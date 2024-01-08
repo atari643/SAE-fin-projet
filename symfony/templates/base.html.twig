@@ -20,7 +20,7 @@
     {% else %}
         [{{ app.user.email }}]
         <a href="{{ path('app_logout') }}">Déconnexion</a>
-    
+    {% endif %}
     <hr/>
 
         {% block body %}{% endblock %}
