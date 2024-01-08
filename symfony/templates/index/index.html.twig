@@ -15,6 +15,12 @@
     </table>
 
     <div class="paging">
+    {% if page - 1 < 0 %}
+        <a href="?page={{ page - 1 }}"><p style="display: inline;">Précédent</p></a>
+    {% else %}
+        <a href="?page={{ page }}"><p style="display: inline;">Précédent</p></a>
+    {% endif %}
+
     {% for nb in 1..numberOfPages %}
         {% if page == nb %}
             <a href="?page={{ nb }}"><p style="display: inline; font-weight: bold;">{{ nb }}</p></a>
@@ -22,5 +28,11 @@
             <a href="?page={{ nb }}"><p style="display: inline;">{{ nb }}</p></a>
         {% endif %}
     {% endfor %}
+
+    {% if page + 1 < numberOfPages %}
+        <a href="?page={{ page + 1 }}"><p style="display: inline;">Suivant</p></a>
+    {% else %}
+        <a href="?page={{ page }}"><p style="display: inline;">Suivant</p></a>
+    {% endif %}
     </div>
 {% endblock %}
