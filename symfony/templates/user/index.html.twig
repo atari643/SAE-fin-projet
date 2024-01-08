@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+    <h1>Liste des utilisateurs</h1>
+
+    {% for user in users %}
+        <div class="user">
+            <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random&rounded=true" style="display: inline;">
+            <p style="display: inline;">{{ user.name }}</p>
+            <p style="display: inline;">{{ user.registerDate|date('Y-m-d') }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}
