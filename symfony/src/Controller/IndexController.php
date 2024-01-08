@@ -8,20 +8,33 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 const SERIES_PER_PAGE = 10;
 
 class IndexController extends AbstractController
 {
-    #[Route('/', name: 'app_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    #[Route('/', name: 'app_default', methods: ['GET'])]
+    public function index(EntityManagerInterface $entityManager, Request $request): Response
     {
+        $page = $request->query->get('page');
         $series = $entityManager
-            ->getRepository(Series::class)
-            ->findBy([],['title'=>'ASC'],SERIES_PER_PAGE);
+            ->getRepository(Series::class);
+        $series_limit = $series->findBy(array(), null, SERIES_PER_PAGE, SERIES_PER_PAGE*($page-1));
+        $count = $series->createQueryBuilder('series')
+        ->select('count(series.id)')
+        ->getQuery()
+        ->getSingleScalarResult();
 
-        return $this->render('index/index.php.twig', [
-            'series' => $series,
+        $numberOfPages = $count/SERIES_PER_PAGE;
+        if($count % SERIES_PER_PAGE != 0){
+            $numberOfPages += 1;
+        }
+
+        return $this->render('index/index.html.twig', [
+            'series' => $series_limit,
+            'numberOfPages' => $numberOfPages,
+            'page' => $page,
         ]);
     }
 

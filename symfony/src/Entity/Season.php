@@ -32,7 +32,7 @@ class Season
         return $this->number;
     }
 
-    public function setNumber(int $number): static
+    public function setNumber(int $number): self
     {
         $this->number = $number;
 
@@ -44,7 +44,7 @@ class Season
         return $this->series;
     }
 
-    public function setSeries(?Series $series): static
+    public function setSeries(?Series $series): self
     {
         $this->series = $series;
 

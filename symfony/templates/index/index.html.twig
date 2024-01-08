@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+    <h1>Accueil</h1>
+
+    <table>
+    {% for seriesToDisplay in series %}
+        <tr>
+            <td>{{ seriesToDisplay.title }}</td>
+            <td><img src="{{ path('app_series_poster', { 'id': seriesToDisplay.id }) }}"></td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    <div class="paging">
+    {% if page - 1 < 0 %}
+        <a href="?page={{ page - 1 }}"><p style="display: inline;">Précédent</p></a>
+    {% else %}
+        <a href="?page={{ page }}"><p style="display: inline;">Précédent</p></a>
+    {% endif %}
+
+    {% for nb in 1..numberOfPages %}
+        {% if page == nb %}
+            <a href="?page={{ nb }}"><p style="display: inline; font-weight: bold;">{{ nb }}</p></a>
+        {% else %}
+            <a href="?page={{ nb }}"><p style="display: inline;">{{ nb }}</p></a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page + 1 < numberOfPages %}
+        <a href="?page={{ page + 1 }}"><p style="display: inline;">Suivant</p></a>
+    {% else %}
+        <a href="?page={{ page }}"><p style="display: inline;">Suivant</p></a>
+    {% endif %}
+
+    <form style="display: inline;">
+        <input name="page" type="number" min="1" max="{{ numberOfPages }}" placeholder="Page" required />
+        <input type="submit" hidden />
+    </form>
+    </div>
+{% endblock %}
