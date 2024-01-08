@@ -14,8 +14,14 @@ class IndexController extends AbstractController
     #[Route('/', name: 'app_default', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager, Request $request): Response
     {
-        $numberPerPage = 10;
         $page = $request->query->get('page');
+        if($page == null){
+
+            return $this->redirect('?page=1');
+
+        }
+
+        $numberPerPage = 10;
         $series = $entityManager
             ->getRepository(Series::class);
         $series_limit = $series->findBy(array(), null, $numberPerPage, $numberPerPage*($page-1));
