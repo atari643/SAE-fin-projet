@@ -34,5 +34,10 @@
     {% else %}
         <a href="?page={{ page }}"><p style="display: inline;">Suivant</p></a>
     {% endif %}
+
+    <form style="display: inline;">
+        <input name="page" type="number" min="1" max="{{ numberOfPages }}" placeholder="Page" required />
+        <input type="submit" hidden />
+    </form>
     </div>
 {% endblock %}
