@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+    <h1>Accueil</h1>
+
+    <table>
+    {% for seriesToDisplay in series %}
+        <tr>
+            <td>{{ seriesToDisplay.title }}</td>
+            <td><img src="{{ path('app_series_poster', { 'id': seriesToDisplay.id }) }}"></td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    <div class="paging">
+    {% for nb in 1..numberOfPages %}
+        {% if page == nb %}
+            <a href="?page={{ nb }}"><p style="display: inline; font-weight: bold;">{{ nb }}</p></a>
+        {% else %}
+            <a href="?page={{ nb }}"><p style="display: inline;">{{ nb }}</p></a>
+        {% endif %}
+    {% endfor %}
+    </div>
+{% endblock %}
