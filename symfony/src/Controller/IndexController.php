@@ -18,6 +18,13 @@ class IndexController extends AbstractController
     public function index(EntityManagerInterface $entityManager, Request $request): Response
     {
         $page = $request->query->get('page');
+        if($page == null){
+
+            return $this->redirect('?page=1');
+
+        }
+
+        $numberPerPage = 10;
         $series = $entityManager
             ->getRepository(Series::class);
         $series_limit = $series->findBy(array(), null, SERIES_PER_PAGE, SERIES_PER_PAGE*($page-1));
