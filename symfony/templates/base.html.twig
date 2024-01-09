@@ -18,7 +18,7 @@
         -
         <a href="{{ path('app_login') }}">Connexion</a>
     {% else %}
-        [{{ app.user.email }}]
+        Bonjour [{{ app.user.email }}], vous êtes connecté en tant que membre
         <a href="{{ path('app_logout') }}">Déconnexion</a>
     {% endif %}
     <hr/>
