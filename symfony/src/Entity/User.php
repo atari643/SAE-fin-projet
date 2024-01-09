@@ -51,7 +51,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     )]
     private $series = array();
 
-    #[ORM\ManyToMany(targetEntity: "Episode", inversedBy: "genre")]
+    #[ORM\ManyToMany(targetEntity: "Episode")]
     #[ORM\JoinTable(
         name: "user_episode",
         joinColumns: [new ORM\JoinColumn(name: "user_id", referencedColumnName: "id")],
@@ -70,7 +70,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     //added (see TD4 Authentification)
     public function getUserIdentifier(): string { return $this->getEmail(); }
-    public function getRoles(): array { return ['ROLE_USER']; }
+    public function getRoles(): array { 
+
+        if($this->isAdmin()){
+
+            return ['ROLE_ADMIN']; 
+
+        }
+
+        return ['ROLE_USER']; 
+    }
     public function eraseCredentials() { }
 
     public static function loadValidatorMetadata(ClassMetadata $metadata): void
@@ -93,7 +102,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): static
     {
         $this->name = $name;
 
@@ -105,7 +114,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(string $email): static
     {
         $this->email = $email;
 
@@ -117,19 +126,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(string $password): static
     {
         $this->password = $password;
 
         return $this;
     }
 
-    public function getRegisterDate()
+    public function getRegisterDate(): ?\DateTimeInterface
     {
         return $this->registerDate;
     }
 
-    public function setRegisterDate($registerDate): self
+    public function setRegisterDate(?\DateTimeInterface $registerDate): static
     {
         $this->registerDate = $registerDate;
 
@@ -141,7 +150,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->admin;
     }
 
-    public function setAdmin(bool $admin): self
+    public function setAdmin(bool $admin): static
     {
         $this->admin = $admin;
 
@@ -153,7 +162,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->country;
     }
 
-    public function setCountry(?Country $country): self
+    public function setCountry(?Country $country): static
     {
         $this->country = $country;
 
@@ -168,7 +177,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->series;
     }
 
-    public function addSeries(Series $series): self
+    public function addSeries(Series $series): static
     {
         if (!$this->series->contains($series)) {
             $this->series->add($series);
@@ -177,7 +186,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeSeries(Series $series): self
+    public function removeSeries(Series $series): static
     {
         $this->series->removeElement($series);
 
@@ -192,7 +201,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->episode;
     }
 
-    public function addEpisode(Episode $episode): self
+    public function addEpisode(Episode $episode): static
     {
         if (!$this->episode->contains($episode)) {
             $this->episode->add($episode);
@@ -201,7 +210,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeEpisode(Episode $episode): self
+    public function removeEpisode(Episode $episode): static
     {
         $this->episode->removeElement($episode);
 
