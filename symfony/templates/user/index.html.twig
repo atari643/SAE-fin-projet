@@ -3,7 +3,7 @@
 {% block title %}Hello UserController!{% endblock %}
 
 {% block body %}
-    {% if is_granted("ROLE") %}
+    {% if app.user %}
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
@@ -15,9 +15,13 @@
             <td><img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random&rounded=true" style="display: inline;"></td>
             <td><p style="display: inline;">{{ user.name }}</p></td>
             <td><p style="display: inline;">{{ user.registerDate|date('Y-m-d') }}</p></td>
-            {% if app.user.admin == 1 %}
+            <!-- {% if app.user.admin == 1 %}
                 <td>
-                    <select name="role" id="role" autocomplete="off" onchange="onSelectChange(this)">
+                    {% if user == app.user %}
+                        <select name="role" id="role" autocomplete="off" onchange="onSelectChange(this)" disabled>
+                    {% else %}
+                        <select name="role" id="role" autocomplete="off" onchange="onSelectChange(this)">
+                    {% endif %}
                         {% if user.admin == '0' %}
                             <option value="{{ 0 ~ ' ' ~ user.id }}" selected>Utilisateur</option>
                             <option value="{{ 1 ~ ' ' ~ user.id }}">Admin</option>
@@ -32,7 +36,7 @@
                             <option value="{{ 2 ~ ' ' ~ user.id }}" disabled="disabled" selected>SuperAdmin</option>
                         {% endif %}
                     </select>
-                </td>
+                </td> -->
             {% endif %}
         </tr>
     {% endfor %}
@@ -46,11 +50,11 @@
             '<input type="text" name="id" value="' + values[1] + '" hidden />' +
             '</form>');
             $('body').append(form);
-            form.submit();
+            form.submit();#
         }
     </script>
 
     {% else %}
-        
+        <p>NO</p>
     {% endif %}
 {% endblock %}
