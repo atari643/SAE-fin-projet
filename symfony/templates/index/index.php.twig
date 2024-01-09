@@ -212,7 +212,7 @@ body {
             {% for e in s.getSeasons %}
                 {% set totalEpisodes = totalEpisodes + e.getEpisodes.count %} 
             {% endfor %}
-            <div class="showChildSeries" data-title="{{ s.title }}" data-épisodes="season: {{ s.getSeasons.count }} episode : {{ totalEpisodes }}" data-avis="4" >
+            <div class="showChildSeries" data-title="{{ s.title }}" data-épisodes="{{ s.getSeasons.count }} Seasons | {{ totalEpisodes }} Episodes" data-avis="4" >
             <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="posters">
             </div>
     {% endfor %}
