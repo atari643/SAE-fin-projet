@@ -3,31 +3,218 @@
 {% block title %}Series{% endblock %}
 
 {% block stylesheets %}
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 <style>
-    .series{
-        /*
-        I tried to center the text, failed tried again and failed again
-        Good luck !
-         */
-        text-align: center;
-        --square-size: 200px;
-        min-width: var(--square-size);
-        min-height: var(--square-size);
-        max-width: var(--square-size);
-        max-height: var(--square-size);
-        background-size: 100%;
-        background: white no-repeat center center;
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background-color: #221F1F;
+    display: flex;
+    flex-direction: column;
+    padding: 5px 10% 0 10%;
+    width: calc(100% - 20%);
+    height: fit-content;
+    align-items: center;
+    gap: 40px;
+}
+
+#menu {
+    display: flex;
+    flex-direction: row;
+    height: fit-content;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #cba848;
+    padding-bottom: 10px;
+}
+
+.itemMenu {
+    color: #cba848;
+    padding: 5px;
+    border-radius: 5px;
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    margin: 0;
+    transition: 0.35s;
+}
+
+.itemMenu>span {
+    font-size: 2rem;
+}
+
+.itemMenu:hover {
+    background-color: hsl(347, 79%, 30%, 30%);
+    cursor: pointer;
+    color: #e3f7f5;
+}
+
+#parentItemMenuLeft,
+#parentItemMenuCenter,
+#parentItemMenuRight {
+    display: flex;
+    gap: 5px;
+    flex-direction: row;
+    width: fit-content;
+    height: fit-content;
+}
+
+.onThisPage {
+    background-color: hsl(347, 79%, 30%, 30%);
+    color: #e3f7f5;
+}
+
+#show {
+    display: grid;
+    width: 100%;
+    height: fit-content;
+    margin: 0;
+    padding: 0;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-auto-rows: 350px;
+    align-items: center;
+    justify-content: center;
+    column-gap: 15px;
+    row-gap: 50px;
+    
+}
+
+.showChildSeries {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    justify-items: center;
+    height: 100%;
+}
+
+.posters {
+    height: 100%;
+    border-radius: 6px;
+    transition: cubic-bezier(.68,-0.55,.27,1.55) 0.5s;
+    border: 1px solid transparent;
+
+}
+
+.posters:hover {
+    cursor: pointer;
+    border: 1px solid #88ddd5;
+    transform: scale(1.08);
+}
+
+.overlay{
+    position: absolute;
+    background-color: #221f1f8a;
+    backdrop-filter: blur(5px);
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    animation: cubic-bezier(.68,-0.55,.27,1.55) 0.5s forwards overlaySpawn;
+    transition: 0.5s;
+}
+
+@keyframes overlaySpawn{
+    0%{
+        opacity: 0;
     }
+    100%{
+        opacity: 1;
+    }
+}
+
+.parentStarsPosterHover{
+    color: #cba848;
+    text-shadow: 0px 0px 4px #fffac0;
+}
+
+.parentStarsPosterHover>span{
+    font-size: 1.4rem;
+    animation-delay: 0.5s;
+}
+
+.titlePosterHover{
+    color: #ac1536;
+    font-size: 2.2rem;
+    font-family: 'Bebas Neue', cursive;
+    margin: 8px 0 0 0;
+    text-shadow: 1px 1px 5px #000000;
+}
+
+.durationPosterHover{
+    color: #e3f7f5;
+    font-size: 1.2rem;
+    font-family: 'Oswald', sans-serif;
+    margin: 0;
+}
+
 </style>
 {% endblock %}
 
 {% block body %}
-    <h1>Here are the series : </h1>
-    <div class="seriesContainer">
-    {% for s in series %}
-            <div class="series" style="background-image:url('{{ path('app_series_poster', { 'id': s.id }) }}')">
-            <a href="{{ path('app_index_series_info', {id: s.id}) }}">{{ s.title }}</a>
+    <div id="menu">
+        <div id="parentItemMenuLeft">
+            <div class="itemMenu">
+                <span class="material-symbols-outlined">
+                    preview
+                </span>
+            </div>
+            <div class="itemMenu">
+                <span class="material-symbols-outlined">
+                    groups
+                </span>
+            </div>
         </div>
+        <div id="parentItemMenuCenter">
+            <div class="itemMenu onThisPage">
+                <span class="material-symbols-outlined">
+                    home
+                </span>
+            </div>
+            <div class="itemMenu">
+                <span class="material-symbols-outlined">
+                    subscriptions
+                </span>
+            </div>
+            <div class="itemMenu">
+                <span class="material-symbols-outlined">
+                    history
+                </span>
+            </div>
+        </div>
+        <div id="parentItemMenuRight">
+            <div class="itemMenu">
+                <span class="material-symbols-outlined">
+                    account_circle
+                </span>
+            </div>
+        </div>
+    </div>
+    <div id="show">
+    {% for s in series %}
+            {% set totalEpisodes = 0 %}
+            {% for e in s.getSeasons %}
+                {% set totalEpisodes = totalEpisodes + e.getEpisodes.count %} 
+            {% endfor %}
+            <div class="showChildSeries" data-title="{{ s.title }}" data-épisodes="season: {{ s.getSeasons.count }} episode : {{ totalEpisodes }}" data-avis="4" >
+            <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="posters">
+            </div>
     {% endfor %}
     </div>
 
@@ -57,4 +244,100 @@
             <input type="submit" hidden />
         </form>
     </div>
+    <script>
+        const series = document.getElementsByClassName('showChildSeries');
+        const seriesPoster = document.getElementsByClassName('posters');
+        for (let i = 0; i < series.length; i++) {
+            seriesPoster[i].addEventListener('mouseover', function () {
+                posterHover(i);
+            });
+            seriesPoster[i].addEventListener('mouseleave', function () {
+                const overlay = series[i].querySelector('.overlay');
+                if (overlay) {
+                    overlay.parentNode.removeChild(overlay);
+                }
+            });
+            seriesPoster[i].addEventListener('click', function () {
+                makeBannerLeft(series[i], seriesPoster[i]);
+            });
+        }
+        
+        function posterHover(i) {
+            const overlay = document.createElement('div');
+            overlay.classList.add('overlay');
+            series[i].appendChild(overlay);
+            const title = document.createElement('p');
+            title.classList.add('titlePosterHover');
+            title.innerHTML = series[i].dataset.title;
+            overlay.appendChild(title);
+            const duration = document.createElement('p');
+            duration.classList.add('durationPosterHover');
+            if (series[i].dataset.duration != null) {
+                duration.innerHTML = series[i].dataset.duration;
+            } else if (series[i].dataset.épisodes != null) {
+                duration.innerHTML = series[i].dataset.épisodes;
+            } else {
+                duration.innerHTML = 'Pas de durée estimée';
+            }
+            overlay.appendChild(duration);
+            const parentStars = document.createElement('div');
+            parentStars.classList.add('parentStarsPosterHover');
+            for (let j = 0; j < series[i].dataset.avis; j++) {
+                parentStars.innerHTML += '<span class="material-symbols-outlined">grade</span>';
+            }
+            for (let j = 0; j < 5 - series[i].dataset.avis; j++) {
+                parentStars.innerHTML += '<span class="material-symbols-outlined">grade</span>';
+                parentStars.lastChild.style.color = '#e3f7f5';
+            }
+            overlay.appendChild(parentStars);
+            overlay.style.width = seriesPoster[i].width + 'px';
+            overlay.style.transform = 'translateY(' + (seriesPoster[i].offsetHeight - overlay.offsetHeight + Math.round(overlay.offsetHeight * 0.08)) + 'px) translateX(' + (seriesPoster[i].offsetLeft - overlay.offsetLeft + 1) + 'px) scale(1.08)';
+        }
+        
+        function makeBannerLeft(poster, posterImg) {
+            const banner = document.createElement('div');
+            banner.classList.add('banner');
+            const bannerTitle = document.createElement('p');
+            const bannerClose = document.createElement('div');
+            bannerClose.classList.add('bannerClose');
+            bannerClose.innerHTML = '<span class="material-symbols-outlined">cancel</span>';
+            banner.appendChild(bannerClose);
+            bannerTitle.classList.add('bannerTitle');
+            bannerTitle.innerHTML = poster.dataset.title;
+            banner.appendChild(bannerTitle);
+            const bannerImg = document.createElement('img');
+            bannerImg.src = posterImg.src;
+            banner.appendChild(bannerImg);
+            const resumé = document.createElement('p');
+            resumé.classList.add('resumé');
+            resumé.innerHTML = poster.dataset.resum;
+            banner.appendChild(resumé);
+            const bannerDuration = document.createElement('p');
+            bannerDuration.classList.add('bannerDuration');
+            const parentBottomBanner = document.createElement('div');
+            parentBottomBanner.classList.add('parentBottomBanner');
+            banner.appendChild(parentBottomBanner);
+            if (poster.dataset.duration != null) {
+                bannerDuration.innerHTML = poster.dataset.duration;
+            } else if (poster.dataset.épisodes != null) {
+                bannerDuration.innerHTML = poster.dataset.épisodes;
+            } else {
+                bannerDuration.innerHTML = 'Pas de durée estimée';
+            }
+            parentBottomBanner.appendChild(bannerDuration);
+            const bannerParentStars = document.createElement('div');
+            bannerParentStars.classList.add('bannerParentStars');
+            for (let j = 0; j < poster.dataset.avis; j++) {
+                bannerParentStars.innerHTML += '<span class="material-symbols-outlined">grade</span>';
+            }
+            for (let j = 0; j < 5 - poster.dataset.avis; j++) {
+                bannerParentStars.innerHTML += '<span class="material-symbols-outlined">grade</span>';
+                bannerParentStars.lastChild.style.color = '#e3f7f5';
+            }
+            parentBottomBanner.appendChild(bannerParentStars);
+            const suivieButton = document.createElement('div');
+            suivieButton.classList.add('suivieButtonadd');suivieButton.innerHTML = '<span class="material-symbols-outlined">=heart_plus</span>';
+            parentBottomBanner.appendChild(suivieButton);
+        }
+        </script>
 {% endblock %}

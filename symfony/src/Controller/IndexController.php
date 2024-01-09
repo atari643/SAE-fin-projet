@@ -63,7 +63,8 @@ class IndexController extends AbstractController
         $series = $entityManager
             ->find(Series::class, $id);
         header('Content-Type: image/jpeg');
-        $response = new Response(Response::HTTP_OK);
+        $response = new Response(
+            'Content-Type', Response::HTTP_OK, ['content-type' => 'image/jpeg']);
         $response->setContent(stream_get_contents($series->getPoster()));
         return $response;
     }

@@ -1,7 +1,118 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Register{% endblock %}
+{% block stylesheets %}
+<style>
+    body, input, button {
 
+        font-family: Arial, sans-serif;
+  
+      }
+  
+  
+      /* Center the form on the page */
+  
+      form {
+  
+        width: 100%;
+  
+        max-width: 300px;
+  
+        margin: 0 auto;
+  
+        padding: 20px;
+  
+        border: 1px solid #ccc;
+  
+        box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+  
+      }
+      body > h1 {
+  
+        text-align: center;
+  
+      }
+  
+      /* Add some space between form elements */
+  
+      form > * {
+  
+        margin-bottom: 10px;
+  
+      }
+  
+  
+      /* Style the input fields */
+  
+      input[type="text"], input[type="email"], input[type="password"] {
+  
+        width: 100%;
+  
+        padding: 10px;
+  
+        border: 1px solid #ccc;
+  
+        border-radius: 4px;
+  
+        box-sizing: border-box;
+  
+      }
+  
+  
+      /* Style the submit button */
+  
+      button {
+  
+        width: 100%;
+  
+        padding: 10px;
+  
+        background-color: #4CAF50;
+  
+        color: white;
+  
+        border: none;
+  
+        border-radius: 4px;
+  
+        cursor: pointer;
+  
+      }
+  
+  
+      /* Add a hover effect to the submit button */
+  
+      button:hover {
+  
+        background-color: #45a049;
+  
+      }
+  
+  
+      /* Make the form responsive */
+  
+      @media (min-width: 600px) {
+  
+        form {
+  
+          max-width: 400px;
+  
+        }
+  
+      }
+  
+  
+      @media (min-width: 900px) {
+  
+        form {
+  
+          max-width: 600px;
+  
+        }
+  
+      }
+</style>
+{% endblock %}
 {% block body %}
     <h1>Register</h1>
 
