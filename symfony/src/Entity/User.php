@@ -34,9 +34,6 @@ class User
     #[ORM\Column(name: "admin", type: "boolean", nullable: false)]
     private $admin = '0';
 
-    #[ORM\Column(name: "user_id", type: "string", length: 128, nullable: true)]
-    private $userId;
-
     #[ORM\ManyToOne(targetEntity: "Country")]
     #[ORM\JoinColumn(name: "country_id", referencedColumnName: "id")]
     private $country;
@@ -76,7 +73,7 @@ class User
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): static
     {
         $this->name = $name;
 
@@ -88,7 +85,7 @@ class User
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(string $email): static
     {
         $this->email = $email;
 
@@ -100,19 +97,19 @@ class User
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(string $password): static
     {
         $this->password = $password;
 
         return $this;
     }
 
-    public function getRegisterDate()
+    public function getRegisterDate(): ?\DateTimeInterface
     {
         return $this->registerDate;
     }
 
-    public function setRegisterDate($registerDate): self
+    public function setRegisterDate(?\DateTimeInterface $registerDate): static
     {
         $this->registerDate = $registerDate;
 
@@ -124,21 +121,9 @@ class User
         return $this->admin;
     }
 
-    public function setAdmin(bool $admin): self
+    public function setAdmin(bool $admin): static
     {
         $this->admin = $admin;
-
-        return $this;
-    }
-
-    public function getUserId(): ?string
-    {
-        return $this->userId;
-    }
-
-    public function setUserId(?string $userId): self
-    {
-        $this->userId = $userId;
 
         return $this;
     }
@@ -148,7 +133,7 @@ class User
         return $this->country;
     }
 
-    public function setCountry(?Country $country): self
+    public function setCountry(?Country $country): static
     {
         $this->country = $country;
 
@@ -163,7 +148,7 @@ class User
         return $this->series;
     }
 
-    public function addSeries(Series $series): self
+    public function addSeries(Series $series): static
     {
         if (!$this->series->contains($series)) {
             $this->series->add($series);
@@ -172,7 +157,7 @@ class User
         return $this;
     }
 
-    public function removeSeries(Series $series): self
+    public function removeSeries(Series $series): static
     {
         $this->series->removeElement($series);
 
@@ -187,7 +172,7 @@ class User
         return $this->episode;
     }
 
-    public function addEpisode(Episode $episode): self
+    public function addEpisode(Episode $episode): static
     {
         if (!$this->episode->contains($episode)) {
             $this->episode->add($episode);
@@ -196,7 +181,7 @@ class User
         return $this;
     }
 
-    public function removeEpisode(Episode $episode): self
+    public function removeEpisode(Episode $episode): static
     {
         $this->episode->removeElement($episode);
 
