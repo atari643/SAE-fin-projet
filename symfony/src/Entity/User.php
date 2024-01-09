@@ -6,13 +6,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity; //under the assumption that the user must be unique
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Table(name: "user", uniqueConstraints: [
     new ORM\UniqueConstraint(name: "UNIQ_8D93D649E7927C74", columns: ["email"]),
     new ORM\UniqueConstraint(name: "IDX_8D93D649F92F3E70", columns: ["country_id"]),
 ])]
 #[ORM\Entity]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Column(name: "id", type: "integer", nullable: false)]
     #[ORM\Id]
@@ -62,6 +65,11 @@ class User
         $this->series = new \Doctrine\Common\Collections\ArrayCollection();
         $this->episode = new \Doctrine\Common\Collections\ArrayCollection();
     }
+
+    //added (see TD4 Authentification)
+    public function getUserIdentifier(): string { return $this->getEmail(); }
+    public function getRoles(): array { return ['ROLE_USER']; }
+    public function eraseCredentials() { }
 
     public function getId(): ?int
     {
