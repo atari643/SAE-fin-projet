@@ -70,10 +70,25 @@ Pour vous connecter à la base de données, suivez les étapes suivantes :
 
 2. Dans le fichier ".env", modifiez la ligne suivante :
     ```
-    DATABASE_URL=mysql://USERNAME:PASSWORD@SERVER:3306/HOST
+    DATABASE_URL=mysql://USERNAME:PASSWORD@SERVER/HOST
     ```
     Remplacez "USERNAME" par votre nom d'utilisateur et "PASSWORD" par votre mot de passe. Remplacez "SERVER" par le nom du serveur et "HOST" par le nom de la base de données.
 
 3. Enregistrez le fichier et fermez-le.
 
 4. Maintenant, vous êtes connecté à la base de données !
+
+## Modifier les droits d'administration des utilisateurs du site
+
+Pour modifier les droits d'administration des utilisateurs du site, suivez les étapes suivantes :
+
+Pour mettre un utilisateur adminstrateur lancer le script:
+    ```
+    ./scriptBDAdminRights/grantAdminRights.sh
+    ```
+
+Pour enlever un utilisateur adminstrateur lancer le script:
+    ```
+    ./scriptBDAdminRights/removeAdminRights.sh
+    ```
+
