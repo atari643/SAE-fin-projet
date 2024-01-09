@@ -30,7 +30,7 @@ class IndexController extends AbstractController
         ->getQuery()
         ->getSingleScalarResult();
 
-        $numberOfPages = $count/SERIES_PER_PAGE;
+        $numberOfPages = intdiv($count, SERIES_PER_PAGE);
         if($count % SERIES_PER_PAGE != 0){
             $numberOfPages += 1;
         }
