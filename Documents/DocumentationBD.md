@@ -3,6 +3,7 @@
 Ce document a pour objectif d'assurer une meilleure compréhension de la base grâce à une description conceptuelle des données.
 
 ## Contexte
+
 Cette base de données est utilisée dans le cadre d'un projet de conception d'une web-app. Dans cette web-app, la base servira à enregistrer de nouveaux utilisateurs, de nouvelles séries, ou encore à stocker les séries vues et suivies par ces utilisateurs.
 
 Voici le schéma MCD de la base :
@@ -176,7 +177,7 @@ Voici le schéma MCD de la base :
     - **genre_id** : clé étrangère référencant **genre.id**.
     - **series_id** : clé étrangère référencant **series.id**
     - Unicité du couple (**genre_id**,**series_id**)
-    - Tous les attributs obligatoires.
+    - Tous les attributs sont obligatoires.
   
     ---
 
@@ -198,7 +199,7 @@ Voici le schéma MCD de la base :
     - **id** : clé primaire.
     - **series_id** : clé étrangère faisant référence à _**series.id**_.
     - **user_id** : clé étrangère faisant référence à _**user.id**_.
-    - Tous les attributs obligatoires sauf **comment**.
+    - Tous les attributs sont obligatoires sauf **comment**.
 
     ---
 
@@ -241,7 +242,7 @@ Voici le schéma MCD de la base :
 
     - **id** : clé primaire.
     - Unicité des attributs **title**, **imdb**, **poster**, **youtube_trailer**.
-    - Les attributs obligatoires sont **id**, **title**, **imdb**.
+    - Les attributs sont obligatoires sont **id**, **title**, **imdb**.
 
     ---
 
@@ -264,7 +265,7 @@ Voici le schéma MCD de la base :
     - **id** : clé primaire.
     - Unicité de l'attribut **email**.
     - **country_id** : clé étrangère référencant **country.id**
-    - Tous les attributs obligatoires sauf **register_date** et **country_id**.
+    - Tous les attributs sont obligatoires sauf **register_date** et **country_id**.
   
     ---
 
@@ -282,7 +283,7 @@ Voici le schéma MCD de la base :
     - **user_id** : clé étrangère référencant **user.id**.
     - **episode_id** : clé étrangère référencant **episode.id**
     - Unicité du couple (**user_id**,**episode_id**)
-    - Tous les attributs obligatoires.
+    - Tous les attributs sont obligatoires.
 
     ---
 
@@ -300,7 +301,7 @@ Voici le schéma MCD de la base :
     - **user_id** : clé étrangère référencant **user.id**.
     - **series_id** : clé étrangère référencant **series.id**
     - Unicité du couple (**user_id**,**series_id**)
-    - Tous les attributs obligatoires.
+    - Tous les attributs sont obligatoires.
 
 
 
