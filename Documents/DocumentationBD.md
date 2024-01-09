@@ -1,11 +1,13 @@
 # Documentation de la base de données
 
 Ce document a pour objectif d'assurer une meilleure compréhension de la base grâce à une description conceptuelle des données.
+
+## Contexte
 Cette base de données est utilisée dans le cadre d'un projet de conception d'une web-app. Dans cette web-app, la base servira à enregistrer de nouveaux utilisateurs, de nouvelles séries, ou encore à stocker les séries vues et suivies par ces utilisateurs.
 
 Voici le schéma MCD de la base :
 
-![MCD](db.png)
+![MCD](MCD-SaeFinS3.png)
 
 ## Description des tables
 
