@@ -33,7 +33,7 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
 
         {% for nb in 1..numberOfPages %}
             {% if page == nb %}
-                <a href="?page={{ nb }}"><p style="display: inline; font-weight: bold;">{{ nb }}</p></a>
+                <a href="?page={{ nb }}"><p style="display: inline; font-weight: bold; font-size:20px;">{{ nb }}</p></a>
             {% else %}
                 <a href="?page={{ nb }}"><p style="display: inline;">{{ nb }}</p></a>
             {% endif %}

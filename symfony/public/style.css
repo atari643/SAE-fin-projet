@@ -217,3 +217,36 @@ body {
     background-color: #cba848;
     color: #e3f7f5;
 }
+.paging {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.paging a {
+    color: #007BFF;
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+.paging a:hover {
+    color: #0056B3;
+}
+
+.paging a:active {
+    color: #004085;
+    
+}
+
+.paging input[type="number"] {
+    width: 50px;
+    text-align: center;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    margin: 0 5px;
+}
+
+.paging input[type="submit"] {
+    display: none;
+}

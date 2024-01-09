@@ -1,20 +1,62 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Series Info{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('/seriesInfo.css') }}">
+{% endblock %}
 
 {% block body %}
-    <div>Poster :
-        <img src="{{ path('app_series_poster',{id: series.id}) }}" alt='Series Poster'>
+    <div id="pageInfo">
+        <div id="visual">
+            <img id="imagePoster" src="{{ path('app_series_poster',{id: series.id}) }}" alt='Series Poster'>
+            <a href="{{series.youtubeTrailer}}" target="_blank">
+                <img id="trailer" src="https://img.youtube.com/vi/{{series.youtubeTrailer|slice(32)}}/0.jpg" alt="Aperçu de la vidéo YouTube">
+            </a> 
+        </div>   
+        <div id="information">
+            <div id="seriesTitle">Title : {{ series.title }}</div>
+            <hr>
+            <div id="seriesPlot">Description : {{ series.plot }}</div>
+            <hr>
+            {% for genre in series.genre %}
+                <p class="genre">{{ genre.name }}</p>
+            {% endfor %}
+            <hr>
+            <div id="seriesDirector">Director : {{ series.director }}</div>
+        </div>
     </div>
-    <div>Title : {{ series.title }}</div>
-    <div>Description : {{ series.plot }}</div>
-    <table>
-        <tr> Seasons :</tr>
-        {% for s in seasons %}
-            <div>Season {{ s.number }}</div>
-        {% endfor %}
-    </table>
-
+    
+    <nav>
+        <ul>
+            {% for s in seasons %}
+            <li ><a href="{{ path('app_index_season_info', {id: series.id, num: s.number}) }}">Season {{ s.number }}</a></li>
+            {% endfor %}
+        </ul>
+    </nav> 
+    <div id="contentEpisode">
+        
+        {% if episodes != null %}
+            <h2>Episodes</h2>
+            <ul id="episodeList">
+                {% for episode in episodes %}
+                    <li>{{ episode.number }} episode
+                    <h2>{{ episode.title }}</h2>
+                    <p>{{ episode.date|date('d/m/Y') }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+        
+    </div>
+    <script>
+        window.onload = function() {
+            var img = document.querySelector('#visual img');
+            var trailer = document.querySelector('#trailer');
+            trailer.style.width = getComputedStyle(img).width;
+        }
+    </script>
 {% endblock %}
 
 
