@@ -26,7 +26,6 @@ class UserController extends AbstractController
 
         $usersRepository = $entityManager
             ->getRepository(User::class);
-        /*$users = $usersRepository->findAll();*/
 
         $role = $request->get('role');
         $id = $request->get('id');
@@ -65,4 +64,15 @@ class UserController extends AbstractController
             'page' => $page,
         ]);
     }
+
+    #[Route('/user/series', name: 'series_followed', methods: ['GET', 'POST'])]
+    public function seriesFollowed(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $user = $this->getUser();
+
+        return $this->render('user/series_followed.html.twig', [
+            'series' => $user->getSeries()
+        ]);
+    }
+
 }
