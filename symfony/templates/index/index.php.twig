@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Series{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .series{
+        /*
+        I tried to center the text, failed tried again and failed again
+        Good luck !
+         */
+        text-align: center;
+        --square-size: 200px;
+        min-width: var(--square-size);
+        min-height: var(--square-size);
+        max-width: var(--square-size);
+        max-height: var(--square-size);
+        background-size: 100%;
+        background: white no-repeat center center;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+    <h1>Here are the series : </h1>
+    <div class="seriesContainer">
+    {% for s in series %}
+            <div class="series" style="background-image:url('{{ path('app_series_poster', { 'id': s.id }) }}')">
+            <a href="{{ path('app_index_series_info', {id: s.id}) }}">{{ s.title }}</a>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Series Info{% endblock %}
+
+{% block body %}
+    <div>Poster :
+        <img src="{{ path('app_series_poster',{id: series.id}) }}" alt='Series Poster'>
+    </div>
+    <div>Title : {{ series.title }}</div>
+    <div>Description : {{ series.plot }}</div>
+    <table>
+        <tr> Seasons :</tr>
+        {% for s in seasons %}
+            <div>Season {{ s.number }}</div>
+        {% endfor %}
+    </table>
+
+{% endblock %}
+
+

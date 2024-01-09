@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Season;
 use App\Entity\Series;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -9,23 +10,31 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
+const SERIES_PER_PAGE = 10;
+
 class IndexController extends AbstractController
 {
     #[Route('/', name: 'app_default', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager, Request $request): Response
     {
-        $numberPerPage = 10;
         $page = $request->query->get('page');
+        if($page == null){
+
+            return $this->redirect('?page=1');
+
+        }
+
+        $numberPerPage = 10;
         $series = $entityManager
             ->getRepository(Series::class);
-        $series_limit = $series->findBy(array(), null, $numberPerPage, $numberPerPage*($page-1));
+        $series_limit = $series->findBy(array(), null, SERIES_PER_PAGE, SERIES_PER_PAGE*($page-1));
         $count = $series->createQueryBuilder('series')
         ->select('count(series.id)')
         ->getQuery()
         ->getSingleScalarResult();
 
-        $numberOfPages = $count/$numberPerPage;
-        if($count % $numberPerPage != 0){
+        $numberOfPages = $count/SERIES_PER_PAGE;
+        if($count % SERIES_PER_PAGE != 0){
             $numberOfPages += 1;
         }
 
@@ -36,24 +45,35 @@ class IndexController extends AbstractController
         ]);
     }
 
-    #[Route('/poster/{id}', name: 'app_series_poster')]
-    public function showPoster(EntityManagerInterface $entityManager, int $id) : Response
+    #[Route('/series/{id}', name: 'app_index_series_info')]
+    public function seriesInfo(EntityManagerInterface $entityManager, int $id)
     {
-        $series_req = $entityManager
-            ->getRepository(Series::class);
-        $series_limit = $series_req->findBy(["id" => $id], null);
-        
-        foreach($series_limit as $serie){
-
-            $response = new Response(
-                'Content-Type',
-                Response::HTTP_OK,
-                ['content-type' => 'image/jpeg']
-            );
-
-            $response->setContent(stream_get_contents($serie->getPoster()));
-            return $response;
-
-        }
+        $series = $entityManager
+            ->getRepository(Series::class)
+            ->find($id);
+        $seasons = $entityManager->getRepository(Season::class)->findBy(
+            ['series' => $series]
+        );
+        return $this->render('index/seriesInfo.html.twig', [
+            'series' => $series,
+            'seasons' => $seasons
+        ]);
     }
+
+    #[Route('/poster/{id}', name: 'app_series_poster')]
+    public function showPoster(EntityManagerInterface $entityManager, int $id) : ?Response
+    {
+        $series = $entityManager
+            ->getRepository(Series::class)
+            ->find($id);
+        $response = new Response(
+            'Content-Type',
+            Response::HTTP_OK,
+            ['content-type' => 'image/jpeg']
+        );
+
+        $response->setContent(stream_get_contents($series->getPoster()));
+        return $response;
+    }
+
 }
