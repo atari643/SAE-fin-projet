@@ -5,7 +5,7 @@
 {% block body %}
     <h1>Register</h1>
 
-    {% if error %}
+    {% if not registrationForm.vars['valid'] %}
 
     L'email ou le mot de passe est invalide
 

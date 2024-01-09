@@ -22,8 +22,12 @@ class RegistrationController extends AbstractController
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted()) { 
             if ($form->isValid()){            // encode the plain password
+                return $this->render('registration/register.html.twig', [
+                    'error'=>'ici',
+                    'registrationForm' => $form->createView(),
+                ]);
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
                         $user,
@@ -41,15 +45,9 @@ class RegistrationController extends AbstractController
                     $request
                 );
             }
-            //la form n'est pas valide donc MEME CA NE MARCHE PAS ?!
-            return $this->render('registration/register.html.twig', [
-                'error'=>1,
-                'registrationForm' => $form->createView(),
-            ]);
         }
-
         return $this->render('registration/register.html.twig', [
-            'error'=>0,
+            'error'=>'',
             'registrationForm' => $form->createView(),
         ]);
     }
