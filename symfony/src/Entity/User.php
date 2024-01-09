@@ -49,7 +49,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     )]
     private $series = array();
 
-    #[ORM\ManyToMany(targetEntity: "Episode", inversedBy: "genre")]
+    #[ORM\ManyToMany(targetEntity: "Episode")]
     #[ORM\JoinTable(
         name: "user_episode",
         joinColumns: [new ORM\JoinColumn(name: "user_id", referencedColumnName: "id")],

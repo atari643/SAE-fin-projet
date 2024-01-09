@@ -19,12 +19,9 @@ class IndexController extends AbstractController
     {
         $page = $request->query->get('page');
         if($page == null){
-
             return $this->redirect('?page=1');
-
         }
 
-        $numberPerPage = 10;
         $series = $entityManager
             ->getRepository(Series::class);
         $series_limit = $series->findBy(array(), null, SERIES_PER_PAGE, SERIES_PER_PAGE*($page-1));
@@ -38,7 +35,7 @@ class IndexController extends AbstractController
             $numberOfPages += 1;
         }
 
-        return $this->render('index/index.html.twig', [
+        return $this->render('index/index.php.twig', [
             'series' => $series_limit,
             'numberOfPages' => $numberOfPages,
             'page' => $page,
@@ -46,7 +43,7 @@ class IndexController extends AbstractController
     }
 
     #[Route('/series/{id}', name: 'app_index_series_info')]
-    public function seriesInfo(EntityManagerInterface $entityManager, int $id)
+    public function seriesInfo(EntityManagerInterface $entityManager, int $id): Response
     {
         $series = $entityManager
             ->getRepository(Series::class)
@@ -64,14 +61,9 @@ class IndexController extends AbstractController
     public function showPoster(EntityManagerInterface $entityManager, int $id) : ?Response
     {
         $series = $entityManager
-            ->getRepository(Series::class)
-            ->find($id);
-        $response = new Response(
-            'Content-Type',
-            Response::HTTP_OK,
-            ['content-type' => 'image/jpeg']
-        );
-
+            ->find(Series::class, $id);
+        header('Content-Type: image/jpeg');
+        $response = new Response(Response::HTTP_OK);
         $response->setContent(stream_get_contents($series->getPoster()));
         return $response;
     }
