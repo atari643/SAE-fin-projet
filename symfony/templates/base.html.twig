@@ -4,6 +4,8 @@
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+        <link rel="stylesheet" href="/nav-bar.css" />
         {% block stylesheets %}
         {% endblock %}
 
@@ -12,14 +14,89 @@
         {% endblock %}
     </head>
     <body>
-    {% if not app.user %}
-        <a href="{{ path('app_register') }}" class="button register" >Inscription</a>
-        <a href="{{ path('app_login') }}" class="button connect">Connexion</a>
-    {% else %}
-        <a class="button logout" href="{{ path('app_logout') }}">Déconnexion</a>
-    {% endif %}
     <hr/>
-
+    <div id="menu">
+        <div id="parentItemMenuLeft">
+            <div class="itemMenu">
+                <span class="material-symbols-outlined">
+                    preview
+                </span>
+            </div>
+            <div class="itemMenu">
+                <span class="material-symbols-outlined">
+                    groups
+                </span>
+            </div>
+        </div>
+        <div id="parentItemMenuCenter">
+            <div class="itemMenu onThisPage">
+                <span class="material-symbols-outlined" onClick="window.location.href = '/'">
+                    home
+                </span>
+            </div>
+            <div class="itemMenu">
+                <span class="material-symbols-outlined">
+                    subscriptions
+                </span>
+            </div>
+            <div class="itemMenu">
+                <span class="material-symbols-outlined">
+                    history
+                </span>
+            </div>
+        </div>
+        <div id="parentItemMenuRight">
+            <div class="itemMenu" id="accountButton">
+                {% if not app.user %}
+                    <a href="{{ path('app_register') }}" class="button register" >Inscription</a>
+                    <a href="{{ path('app_login') }}" class="button connect">Connexion</a>
+                {% else %}
+                    <span class="material-symbols-outlined">
+                        account_circle
+                    </span>
+                {% endif %}
+                
+            </div>
+        </div>
+    </div>
         {% block body %}{% endblock %}
     </body>
+    <script>
+        const accountButton = document.querySelector('#accountButton');
+        if(accountButton.contains(document.querySelector(span))){
+            accountButton.addEventListener('click', function () {
+                if (document.querySelector('.déconnecter')) {
+                    document.querySelector('.déconnecter').parentNode.removeChild(document.querySelector('.déconnecter'));
+                }else{
+                    accountButton.parentNode.insertBefore(makeAccountNav(), accountButton);
+                }
+            });
+        }
+
+
+function makeAccountNav() {
+    const accountNav = document.createElement('div');
+    accountNav.classList.add('déconnecter');
+    accountNav.innerHTML = '<a class="button logout" href="{{ path('app_logout') }}"><span class="material-symbols-outlined">logout</span> Se déconnecter </a>';
+    return accountNav;
+}
+suivieButton.addEventListener('click', function () {
+    if (suivieButton.querySelector('span').innerHTML == 'heart_plus') {
+        suivieButton.querySelector('span').innerHTML = 'heart_check';
+        suivieButton.style.color = 'rgb(0, 105, 0)';
+        setTimeout(function () {
+            suivieButton.style.color = 'white';
+            suivieButton.querySelector('span').innerHTML = 'heart_minus';
+        }, 600);
+    }else if(suivieButton.querySelector('span').innerHTML == 'heart_minus'){
+        suivieButton.querySelector('span').innerHTML = 'heart_check';
+        suivieButton.style.color = '#ac1536';
+        setTimeout(function () {
+            suivieButton.style.color = 'white';
+            suivieButton.querySelector('span').innerHTML = 'heart_plus';
+        }, 600);
+    }
+});
+//app.user sur twig vérifier l'utlisateur connecté
+    </script>
 </html>
