@@ -24,7 +24,6 @@ class IndexController extends AbstractController
 
         }
 
-        $numberPerPage = 10;
         $series = $entityManager
             ->getRepository(Series::class);
         $series_limit = $series->findBy(array(), null, SERIES_PER_PAGE, SERIES_PER_PAGE*($page-1));
@@ -33,7 +32,7 @@ class IndexController extends AbstractController
         ->getQuery()
         ->getSingleScalarResult();
 
-        $numberOfPages = $count/SERIES_PER_PAGE;
+        $numberOfPages = intdiv($count, SERIES_PER_PAGE);
         if($count % SERIES_PER_PAGE != 0){
             $numberOfPages += 1;
         }

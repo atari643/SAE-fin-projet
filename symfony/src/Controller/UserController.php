@@ -10,14 +10,23 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Request;
 
+const USERS_PER_PAGE = 10;
+
 class UserController extends AbstractController
 {
     #[Route('/users', name: 'app_users', methods: ['GET', 'POST'])]
     public function index(EntityManagerInterface $entityManager, Request $request): Response
     {
+        $page = $request->query->get('page');
+        if($page == null){
+
+            return $this->redirect('?page=1');
+
+        }
+
         $usersRepository = $entityManager
             ->getRepository(User::class);
-        $users = $usersRepository->findAll();
+        /*$users = $usersRepository->findAll();*/
 
         $role = $request->get('role');
         $id = $request->get('id');
@@ -36,14 +45,24 @@ class UserController extends AbstractController
             $entityManager->flush();
         }
 
+        $users = $entityManager
+            ->getRepository(User::class);
+        $users_limit = $users->findBy(array(), null, USERS_PER_PAGE, USERS_PER_PAGE*($page-1));
         $count = $usersRepository->createQueryBuilder('users')
             ->select('count(users.id)')
             ->getQuery()
             ->getSingleScalarResult();
 
+        $numberOfPages = intdiv($count, USERS_PER_PAGE);
+        if($count % USERS_PER_PAGE != 0){
+            $numberOfPages += 1;
+        }
+
         return $this->render('user/index.html.twig', [
-            'users' => $users,
+            'users' => $users_limit,
             'count' => $count,
+            'numberOfPages' => $numberOfPages,
+            'page' => $page,
         ]);
     }
 }
