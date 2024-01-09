@@ -17,12 +17,12 @@ Voici le schéma MCD de la base :
 
     _**Attributs :**_
         
-    - **id**: l'identifiant de la table.
-    - **name**: nom de l'acteur.
+    - **id**: l'identifiant de la table. _**(int)**_
+    - **name**: nom de l'acteur. _**(varchar)**_
 
     _**Contraintes :**_
         
-    - **id** : clé primaire.
+    - **id** : clé primaire. _**(int)**_
     - Unicité de **actor.name**.
     - Tous les attributs sont obligatoires.
   
@@ -34,10 +34,11 @@ Voici le schéma MCD de la base :
 
     _**Attributs :**_
         
-    - **actor_id** : identifiant de l'acteur.
-    - **series_id** : identifiant de la serie.
+    - **actor_id** : identifiant de l'acteur. _**(int)**_
+    - **series_id** : identifiant de la serie. _**(int)**_
         
     _**Contraintes :**_
+
     - **actor_id** : clé étrangère faisant réfèrence à _**actor.id**_.
     - **series_id** : clé étrangère faisant réfèrence à _**series.id**_.
     - Unicité du couple (**acotor_id**,**series_id**)
@@ -51,8 +52,8 @@ Voici le schéma MCD de la base :
 
     _**Attributs :**_
         
-    - **id** : identifiant de la table.
-    - **name** : nom du pays.
+    - **id** : identifiant de la table. _**(int)**_
+    - **name** : nom du pays. _**(varchar)**_
 
     _**Contraintes :**_
         
@@ -68,8 +69,8 @@ Voici le schéma MCD de la base :
 
     _**Attributs :**_
         
-    - **country_id** : identifiant du pays.
-    - **series_id** : identifiant de la serie.
+    - **country_id** : identifiant du pays. _**(int)**_
+    - **series_id** : identifiant de la serie. _**(int)**_
         
     _**Contraintes :**_
 
@@ -86,20 +87,20 @@ Voici le schéma MCD de la base :
 
     _**Attributs :**_
         
-    - **id** : identifiant de la table.
-    - **season_id** : identifiant de la saison à laquelle l'épisode appartient.
-    - **title** : titre de l'épisode.
-    - **date** : date de l'épisode.
-    - **imdb** : identifiant IMDb de l'épisode.
-    - **imdbrating** : note IMDb de l'épisode.
-    - **number** : numéro de l'épisode dans la saison.
+    - **id** : identifiant de la table. _**(int)**_
+    - **season_id** : identifiant de la saison à laquelle l'épisode appartient._**(int)**_
+    - **title** : titre de l'épisode. _**(varchar)**_
+    - **date** : date de l'épisode. _**(date)**_
+    - **imdb** : identifiant IMDb de l'épisode. _**(varchar)**_
+    - **imdbrating** : note IMDb de l'épisode. _**(double)**_
+    - **number** : numéro de l'épisode dans la saison. _**(int)**_
         
     _**Contraintes :**_
 
     - **id** : clé primaire.
     - **season_id** : clé étrangère faisant référence à _**season.id**_
     - Unicité de l'attribut **imdb**.
-    - Tous les attributs sont obligatoires.
+    - Tous les attributs sont obligatoires sauf **date** et **imdbrating**.
 
     #### Note :
     L'attribut _**imdb**_ fait référence à Internet Movie Database (IMDb), une base de données en ligne regroupant des informations sur les films, émissions de télévision, séries, jeux vidéo et professionnels de l'industrie cinématographique.
@@ -112,18 +113,18 @@ Voici le schéma MCD de la base :
 
     _**Attributs :**_
         
-    - **id** : identifiant de la table.
-    - **series_id** : identifiant de la série à laquelle l'évaluation appartient.
-    - **source_id** : identifiant de la source de l'évaluation.
-    - **value** : valeur de l'évaluation.
-    - **votes** : nombre de votes associés à l'évaluation.
+    - **id** : identifiant de la table. _**(int)**_
+    - **series_id** : identifiant de la série à laquelle l'évaluation appartient. _**(int)**_
+    - **source_id** : identifiant de la source de l'évaluation. _**(int)**_
+    - **value** : valeur de l'évaluation. _**(varchar)**_
+    - **votes** : nombre de votes associés à l'évaluation. _**(int)**_
         
     _**Contraintes :**_
 
     - **id** : clé primaire.
     - **series_id** : clé étrangère faisant référence à _**series.id**_.
     - **source_id** : clé étrangère faisant référence à _**external_rating_source.id**_.
-    - Tous les attributs sont obligatoires sauf _**votes**_, qui est par défaut à **NULL**.
+    - Tous les attributs sont obligatoires sauf _**votes**_.
 
     ---
 
@@ -133,8 +134,8 @@ Voici le schéma MCD de la base :
 
     _**Attributs :**_
         
-    - **id** : identifiant de la table.
-    - **name** : nom de la source.
+    - **id** : identifiant de la table. _**(int)**_
+    - **name** : nom de la source. _**(varchar)**_
         
     _**Contraintes :**_
 
@@ -150,8 +151,8 @@ Voici le schéma MCD de la base :
 
     _**Attributs :**_
         
-    - **id** : identifiant de la table.
-    - **name** : nom du genre.
+    - **id** : identifiant de la table. _**(int)**_
+    - **name** : nom du genre. _**(varchar)**_
         
     _**Contraintes :**_
 
@@ -167,8 +168,8 @@ Voici le schéma MCD de la base :
 
     _**Attributs :**_
 
-    - **genre_id** : identifiant du genre.
-    - **series_id** : identifiant de la serie.
+    - **genre_id** : identifiant du genre. _**(int)**_
+    - **series_id** : identifiant de la serie. _**(int)**_
 
     _**Contraintes :**_
 
@@ -185,12 +186,12 @@ Voici le schéma MCD de la base :
 
     _**Attributs :**_
         
-    - **id** : identifiant de la table.
-    - **series_id** : identifiant de la série évaluée.
-    - **user_id** : identifiant de l'utilisateur qui a donné l'évaluation.
-    - **value** : valeur de l'évaluation attribuée à la série.
-    - **comment** : commentaire associé à l'évaluation.
-    - **date** : date à laquelle l'évaluation a été donnée.
+    - **id** : identifiant de la table. _**(int)**_
+    - **series_id** : identifiant de la série évaluée. _**(int)**_
+    - **user_id** : identifiant de l'utilisateur qui a donné  _**(int)**_l'évaluation.
+    - **value** : valeur de l'évaluation attribuée à la série. _**(int)**_
+    - **comment** : commentaire associé à l'évaluation. _**(longtext)**_
+    - **date** : date à laquelle l'évaluation a été donnée. _**(datetime)**_
 
     _**Contraintes :**_
 
@@ -207,9 +208,9 @@ Voici le schéma MCD de la base :
 
     _**Attributs :**_
         
-    - **id** : identifiant de la saison.
-    - **series_id** : identifiant de la série à laquelle la saison appartient.
-    - **number** : numéro de la saison dans la série.
+    - **id** : identifiant de la saison. _**(int)**_
+    - **series_id** : identifiant de la série à laquelle la saison appartient. _**(int)**_
+    - **number** : numéro de la saison dans la série. _**(int)**_
 
     _**Contraintes :**_
 
@@ -225,16 +226,16 @@ Voici le schéma MCD de la base :
 
     _**Attributs :**_
         
-    - **id** : identifiant de la série.
-    - **title** : nom de la série.
-    - **plot** : intrigue de la série.
-    - **imdb** : identifiant IMDb de la série. [note](#note)
-    - **poster** : affiche de la série.
-    - **director** : réalisateur de la série.
-    - **youtube_trailer** : vidéo du trailer.
-    - **awards** : récompenses de la série.
-    - **year_start** : date de début de la série.
-    - **year_end** : date de fin de la série.
+    - **id** : identifiant de la série. _**(int)**_
+    - **title** : nom de la série. _**(varchar)**_
+    - **plot** : intrigue de la série. _**(longtext)**_
+    - **imdb** : identifiant IMDb de la série. _**(varchar)**_ [note](#note)
+    - **poster** : affiche de la série. _**(longblob)**_
+    - **director** : réalisateur de la série. _**(varchar)**_
+    - **youtube_trailer** : vidéo du trailer. _**(varchar)**_
+    - **awards** : récompenses de la série. _**(longtext)**_
+    - **year_start** : date de début de la série. _**(int)**_
+    - **year_end** : date de fin de la série. _**(int)**_
 
     _**Contraintes :**_
 
@@ -250,13 +251,13 @@ Voici le schéma MCD de la base :
 
     _**Attributs :**_
 
-    - **id** : identifiant de la table.
-    - **name** : nom de l'utilisateur.
-    - **email** : email valide de l'utilisateur.
-    - **password** : mot de passe chiffré de l'utilisateur.
-    - **register_date** : date de création du compte.
-    - **admin** : 1 si l'utilisateur est admin sinon 0.
-    - **country_id** : identifiant du pays de l'utilisateur.
+    - **id** : identifiant de la table. _**(int)**_
+    - **name** : nom de l'utilisateur. _**(varchar)**_
+    - **email** : email valide de l'utilisateur. _**(varchar)**_
+    - **password** : mot de passe chiffré de l'utilisateur. _**(varchar)**_
+    - **register_date** : date de création du compte. _**(datetime)**_
+    - **admin** : 1 si l'utilisateur est admin sinon 0. _**(tinyint)**_
+    - **country_id** : identifiant du pays de l'utilisateur. _**(int)**_
     
     _**Contraintes :**_
 
@@ -273,8 +274,8 @@ Voici le schéma MCD de la base :
 
     _**Attributs :**_
 
-    - **user_id** : identifiant de l'utilisateur.
-    - **episode_id** : identifiant de l'épisode.
+    - **user_id** : identifiant de l'utilisateur. _**(int)**_
+    - **episode_id** : identifiant de l'épisode. _**(int)**_
 
     _**Contraintes :**_
 
@@ -291,8 +292,8 @@ Voici le schéma MCD de la base :
 
     _**Attributs :**_
 
-    - **user_id** : identifiant de l'utilisateur.
-    - **series_id** : identifiant de la serie.
+    - **user_id** : identifiant de l'utilisateur. _**(int)**_
+    - **series_id** : identifiant de la serie. _**(int)**_
 
     _**Contraintes :**_
 
