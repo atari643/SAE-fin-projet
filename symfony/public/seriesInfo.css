@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+#pageInfo{
+    display: flex;
+}
+#visual{
+    max-width: 25%;
+}
+#seriesTitle{
+    color: #e3f7f5;
+    font-size: 2rem;
+    font-family: 'Bebas Neue', cursive;
+    margin: 10px 0 0 14px;
+    text-shadow: 1px 1px 5px #000000;
+}
+#seriesPlot, .genre, #seriesDirector {
+    color: #e3f7f5;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+    width: calc(100% - 28px);
+    margin: 15px 0 0 14px;
+    text-align: justify;
+}
+nav{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    background-color: #e3f7f5;
+    margin: 0;
+    padding: 0;
+    flex-direction: column;
+}
+nav ul{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+nav ul li{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+nav ul li a {
+    transition: background-color 0.3s ease, color 0.3s ease;
+    color: black;
+    text-decoration: none;
+}
+
+nav ul li a:hover {
+    background-color: #f4f4f4;
+    color: blue;
+}
+
+#listeEpisode{
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+}
+#contentEpisode{
+    background-color: #f4f4f4;
+    width: 100%;
+}
+#contentEpisode li{
+    background-color: antiquewhite;
+    border-color: #000000 2px solid;
+    margin-bottom: 10px;
+    list-style: none;
+    width: 95%;
+}
+#episodeList li{
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
+}

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Episode;
 use App\Entity\Season;
 use App\Entity\Series;
 use Doctrine\ORM\EntityManagerInterface;
@@ -90,7 +91,8 @@ class IndexController extends AbstractController
             ->getRepository(Series::class)
             ->find($id);
         $seasons = $entityManager->getRepository(Season::class)->findBy(
-            ['series' => $series]
+            ['series' => $series],
+            ['number' => 'ASC']
         );
 
         $follow = false;
@@ -114,7 +116,29 @@ class IndexController extends AbstractController
         return $this->render('index/seriesInfo.html.twig', [
             'series' => $series,
             'seasons' => $seasons,
-            'follow' => $follow
+            'episodes' => null
+        ]);
+    }
+    #[Route('/series/{id}/{num}', name: 'app_index_season_info')]
+    public function seasonInfo(EntityManagerInterface $entityManager, int $id, int $num): Response
+    {
+        $series = $entityManager
+            ->getRepository(Series::class)
+            ->find($id);
+        $seasons = $entityManager->getRepository(Season::class)->findBy(
+            ['series' => $series],
+            ['number' => 'ASC']
+            
+        );
+        $episodes = $entityManager->getRepository(Episode::class)->findBy(
+            ['season' => $seasons[$num-1]],
+            ['number' => 'ASC']
+        );
+        
+        return $this->render('index/seriesInfo.html.twig', [
+            'series' => $series,
+            'seasons' => $seasons,
+            'episodes' => $episodes
         ]);
     }
 
