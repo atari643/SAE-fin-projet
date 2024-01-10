@@ -13,9 +13,9 @@
 
             {% for nb in 1..numberOfPages %}
                 {% if page == nb %}
-                    <a href="?page={{ nb }}"><p style="display: inline; font-weight: bold;">{{ nb }}</p></a>
+                    <a class="number" href="?page={{ nb }}"><p style="display: inline; font-weight: bold;">{{ nb }}</p></a>
                 {% else %}
-                    <a href="?page={{ nb }}"><p style="display: inline;">{{ nb }}</p></a>
+                    <a class="number" href="?page={{ nb }}"><p style="display: inline;">{{ nb }}</p></a>
                 {% endif %}
             {% endfor %}
 
