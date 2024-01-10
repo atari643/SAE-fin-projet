@@ -50,7 +50,7 @@ class Rating
         return $this->value;
     }
 
-    public function setValue(int $value): static
+    public function setValue(int $value): self
     {
         $this->value = $value;
 
@@ -62,7 +62,7 @@ class Rating
         return $this->comment;
     }
 
-    public function setComment(string $comment): static
+    public function setComment(string $comment): self
     {
         $this->comment = $comment;
 
@@ -74,7 +74,7 @@ class Rating
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): static
+    public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
 
@@ -86,7 +86,7 @@ class Rating
         return $this->user;
     }
 
-    public function setUser(?User $user): static
+    public function setUser(?User $user): self
     {
         $this->user = $user;
 
@@ -98,7 +98,7 @@ class Rating
         return $this->series;
     }
 
-    public function setSeries(?Series $series): static
+    public function setSeries(?Series $series): self
     {
         $this->series = $series;
 
