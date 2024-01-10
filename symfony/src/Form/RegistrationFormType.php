@@ -21,6 +21,7 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('country')
             ->add('email', EmailType::class, ['attr' => ['placeholder' => 'example@mail.com'],'constraints' => [
                 new NotBlank(['message' => 'Please enter a valid email',]),
                 //new Assert\Email(['message' => 'address must be valid',]),
