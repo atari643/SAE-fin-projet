@@ -17,6 +17,13 @@
             <hr>
             <div id="seriesPlot">Description : {{ series.plot }}</div>
             <hr>
+
+            {% if series.genre|length > 1 %}
+                <div id="seriesGenre">Genres : </div>
+            {% else %}
+                <div id="seriesGenre">Genre : </div>
+            {% endif %}
+
             {% for genre in series.genre %}
                 <p class="genre">{{ genre.name }}</p>
             {% endfor %}
