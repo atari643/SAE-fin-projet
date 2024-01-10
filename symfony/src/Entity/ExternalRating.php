@@ -40,7 +40,7 @@ class ExternalRating
         return $this->value;
     }
 
-    public function setValue(string $value): static
+    public function setValue(string $value): self
     {
         $this->value = $value;
 
@@ -52,7 +52,7 @@ class ExternalRating
         return $this->votes;
     }
 
-    public function setVotes(?int $votes): static
+    public function setVotes(?int $votes): self
     {
         $this->votes = $votes;
 
@@ -64,7 +64,7 @@ class ExternalRating
         return $this->source;
     }
 
-    public function setSource(?ExternalRatingSource $source): static
+    public function setSource(?ExternalRatingSource $source): self
     {
         $this->source = $source;
 
@@ -76,7 +76,7 @@ class ExternalRating
         return $this->series;
     }
 
-    public function setSeries(?Series $series): static
+    public function setSeries(?Series $series): self
     {
         $this->series = $series;
 
