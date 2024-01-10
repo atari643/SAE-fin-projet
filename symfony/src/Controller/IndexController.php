@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-
+use Symfony\Component\HttpFoundation\Session\Session;
 const SERIES_PER_PAGE = 10;
 
 class IndexController extends AbstractController
@@ -22,14 +22,16 @@ class IndexController extends AbstractController
         if($page == null){
             return $this->redirect('?page=1');
         }
-
+        
         $series = $entityManager
             ->getRepository(Series::class);
+
+        $seriesTotaliter = $series->findBy(array(), null,100);
         $series_limit = $series->findBy(array(), null, SERIES_PER_PAGE, SERIES_PER_PAGE*($page-1));
         $count = $series->createQueryBuilder('series')
-        ->select('count(series.id)')
-        ->getQuery()
-        ->getSingleScalarResult();
+            ->select('count(series.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
 
         $numberOfPages = $count/SERIES_PER_PAGE;
         if($count % SERIES_PER_PAGE != 0){
@@ -37,6 +39,7 @@ class IndexController extends AbstractController
         }
 
         return $this->render('index/index.php.twig', [
+            'seriesTotal'=>$seriesTotaliter,
             'series' => $series_limit,
             'numberOfPages' => $numberOfPages,
             'page' => $page,

@@ -8,6 +8,24 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
 <link rel="stylesheet" href="/style.css" />
 
 {% endblock %}
+{% block header %}
+    <header>
+        <div class="caroussel">
+            <div class="carousselChild">
+                {% for s in seriesTotal %}
+                <div class="carousselChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" >
+                    <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="affiche">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <h1>Vision Vibes</h1>
+        <div class="search">
+            <input type="text" placeholder="Search">
+            <span class="material-symbols-outlined">search</span>
+        </div>
+    </header>
+    {% endblock %}
 {% block body %}
     
     <div id="show">

@@ -19,6 +19,8 @@
 	</head>
 	<body data-onthispage={{ path(app.request.attributes.get('_route'),
      app.request.attributes.get('_route_params')) }}>
+        {% block header %}
+        {% endblock %}
 		<div id="menu">
 			<div id="parentItemMenuLeft">
 				<div class="itemMenu">

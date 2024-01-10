@@ -250,3 +250,48 @@ body {
 .paging input[type="submit"] {
     display: none;
 }
+header{
+    height: 75vh;
+    width: 80vw;
+    align-items: center;
+    text-align: center;
+}
+header>h1{
+    color: #cba848;
+    text-align: center;
+    font-size: 100px;
+    font-family: 'Bebas Neue', cursive;
+    text-shadow: 1px 1px 5px #000000;
+}
+.search{
+    align-items: center;
+}
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-250px * 10)); } /* Replace '10' with the actual value or valid CSS expression */
+}
+
+.caroussel {
+    display: flex;
+    height: 350px;
+    overflow: hidden;
+}
+
+.carousselChild {
+    display: flex;
+    animation: scroll 30s linear infinite;
+}
+
+.carousselChildSeries {
+    width: 250px;
+    height: 350px;
+    margin: 0 15px;
+    border-radius: 6px;
+    transition: cubic-bezier(.68, -0.55, .27, 1.55) 0.5s;
+    border: 1px solid transparent;
+
+}
+.affiche{
+    height: 100%;
+    width: 100%;
+}
