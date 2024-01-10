@@ -10,9 +10,7 @@
     <div id="pageInfo">
         <div id="visual">
             <img id="imagePoster" src="{{ path('app_series_poster',{id: series.id}) }}" alt='Series Poster'>
-            <a href="{{series.youtubeTrailer}}" target="_blank">
-                <img id="trailer" src="https://img.youtube.com/vi/{{series.youtubeTrailer|slice(32)}}/0.jpg" alt="Aperçu de la vidéo YouTube">
-            </a> 
+            <iframe id="trailer" src="{{ series.youtubeTrailer }}" frameborder="0" allowfullscreen autoplay></iframe>
         </div>   
         <div id="information">
             <div id="seriesTitle">Title : {{ series.title }}</div>
