@@ -49,8 +49,8 @@
         <div id="parentItemMenuRight">
             <div class="itemMenu" id="accountButton">
                 {% if not app.user %}
-                    <a href="{{ path('app_register') }}" class="button register" >Inscription</a>
-                    <a href="{{ path('app_login') }}" class="button connect">Connexion</a>
+                    <a href="{{ path('app_register') }}" class="button register" >Register</a>
+                    <a href="{{ path('app_login') }}" class="button connect">Sign in</a>
                 {% else %}
                     <span class="material-symbols-outlined">
                         account_circle

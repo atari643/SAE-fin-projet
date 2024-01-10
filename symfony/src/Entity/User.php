@@ -75,7 +75,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     //added (see TD4 Authentification)
     public function getUserIdentifier(): string { return $this->getEmail(); }
-    public function getRoles(): array { return ['ROLE_USER']; }
+    public function getRoles(): array {
+
+        if($this->isAdmin()){
+
+            return ['ROLE_ADMIN'];
+
+        }
+
+        return ['ROLE_USER'];
+
+    }
     public function eraseCredentials() { }
 
     public static function loadValidatorMetadata(ClassMetadata $metadata): void
