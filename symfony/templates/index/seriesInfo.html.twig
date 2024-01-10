@@ -27,8 +27,15 @@
     
     <nav>
         <ul>
+            {% set route = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) %}
+            {% set seasonNumber = route|slice(route|length-1, route|length) %}
+
             {% for s in seasons %}
-            <li ><a href="{{ path('app_index_season_info', {id: series.id, num: s.number}) }}">Season {{ s.number }}</a></li>
+                {% if s.number == seasonNumber %}
+                    <li ><a style="color: #cba848;" href="{{ path('app_index_season_info', {id: series.id, num: s.number}) }}">Season {{ s.number }}</a></li>
+                {% else %}
+                    <li ><a href="{{ path('app_index_season_info', {id: series.id, num: s.number}) }}">Season {{ s.number }}</a></li>
+                {% endif %}
             {% endfor %}
         </ul>
     </nav> 
@@ -36,7 +43,7 @@
         
         {% if episodes != null %}
             <h2 style="color:black">Episodes</h2>
-            <ul  id="episodeList">
+            <ul id="episodeList">
                 {% for episode in episodes %}
                     <li>{{ episode.number }} episode
                     <h2>{{ episode.title }}</h2>
