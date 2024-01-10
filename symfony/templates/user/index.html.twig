@@ -24,21 +24,11 @@
             <td><p style="display: inline;">{{ user.name }}</p></td>
             <td><p style="display: inline;">{{ user.registerDate|date('Y-m-d') }}</p></td>
             <td>
-                <select name="role" id="role" autocomplete="off" onchange="onSelectChange(this)" disabled>
-                    {% if user.admin == '0' %}
-                        <option value="{{ 0 ~ ' ' ~ user.id }}" selected>User</option>
-                        <option value="{{ 1 ~ ' ' ~ user.id }}">Admin</option>
-                        <option value="{{ 2 ~ ' ' ~ user.id }}" disabled="disabled">SuperAdmin</option>
-                    {% elseif user.admin == '1' %}
-                        <option value="{{ 0 ~ ' ' ~ user.id }}">User</option>
-                        <option value="{{ 1 ~ ' ' ~ user.id }}" selected>Admin</option>
-                        <option value="{{ 2 ~ ' ' ~ user.id }}" disabled="disabled">SuperAdmin</option>
-                    {% elseif user.admin == '2' %}
-                        <option value="{{ 0 ~ ' ' ~ user.id }}" disabled="disabled">User</option>
-                        <option value="{{ 1 ~ ' ' ~ user.id }}" disabled="disabled">Admin</option>
-                        <option value="{{ 2 ~ ' ' ~ user.id }}" disabled="disabled" selected>SuperAdmin</option>
-                    {% endif %}
-                </select>
+                {% if user.admin == '0' %}
+                    <p>User</p>
+                {% else %}
+                    <p>Admin</p>
+                {% endif %}
             </td>
             </tr>
         </tbody>
