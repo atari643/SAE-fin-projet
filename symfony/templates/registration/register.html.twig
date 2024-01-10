@@ -1,15 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Register{% endblock %}
-
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('/register-login.css') }}">
+{% endblock %}
+{% block javascripts %}
+{% endblock %}
 {% block body %}
     <h1>Register</h1>
 
-    {{ form_errors(registrationForm.email) }}
-    {{ form_errors(registrationForm.plainPassword) }}
     {{ form_errors(registrationForm) }}
 
-    {% if not registrationForm.vars.valid %}
+    {#% if not registrationForm.vars.valid %}
         <div class="alert alert-danger">
         {{ form_errors(registrationForm) }}
         {% for children in registrationForm.children %}
@@ -23,7 +25,7 @@
             {% endfor %}
         {% endfor %}
             </div>
-    {% endif %}
+    {% endif %#}
 
     {{ form_start(registrationForm) }}
         {{ form_row(registrationForm.email, {label: 'Email'}) }}

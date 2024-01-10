@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: "season", indexes: [
@@ -22,6 +23,13 @@ class Season
     #[ORM\JoinColumn(name: "series_id", referencedColumnName: "id")]
     private $series;
 
+    #[ORM\OneToMany(mappedBy: "season", targetEntity: "Episode")]
+    private Collection $episodes;
+
+
+    public function getEpisodes() : Collection{
+        return $this->episodes;
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -32,7 +40,7 @@ class Season
         return $this->number;
     }
 
-    public function setNumber(int $number): static
+    public function setNumber(int $number): self
     {
         $this->number = $number;
 
@@ -44,7 +52,7 @@ class Season
         return $this->series;
     }
 
-    public function setSeries(?Series $series): static
+    public function setSeries(?Series $series): self
     {
         $this->series = $series;
 

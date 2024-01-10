@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Episode;
 use App\Entity\Season;
 use App\Entity\Series;
 use Doctrine\ORM\EntityManagerInterface;
@@ -9,26 +10,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use App\Entity\User;
 
 const SERIES_PER_PAGE = 10;
 
 class IndexController extends AbstractController
 {
-
-    protected function getUser(): ?User
-    {
-        if (!$this->container->has('security.token_storage')) {
-            throw new \LogicException('The SecurityBundle is not registered in your application. Try running "composer require symfony/security-bundle".');
-        }
-
-        if (null === $token = $this->container->get('security.token_storage')->getToken()) {
-            return null;
-        }
-
-        return $token->getUser();
-    }
-
     #[Route('/', name: 'app_default', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -45,43 +31,17 @@ class IndexController extends AbstractController
         ->getQuery()
         ->getSingleScalarResult();
 
-        $numberOfPages = intdiv($count, SERIES_PER_PAGE);
+        $numberOfPages = $count/SERIES_PER_PAGE;
         if($count % SERIES_PER_PAGE != 0){
             $numberOfPages += 1;
         }
 
-
-        //if user is logged in : do below and uncomment. If not, do below and remove the comment
-        //$tokenInterface = $this->container->has('security.token_storage');//->getToken();
-        //$securityContext = $this->container->get('security.authorization_checker');
-        //if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-        /** @var User $user */
-        $user = $this->getUser();
-        /*if ($user->isAdmin()){
-            return $this->render('index/index.html.twig', [
-                'series' => $series_limit,
-                'numberOfPages' => $numberOfPages,
-                'page' => $page,
-                'admin' => 1,
-            ]);
-        }
-        else{
-            return $this->render('index/index.html.twig', [
-                'series' => $series_limit,
-                'numberOfPages' => $numberOfPages,
-                'page' => $page,
-                'admin' => 0,
-            ]);
-        }*/
-        
         return $this->render('index/index.php.twig', [
             'series' => $series_limit,
             'numberOfPages' => $numberOfPages,
             'page' => $page,
         ]);
     }
-    
-    
 
     #[Route('/series/{id}', name: 'app_index_series_info')]
     public function seriesInfo(EntityManagerInterface $entityManager, int $id): Response
@@ -90,11 +50,35 @@ class IndexController extends AbstractController
             ->getRepository(Series::class)
             ->find($id);
         $seasons = $entityManager->getRepository(Season::class)->findBy(
-            ['series' => $series]
+            ['series' => $series],
+            ['number' => 'ASC']
         );
         return $this->render('index/seriesInfo.html.twig', [
             'series' => $series,
-            'seasons' => $seasons
+            'seasons' => $seasons,
+            'episodes' => null
+        ]);
+    }
+    #[Route('/series/{id}/{num}', name: 'app_index_season_info')]
+    public function seasonInfo(EntityManagerInterface $entityManager, int $id, int $num): Response
+    {
+        $series = $entityManager
+            ->getRepository(Series::class)
+            ->find($id);
+        $seasons = $entityManager->getRepository(Season::class)->findBy(
+            ['series' => $series],
+            ['number' => 'ASC']
+            
+        );
+        $episodes = $entityManager->getRepository(Episode::class)->findBy(
+            ['season' => $seasons[$num-1]],
+            ['number' => 'ASC']
+        );
+        
+        return $this->render('index/seriesInfo.html.twig', [
+            'series' => $series,
+            'seasons' => $seasons,
+            'episodes' => $episodes
         ]);
     }
 
@@ -104,7 +88,8 @@ class IndexController extends AbstractController
         $series = $entityManager
             ->find(Series::class, $id);
         header('Content-Type: image/jpeg');
-        $response = new Response(Response::HTTP_OK);
+        $response = new Response(
+            'Content-Type', Response::HTTP_OK, ['content-type' => 'image/jpeg']);
         $response->setContent(stream_get_contents($series->getPoster()));
         return $response;
     }

@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Utilisateurs{% endblock %}
+{% block title %}Paging{% endblock %}
 
 {% block body %}
     {% block paging %}
         <div class="paging">
-            {% if page - 1 < 0 %}
-                <a href="?page={{ page - 1 }}"><p style="display: inline;">Précédent</p></a>
+            {% if page - 1 > 0 %}
+                <a href="?page={{ page - 1 }}"><p style="display: inline;">Previous</p></a>
             {% else %}
-                <a href="?page={{ page }}"><p style="display: inline;">Précédent</p></a>
+                <a href="?page={{ page }}"><p style="display: inline;">Previous</p></a>
             {% endif %}
 
             {% for nb in 1..numberOfPages %}
@@ -19,15 +19,15 @@
                 {% endif %}
             {% endfor %}
 
-            {% if page + 1 < numberOfPages %}
-                <a href="?page={{ page + 1 }}"><p style="display: inline;">Suivant</p></a>
+            {% if page + 1 <= numberOfPages %}
+                <a href="?page={{ page + 1 }}"><p style="display: inline;">Next</p></a>
             {% else %}
-                <a href="?page={{ page }}"><p style="display: inline;">Suivant</p></a>
+                <a href="?page={{ page }}"><p style="display: inline;">Next</p></a>
             {% endif %}
 
             <form style="display: inline;">
                 <input name="page" type="number" min="1" max="{{ numberOfPages }}" placeholder="Page" required />
-                <input type="submit" hidden />
+                <input onClick="window.location.href = '?page=' + this.previousElementSibling.value; window.location.reload" type="button" value="Go">            
             </form>
         </div>
     {% endblock %}

@@ -26,14 +26,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(name: "name", type: "string", length: 128, nullable: false)]
     private $name;
-    
+
     #[ORM\Column(name: "email", type: "string", length: 128, nullable: false)]
-    #[Assert\NotBlank(message:'Empty emailAdress')]
-    #[Assert\Email(message: 'Invalid e-mail address.')]
+    #[Assert\NotBlank(message:'Empty email address')]
+    #[Assert\Email(message: 'Invalid email address')]
+    #[Assert\Length(min:5, minMessage: 'email address must be valid')]
     private $email;
 
     #[ORM\Column(name: "password", type: "string", length: 128, nullable: false)]
-    #[Assert\NotBlank(message:'Empty password')]
+    /*#[Assert\NotBlank(message:'Empty paaaassword')]*/
     #[Assert\Length(min: 6, minMessage: 'Password must be at least 6 characters long')]
     private $password;
 
@@ -74,16 +75,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     //added (see TD4 Authentification)
     public function getUserIdentifier(): string { return $this->getEmail(); }
-    public function getRoles(): array { 
-
-        if($this->isAdmin()){
-
-            return ['ROLE_ADMIN']; 
-
-        }
-
-        return ['ROLE_USER']; 
-    }
+    public function getRoles(): array { return ['ROLE_USER']; }
     public function eraseCredentials() { }
 
     public static function loadValidatorMetadata(ClassMetadata $metadata): void
@@ -93,8 +85,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'message' => 'This email was already used to register an account.',
         ]));
 
-        $metadata->addPropertyConstraint('email', new Assert\Email());
+        //$metadata->addPropertyConstraint('email', new Assert\Email(message: 'Invalid email address'));
     }
+
 
     public function getId(): ?int
     {
@@ -106,7 +99,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -118,7 +111,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -130,19 +123,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
         return $this;
     }
 
-    public function getRegisterDate(): ?\DateTimeInterface
+    public function getRegisterDate()
     {
         return $this->registerDate;
     }
 
-    public function setRegisterDate(?\DateTimeInterface $registerDate): static
+    public function setRegisterDate($registerDate): self
     {
         $this->registerDate = $registerDate;
 
@@ -154,7 +147,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->admin;
     }
 
-    public function setAdmin(bool $admin): static
+    public function setAdmin(bool $admin): self
     {
         $this->admin = $admin;
 
@@ -166,7 +159,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->country;
     }
 
-    public function setCountry(?Country $country): static
+    public function setCountry(?Country $country): self
     {
         $this->country = $country;
 
@@ -181,7 +174,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->series;
     }
 
-    public function addSeries(Series $series): static
+    public function addSeries(Series $series): self
     {
         if (!$this->series->contains($series)) {
             $this->series->add($series);
@@ -190,7 +183,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeSeries(Series $series): static
+    public function removeSeries(Series $series): self
     {
         $this->series->removeElement($series);
 
@@ -205,7 +198,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->episode;
     }
 
-    public function addEpisode(Episode $episode): static
+    public function addEpisode(Episode $episode): self
     {
         if (!$this->episode->contains($episode)) {
             $this->episode->add($episode);
@@ -214,7 +207,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeEpisode(Episode $episode): static
+    public function removeEpisode(Episode $episode): self
     {
         $this->episode->removeElement($episode);
 
