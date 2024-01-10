@@ -78,6 +78,7 @@ function makeAccountNav() {
     accountNav.innerHTML = '<span class="material-symbols-outlined">logout</span><a href="{{ path('app_logout') }}">Logout</a>';
     return accountNav;
 }
+const suivieButton = document.querySelector('#suivieButton');
 suivieButton.addEventListener('click', function () {
     if (suivieButton.querySelector('span').innerHTML == 'heart_plus') {
         suivieButton.querySelector('span').innerHTML = 'heart_check';
