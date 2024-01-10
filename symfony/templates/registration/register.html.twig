@@ -5,15 +5,25 @@
 {% block body %}
     <h1>Register</h1>
 
-    {% if not registrationForm.vars['valid'] %}
-
-    L'email ou le mot de passe est invalide
-
-    {% endif %}
-
     {{ form_errors(registrationForm.email) }}
     {{ form_errors(registrationForm.plainPassword) }}
     {{ form_errors(registrationForm) }}
+
+    {% if not registrationForm.vars.valid %}
+        <div class="alert alert-danger">
+        {{ form_errors(registrationForm) }}
+        {% for children in registrationForm.children %}
+            {% if not children.vars.valid %}
+                {{ form_errors(children) }}
+            {% endif %}
+            {% for child in children %}
+                {% if not child.vars.valid %}
+                    {{ form_errors(child) }}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+            </div>
+    {% endif %}
 
     {{ form_start(registrationForm) }}
         {{ form_row(registrationForm.email, {label: 'Email'}) }}

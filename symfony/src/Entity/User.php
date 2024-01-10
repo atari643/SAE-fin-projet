@@ -28,9 +28,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $name;
     
     #[ORM\Column(name: "email", type: "string", length: 128, nullable: false)]
+    #[Assert\NotBlank(message:'Empty emailAdress')]
+    #[Assert\Email(message: 'Invalid e-mail address.')]
     private $email;
 
     #[ORM\Column(name: "password", type: "string", length: 128, nullable: false)]
+    #[Assert\NotBlank(message:'Empty password')]
+    #[Assert\Length(min: 6, minMessage: 'Password must be at least 6 characters long')]
     private $password;
 
     #[ORM\Column(name: "register_date", type: "datetime", nullable: true)]
