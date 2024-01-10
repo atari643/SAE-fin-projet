@@ -1,0 +1,28 @@
+{% extends './utils/paging.html.twig' %}
+
+{% block title %}Utilisateurs{% endblock %}
+
+{% block body %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <h1>Followed series</h1>
+
+    <table style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
+        <thead>
+            <tr>
+                <td>Poster</td>
+                <td>Title</td>
+                <td>Link</td>
+            </tr>
+        </thead>
+        {% for s in series %}
+        <tbody>
+            <tr class="series">
+            <td><img src="{{ path('app_series_poster',{id: s.id}) }}" style="width: 8%;"></td>
+            <td><p style="display: inline;">{{ s.title }}</p></td>
+            <td><a href="{{ path('app_index_series_info',{id: s.id}) }}"><p>Go to page</p></a></td>
+            </tr>
+        </tbody>
+    {% endfor %}
+    </table>
+{% endblock %}

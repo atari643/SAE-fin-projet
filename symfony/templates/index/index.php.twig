@@ -8,7 +8,6 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
 <link rel="stylesheet" href="/style.css" />
 
 {% endblock %}
-
 {% block body %}
     
     <div id="show">
@@ -49,10 +48,10 @@ for (let i = 0; i < series.length; i++) {
     });
     
 }
-const page = document.querySelectorAll('a');
+const page = document.querySelectorAll('.number');
         for (let j = 0; j < page.length; j++) {
             page[j].addEventListener('click', function () {
-                window.location.reload();
+                window.location.href = '?page=' + (j+1) ;
             });
         }
 
