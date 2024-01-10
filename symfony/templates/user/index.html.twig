@@ -5,6 +5,7 @@
 {% block body %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/css/users.css" />
 
     <h1>Users List</h1>
 
@@ -28,22 +29,13 @@
             Impersonate</a>
             </button></form></td>
             <td>
-                <select name="role" id="role" autocomplete="off" onchange="onSelectChange(this)" disabled>
-                    {% if user.admin == '0' %}
-                        <option value="{{ 0 ~ ' ' ~ user.id }}" selected>User</option>
-                        <option value="{{ 1 ~ ' ' ~ user.id }}">Admin</option>
-                        <option value="{{ 2 ~ ' ' ~ user.id }}" disabled="disabled">SuperAdmin</option>
-                    {% elseif user.admin == '1' %}
-                        <option value="{{ 0 ~ ' ' ~ user.id }}">User</option>
-                        <option value="{{ 1 ~ ' ' ~ user.id }}" selected>Admin</option>
-                        <option value="{{ 2 ~ ' ' ~ user.id }}" disabled="disabled">SuperAdmin</option>
-                    {% elseif user.admin == '2' %}
-                        <option value="{{ 0 ~ ' ' ~ user.id }}" disabled="disabled">User</option>
-                        <option value="{{ 1 ~ ' ' ~ user.id }}" disabled="disabled">Admin</option>
-                        <option value="{{ 2 ~ ' ' ~ user.id }}" disabled="disabled" selected>SuperAdmin</option>
-                    {% endif %}
-                </select>
+                {% if user.admin == '0' %}
+                    <p>User</p>
+                {% else %}
+                    <p>Admin</p>
+                {% endif %}
             </td>
+            <td class="embody"><span style="display: inline;" class="material-symbols-outlined">login</span>Embody</td>
             </tr>
         </tbody>
     {% endfor %}

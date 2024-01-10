@@ -1,0 +1,24 @@
+.embody{
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    padding: 5px 8px;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    color: #cba848;
+    font-family: 'Roboto', sans-serif;
+    border-radius: 5px;
+    background-color: #e3f7f5;
+    cursor: pointer;
+    transition: 0.5s;
+    font-size: 0.9rem;
+    border: 2px solid #cba848;
+}
+
+.embody:hover {
+
+    color: #e3f7f5;
+    background-color: #cba848;
+
+}
