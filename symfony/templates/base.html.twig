@@ -55,9 +55,7 @@
 						<a href="{{ path('app_register') }}" class="button register">Register</a>
 						<a href="{{ path('app_login') }}" class="button connect">Sign in</a>
 					{% else %}
-						<span class="material-symbols-outlined">
-							account_circle
-						</span>
+						<img src="https://ui-avatars.com/api/?name={{ app.user.name }}&size=32&background=random&rounded=true">
 					{% endif %}
 				</div>
 			</div>
