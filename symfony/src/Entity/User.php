@@ -28,9 +28,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $name;
 
     #[ORM\Column(name: "email", type: "string", length: 128, nullable: false)]
-    #[Assert\NotBlank(message:'Empty email address')]
+    /*#[Assert\NotBlank(message:'Empty email address')]
     #[Assert\Email(message: 'Invalid email address')]
-    #[Assert\Length(min:5, minMessage: 'email address must be valid')]
+    #[Assert\Length(min:5, minMessage: 'email address must be valid')]*/
     private $email;
 
     #[ORM\Column(name: "password", type: "string", length: 128, nullable: false)]
@@ -85,7 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'message' => 'This email was already used to register an account.',
         ]));
 
-        $metadata->addPropertyConstraint('email', new Assert\Email(['message' => 'Invalid email address',]));
+        $metadata->addPropertyConstraint('email', new Assert\Email(['message' => 'The email address is invalid',]));
     }
 
 
