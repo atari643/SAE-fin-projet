@@ -9,6 +9,10 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
 
 {% endblock %}
 {% block body %}
+
+{% if is_granted('IS_IMPERSONATOR') %}
+    <a href="{{ impersonation_exit_path(path('app_login') ) }}">Exit impersonation</a>
+{% endif %}
     
     <div id="show">
     {% for s in series %}
