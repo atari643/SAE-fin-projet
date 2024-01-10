@@ -17,16 +17,18 @@
     <body>
     <div id="menu">
         <div id="parentItemMenuLeft">
-            <div class="itemMenu">
-                <span class="material-symbols-outlined">
-                    preview
-                </span>
-            </div>
-            <div class="itemMenu">
-                <span class="material-symbols-outlined" onClick="window.location.href = '/users'">
-                    groups
-                </span>
-            </div>
+            {% if app.user != null and app.user.admin %}
+                <div class="itemMenu">
+                    <span class="material-symbols-outlined">
+                        preview
+                    </span>
+                </div>
+                <div class="itemMenu">
+                    <span class="material-symbols-outlined" onClick="window.location.href = '/users'">
+                        groups
+                    </span>
+                </div>
+            {% endif %}
         </div>
         <div id="parentItemMenuCenter">
             <div class="itemMenu onThisPage">
