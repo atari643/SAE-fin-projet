@@ -92,9 +92,29 @@ class IndexController extends AbstractController
         $seasons = $entityManager->getRepository(Season::class)->findBy(
             ['series' => $series]
         );
+
+        $follow = false;
+        $user = $this->getUser();
+
+        $i = 0;
+        $end = false;
+        $seriesToFind = null;
+        while(!$end && $i < $user->getSeries()->count()){
+            if($user->getSeries()[$i]->getId() == $id){
+                $seriesToFind = $user->getSeries()[$i];
+                $end = true;
+            }
+            $i++;
+        }
+
+        if($seriesToFind != null){
+            $follow = true;
+        }
+
         return $this->render('index/seriesInfo.html.twig', [
             'series' => $series,
-            'seasons' => $seasons
+            'seasons' => $seasons,
+            'follow' => $follow
         ]);
     }
 
@@ -103,8 +123,11 @@ class IndexController extends AbstractController
     {
         $series = $entityManager
             ->find(Series::class, $id);
-        header('Content-Type: image/jpeg');
-        $response = new Response(Response::HTTP_OK);
+        $response = new Response(
+            'Content-Type',
+            Response::HTTP_OK,
+            ['content-type' => 'image/jpeg']
+        );
         $response->setContent(stream_get_contents($series->getPoster()));
         return $response;
     }

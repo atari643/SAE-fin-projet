@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Utilisateurs{% endblock %}
+{% block title %}Paging{% endblock %}
 
 {% block body %}
     {% block paging %}
         <div class="paging">
             {% if page - 1 < 0 %}
-                <a href="?page={{ page - 1 }}"><p style="display: inline;">Précédent</p></a>
+                <a href="?page={{ page - 1 }}"><p style="display: inline;">Previous</p></a>
             {% else %}
-                <a href="?page={{ page }}"><p style="display: inline;">Précédent</p></a>
+                <a href="?page={{ page }}"><p style="display: inline;">Previous</p></a>
             {% endif %}
 
             {% for nb in 1..numberOfPages %}
@@ -20,9 +20,9 @@
             {% endfor %}
 
             {% if page + 1 < numberOfPages %}
-                <a href="?page={{ page + 1 }}"><p style="display: inline;">Suivant</p></a>
+                <a href="?page={{ page + 1 }}"><p style="display: inline;">Next</p></a>
             {% else %}
-                <a href="?page={{ page }}"><p style="display: inline;">Suivant</p></a>
+                <a href="?page={{ page }}"><p style="display: inline;">Next</p></a>
             {% endif %}
 
             <form style="display: inline;">
