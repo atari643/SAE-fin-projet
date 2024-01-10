@@ -27,7 +27,7 @@ class Series
     #[ORM\Column(name: "imdb", type: "string", length: 128, nullable: false)]
     private $imdb;
 
-    #[ORM\Column(name: "poster", type: "blob", length: 0, nullable: true)]
+    #[ORM\Column(name: "poster", type: "blob", nullable: true)]
     private $poster;
 
     #[ORM\Column(name: "director", type: "string", length: 128, nullable: true)]
@@ -45,6 +45,7 @@ class Series
     #[ORM\Column(name: "year_end", type: "integer", nullable: true)]
     private $yearEnd;
 
+
     #[ORM\ManyToMany(targetEntity: "User", mappedBy: "series")]
     private $user = array();
 
@@ -57,6 +58,11 @@ class Series
     #[ORM\ManyToMany(targetEntity: "Country", mappedBy: "series")]
     private $country = array();
 
+
+    #[ORM\OneToMany(mappedBy: "series", targetEntity: "Season")]
+    #[ORM\OrderBy(["number" => "ASC"])]
+    private Collection $seasons;
+
     /**
      * Constructor
      */
@@ -66,6 +72,7 @@ class Series
         $this->genre = new \Doctrine\Common\Collections\ArrayCollection();
         $this->actor = new \Doctrine\Common\Collections\ArrayCollection();
         $this->country = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->seasons = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -123,7 +130,7 @@ class Series
 
     public function getYoutubeTrailer(): ?string
     {
-        return $this->youtubeTrailer;
+        return str_replace("www.youtube.com/watch?v=", "www.youtube.com/embed/", $this->youtubeTrailer);
     }
 
     public function setYoutubeTrailer(?string $youtubeTrailer): self
@@ -168,7 +175,12 @@ class Series
 
         return $this;
     }
+    public function setPosterFromUrl(string $url): static
+    {
+        $this->poster = file_get_contents($url);
 
+        return $this;
+    }
     /**
      * @return Collection<int, User>
      */
@@ -285,6 +297,36 @@ class Series
     public function setPoster($poster): static
     {
         $this->poster = $poster;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Season>
+     */
+     public function getSeasons(): Collection
+    {
+        return $this->seasons;
+    }
+
+    public function addSeason(Season $season): static
+    {
+        if (!$this->seasons->contains($season)) {
+            $this->seasons->add($season);
+            $season->setSeries($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSeason(Season $season): static
+    {
+        if ($this->seasons->removeElement($season)) {
+            // set the owning side to null (unless already changed)
+            if ($season->getSeries() === $this) {
+                $season->setSeries(null);
+            }
+        }
 
         return $this;
     }

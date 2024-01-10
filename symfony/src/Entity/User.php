@@ -6,13 +6,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity; //under the assumption that the user must be unique
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Table(name: "user", uniqueConstraints: [
     new ORM\UniqueConstraint(name: "UNIQ_8D93D649E7927C74", columns: ["email"]),
     new ORM\UniqueConstraint(name: "IDX_8D93D649F92F3E70", columns: ["country_id"]),
 ])]
 #[ORM\Entity]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Column(name: "id", type: "integer", nullable: false)]
     #[ORM\Id]
@@ -23,9 +28,14 @@ class User
     private $name;
 
     #[ORM\Column(name: "email", type: "string", length: 128, nullable: false)]
+    #[Assert\NotBlank(message:'Empty email address')]
+    #[Assert\Email(message: 'Invalid email address')]
+    #[Assert\Length(min:5, minMessage: 'email address must be valid')]
     private $email;
 
     #[ORM\Column(name: "password", type: "string", length: 128, nullable: false)]
+    /*#[Assert\NotBlank(message:'Empty paaaassword')]*/
+    #[Assert\Length(min: 6, minMessage: 'Password must be at least 6 characters long')]
     private $password;
 
     #[ORM\Column(name: "register_date", type: "datetime", nullable: true)]
@@ -33,9 +43,6 @@ class User
 
     #[ORM\Column(name: "admin", type: "boolean", nullable: false)]
     private $admin = '0';
-
-    #[ORM\Column(name: "user_id", type: "string", length: 128, nullable: true)]
-    private $userId;
 
     #[ORM\ManyToOne(targetEntity: "Country")]
     #[ORM\JoinColumn(name: "country_id", referencedColumnName: "id")]
@@ -49,7 +56,7 @@ class User
     )]
     private $series = array();
 
-    #[ORM\ManyToMany(targetEntity: "Episode", inversedBy: "genre")]
+    #[ORM\ManyToMany(targetEntity: "Episode")]
     #[ORM\JoinTable(
         name: "user_episode",
         joinColumns: [new ORM\JoinColumn(name: "user_id", referencedColumnName: "id")],
@@ -65,6 +72,32 @@ class User
         $this->series = new \Doctrine\Common\Collections\ArrayCollection();
         $this->episode = new \Doctrine\Common\Collections\ArrayCollection();
     }
+
+    //added (see TD4 Authentification)
+    public function getUserIdentifier(): string { return $this->getEmail(); }
+    public function getRoles(): array {
+
+        if($this->isAdmin()){
+
+            return ['ROLE_ADMIN'];
+
+        }
+
+        return ['ROLE_USER'];
+
+    }
+    public function eraseCredentials() { }
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata): void
+    {
+        $metadata->addConstraint(new UniqueEntity([
+            'fields' => 'email',
+            'message' => 'This email was already used to register an account.',
+        ]));
+
+        //$metadata->addPropertyConstraint('email', new Assert\Email(message: 'Invalid email address'));
+    }
+
 
     public function getId(): ?int
     {
@@ -127,18 +160,6 @@ class User
     public function setAdmin(bool $admin): self
     {
         $this->admin = $admin;
-
-        return $this;
-    }
-
-    public function getUserId(): ?string
-    {
-        return $this->userId;
-    }
-
-    public function setUserId(?string $userId): self
-    {
-        $this->userId = $userId;
 
         return $this;
     }

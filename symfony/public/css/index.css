@@ -1,0 +1,17 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+body {
+
+    background-color: #221F1F;
+    color: #e3f7f5;
+    font-family: 'Roboto';
+
+}
+
+table {
+
+    width: 100%;
+    margin: 2%;
+
+}

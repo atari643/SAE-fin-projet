@@ -1,0 +1,125 @@
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background-color: #221F1F;
+    display: flex;
+    flex-direction: column;
+    padding: 5px 10% 0 10%;
+    width: 80%;
+    height: fit-content;
+    align-items: center;
+    gap: 40px;
+}
+
+#menu {
+    display: flex;
+    flex-direction: row;
+    height: fit-content;
+    width: 100%;
+    align-items: end;
+    justify-content: space-between;
+    border-bottom: 1px solid #cba848;
+    padding-bottom: 10px;
+}
+
+.itemMenu{
+    color: #cba848;
+    padding: 5px;
+    border-radius: 5px;
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    transition: 0.35s;
+}
+
+.itemMenu>span {
+    font-size: 2rem;
+}
+
+.itemMenu:hover{
+    background-color: hsl(347, 79%, 30%, 30%);
+    cursor: pointer;
+    color: #e3f7f5;
+}
+
+#parentItemMenuLeft,
+#parentItemMenuCenter,
+#parentItemMenuRight {
+    display: flex;
+    gap: 5px;
+    flex-direction: row;
+    width: fit-content;
+    height: fit-content;
+}
+
+#parentItemMenuRight{
+    gap: 5px;
+    flex-direction: column;
+    align-items: end;
+}
+
+
+
+.onThisPage {
+    background-color: hsl(347, 79%, 30%, 30%);
+    color: #e3f7f5;
+}
+
+.suivieButtonadd {
+    margin-top: 2px;
+    color: #e3f7f5;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+#accountButton {
+    align-items: center;
+    font-family: 'Roboto', sans-serif;
+    gap: 4px;
+    padding: 5px 8px;
+    display: flex;
+}
+
+.déconnecter{
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    padding: 5px 8px;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    font-family: 'Roboto', sans-serif;
+    border-radius: 5px;
+    background-color: #88ddd5;
+    cursor: pointer;
+    transition: 0.4s;
+    font-size: 0.9rem;
+}
+
+.déconnecter>span{
+    font-size: 1.5rem;
+}
+
+.déconnecter:active{
+    scale: 0.95;
+}
+
+#parentItemMenuRight>div>a{
+    text-decoration: none;
+    color: #cba848;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    transition: 0.4s;
+}
+
+#parentItemMenuRight>div>a:hover{
+    color: #e3f7f5;
+}

@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('/register-login.css') }}">
+{% endblock %}
+{% block javascripts %}
+{% endblock %}
+{% block body %}
+    <h1>Register</h1>
+
+    {{ form_errors(registrationForm) }}
+
+    {#% if not registrationForm.vars.valid %}
+        <div class="alert alert-danger">
+        {{ form_errors(registrationForm) }}
+        {% for children in registrationForm.children %}
+            {% if not children.vars.valid %}
+                {{ form_errors(children) }}
+            {% endif %}
+            {% for child in children %}
+                {% if not child.vars.valid %}
+                    {{ form_errors(child) }}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+            </div>
+    {% endif %#}
+
+    {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.email, {label: 'Email'}) }}
+        
+        {{ form_row(registrationForm.plainPassword, {
+            label: 'Password'
+        }) }}
+        {{ form_row(registrationForm.agreeTerms) }}
+
+        <button type="submit" class="btn">Register</button>
+    {{ form_end(registrationForm) }}
+{% endblock %}
