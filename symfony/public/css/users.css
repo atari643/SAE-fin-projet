@@ -1,4 +1,4 @@
-.embody{
+.impersonate{
     display: flex;
     flex-direction: row;
     margin: 0;
@@ -16,7 +16,7 @@
     border: 2px solid #cba848;
 }
 
-.embody:hover {
+.impersonate:hover {
 
     color: #e3f7f5;
     background-color: #cba848;

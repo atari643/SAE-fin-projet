@@ -15,7 +15,6 @@
                 <td></td>
                 <td>Email</td>
                 <td>Creation Date</td>
-                <td>Impersonate User</td>
                 <td>Role</td>
             </tr>
         </thead>
@@ -25,9 +24,6 @@
             <td><img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random&rounded=true" style="display: inline;"></td>
             <td><p style="display: inline;">{{ user.name }}</p></td>
             <td><p style="display: inline;">{{ user.registerDate|date('Y-m-d') }}</p></td>
-            <td><a href="http://localhost:8000/?page=1&_switch_user={{user.name}}">
-            Impersonate</a>
-            </button></form></td>
             <td>
                 {% if user.admin == '0' %}
                     <p>User</p>
@@ -35,7 +31,7 @@
                     <p>Admin</p>
                 {% endif %}
             </td>
-            <td class="embody"><span style="display: inline;" class="material-symbols-outlined">login</span>Embody</td>
+            <td class="impersonate"><a href="http://localhost:8000/?page=1&_switch_user={{user.name}}"><span style="display: inline;" class="material-symbols-outlined">login</span>Impersonate</a></td>
             </tr>
         </tbody>
     {% endfor %}
