@@ -27,7 +27,6 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
     {{ block('paging') }}
     
     <script>
-        
         const series = document.getElementsByClassName('showChildSeries');
 const seriesPoster = document.getElementsByClassName('posters');
 for (let i = 0; i < series.length; i++) {
@@ -56,6 +55,7 @@ const page = document.querySelectorAll('a');
                 location.reload();
             });
         }
+
 
 function posterHover(i) {
     const overlay = document.createElement('div');
@@ -170,4 +170,5 @@ function makeBannerLeft(poster, posterImg) {
     }
 }
         </script>
+
 {% endblock %}
