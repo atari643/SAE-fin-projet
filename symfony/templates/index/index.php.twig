@@ -12,11 +12,7 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
     
     <div id="show">
     {% for s in series %}
-            {% set totalEpisodes = 0 %}
-            {% for e in s.getSeasons %}
-                {% set totalEpisodes = totalEpisodes + e.getEpisodes.count %} 
-            {% endfor %}
-            <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.getSeasons.count }} Seasons | {{ totalEpisodes }} Episodes" data-avis="4"
+            <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="4"
             data-resum="{{s.plot}}">
             <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="posters">
             </div>

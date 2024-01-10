@@ -6,6 +6,7 @@ use App\Entity\Episode;
 use App\Entity\Season;
 use App\Entity\Series;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr\Join;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,8 +37,36 @@ class IndexController extends AbstractController
             $numberOfPages += 1;
         }
 
+        $series_infos = [];
+
+        for($i=0; $i < sizeof($series_limit); $i++){
+            $current_series = $series_limit[$i];
+            $infos = [];
+            $infos['id'] = $current_series->getId();
+            $infos['title'] = $current_series->getTitle();
+            $infos['plot'] = $current_series->getPlot();
+            $infos['rating'] = $current_series->getImdb();
+
+            $qb = $entityManager->createQueryBuilder();
+            $result = $qb
+                ->select(['count(DISTINCT(season.number)) as s_count',
+                        'count(episode.number) as e_count'])
+                ->from('App:Series','series')
+                ->innerJoin('App:Season', 'season',
+                    Join::WITH, 'series = season.series')
+                ->innerJoin('App:Episode', 'episode',
+                    Join::WITH, 'season = episode.season')
+                ->where('series.id = '.$infos['id'])
+                ->getQuery()
+                ->getSingleResult();
+
+            $infos['episode_count'] = $result['e_count'];
+            $infos['season_count'] = $result['s_count'];
+            $series_infos[] = $infos;
+        }
+
         return $this->render('index/index.php.twig', [
-            'series' => $series_limit,
+            'series' => $series_infos,
             'numberOfPages' => $numberOfPages,
             'page' => $page,
         ]);
