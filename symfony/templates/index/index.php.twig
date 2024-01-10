@@ -25,7 +25,7 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
     </div>
 
     <div class="paging">
-        {% if page - 1 < 0 %}
+        {% if page - 1 > 0 %}
             <a href="?page={{ page - 1 }}"><p style="display: inline;">Précédent</p></a>
         {% else %}
             <a href="?page={{ page }}"><p style="display: inline;">Précédent</p></a>
@@ -46,8 +46,8 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
         {% endif %}
 
         <form style="display: inline;">
-            <input name="page" type="number" min="1" max="{{ numberOfPages }}" placeholder="Page" required />
-            <input type="submit" hidden />
+            <input type="number" name="page" min="1" max="{{ numberOfPages }}" value="{{ page }}" style="width: 50px;">
+            <input onClick="window.location.href = '?page=' + this.previousElementSibling.value; location.reload" type="button" value="Go">
         </form>
     </div>
     <script>
@@ -71,7 +71,15 @@ for (let i = 0; i < series.length; i++) {
         }
         makeBannerLeft(series[i], seriesPoster[i]);
     });
+    
 }
+const page = document.querySelectorAll('a');
+        for (let j = 0; j < page.length; j++) {
+            page[j].addEventListener('click', function () {
+                location.reload();
+            });
+        }
+
 
 function posterHover(i) {
     const overlay = document.createElement('div');
@@ -186,4 +194,5 @@ function makeBannerLeft(poster, posterImg) {
     }
 }
         </script>
+
 {% endblock %}
