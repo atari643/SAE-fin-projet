@@ -27,7 +27,7 @@
 
             <form style="display: inline;">
                 <input name="page" type="number" min="1" max="{{ numberOfPages }}" placeholder="Page" required />
-                <input type="submit" hidden />
+                <input onClick="window.location.href = '?page=' + this.previousElementSibling.value; window.location.reload" type="button" value="Go">            
             </form>
         </div>
     {% endblock %}
