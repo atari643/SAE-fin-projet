@@ -85,7 +85,7 @@ class Series
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(string $title): static
     {
         $this->title = $title;
 
@@ -97,7 +97,7 @@ class Series
         return $this->plot;
     }
 
-    public function setPlot(?string $plot): self
+    public function setPlot(?string $plot): static
     {
         $this->plot = $plot;
 
@@ -109,7 +109,7 @@ class Series
         return $this->imdb;
     }
 
-    public function setImdb(string $imdb): self
+    public function setImdb(string $imdb): static
     {
         $this->imdb = $imdb;
 
@@ -121,7 +121,7 @@ class Series
         return $this->director;
     }
 
-    public function setDirector(?string $director): self
+    public function setDirector(?string $director): static
     {
         $this->director = $director;
 
@@ -133,7 +133,7 @@ class Series
         return $this->youtubeTrailer;
     }
 
-    public function setYoutubeTrailer(?string $youtubeTrailer): self
+    public function setYoutubeTrailer(?string $youtubeTrailer): static
     {
         $this->youtubeTrailer = $youtubeTrailer;
 
@@ -145,7 +145,7 @@ class Series
         return $this->awards;
     }
 
-    public function setAwards(?string $awards): self
+    public function setAwards(?string $awards): static
     {
         $this->awards = $awards;
 
@@ -157,7 +157,7 @@ class Series
         return $this->yearStart;
     }
 
-    public function setYearStart(?int $yearStart): self
+    public function setYearStart(?int $yearStart): static
     {
         $this->yearStart = $yearStart;
 
@@ -169,7 +169,7 @@ class Series
         return $this->yearEnd;
     }
 
-    public function setYearEnd(?int $yearEnd): self
+    public function setYearEnd(?int $yearEnd): static
     {
         $this->yearEnd = $yearEnd;
 
@@ -189,7 +189,7 @@ class Series
         return $this->user;
     }
 
-    public function addUser(User $user): self
+    public function addUser(User $user): static
     {
         if (!$this->user->contains($user)) {
             $this->user->add($user);
@@ -199,7 +199,7 @@ class Series
         return $this;
     }
 
-    public function removeUser(User $user): self
+    public function removeUser(User $user): static
     {
         if ($this->user->removeElement($user)) {
             $user->removeSeries($this);
@@ -216,7 +216,7 @@ class Series
         return $this->genre;
     }
 
-    public function addGenre(Genre $genre): self
+    public function addGenre(Genre $genre): static
     {
         if (!$this->genre->contains($genre)) {
             $this->genre->add($genre);
@@ -226,7 +226,7 @@ class Series
         return $this;
     }
 
-    public function removeGenre(Genre $genre): self
+    public function removeGenre(Genre $genre): static
     {
         if ($this->genre->removeElement($genre)) {
             $genre->removeSeries($this);
@@ -243,7 +243,7 @@ class Series
         return $this->actor;
     }
 
-    public function addActor(Actor $actor): self
+    public function addActor(Actor $actor): static
     {
         if (!$this->actor->contains($actor)) {
             $this->actor->add($actor);
@@ -253,7 +253,7 @@ class Series
         return $this;
     }
 
-    public function removeActor(Actor $actor): self
+    public function removeActor(Actor $actor): static
     {
         if ($this->actor->removeElement($actor)) {
             $actor->removeSeries($this);
@@ -270,7 +270,7 @@ class Series
         return $this->country;
     }
 
-    public function addCountry(Country $country): self
+    public function addCountry(Country $country): static
     {
         if (!$this->country->contains($country)) {
             $this->country->add($country);
@@ -280,7 +280,7 @@ class Series
         return $this;
     }
 
-    public function removeCountry(Country $country): self
+    public function removeCountry(Country $country): static
     {
         if ($this->country->removeElement($country)) {
             $country->removeSeries($this);

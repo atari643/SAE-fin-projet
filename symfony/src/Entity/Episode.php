@@ -58,7 +58,7 @@ class Episode
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(string $title): static
     {
         $this->title = $title;
 
@@ -70,7 +70,7 @@ class Episode
         return $this->imdb;
     }
 
-    public function setImdb(string $imdb): self
+    public function setImdb(string $imdb): static
     {
         $this->imdb = $imdb;
 
@@ -82,7 +82,7 @@ class Episode
         return $this->imdbrating;
     }
 
-    public function setImdbrating(?float $imdbrating): self
+    public function setImdbrating(?float $imdbrating): static
     {
         $this->imdbrating = $imdbrating;
 
@@ -94,7 +94,7 @@ class Episode
         return $this->number;
     }
 
-    public function setNumber(int $number): self
+    public function setNumber(int $number): static
     {
         $this->number = $number;
 
@@ -106,7 +106,7 @@ class Episode
         return $this->season;
     }
 
-    public function setSeason(?Season $season): self
+    public function setSeason(?Season $season): static
     {
         $this->season = $season;
 
@@ -121,7 +121,7 @@ class Episode
         return $this->user;
     }
 
-    public function addUser(User $user): self
+    public function addUser(User $user): static
     {
         if (!$this->user->contains($user)) {
             $this->user->add($user);
@@ -131,7 +131,7 @@ class Episode
         return $this;
     }
 
-    public function removeUser(User $user): self
+    public function removeUser(User $user): static
     {
         if ($this->user->removeElement($user)) {
             $user->removeEpisode($this);
@@ -145,7 +145,7 @@ class Episode
         return $this->date;
     }
 
-    public function setDate(?\DateTimeInterface $date): self
+    public function setDate(?\DateTimeInterface $date): static
     {
         $this->date = $date;
 

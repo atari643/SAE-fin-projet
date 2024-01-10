@@ -44,7 +44,7 @@ class Country
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): static
     {
         $this->name = $name;
 
@@ -59,7 +59,7 @@ class Country
         return $this->series;
     }
 
-    public function addSeries(Series $series): self
+    public function addSeries(Series $series): static
     {
         if (!$this->series->contains($series)) {
             $this->series->add($series);
@@ -68,7 +68,7 @@ class Country
         return $this;
     }
 
-    public function removeSeries(Series $series): self
+    public function removeSeries(Series $series): static
     {
         $this->series->removeElement($series);
 

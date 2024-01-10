@@ -9,6 +9,14 @@
 {% block body %}
     <h1>Register</h1>
 
+    {% if error %}
+
+    L'email ou le mot de passe est invalide
+
+    {% endif %}
+
+    {{ form_errors(registrationForm.email) }}
+    {{ form_errors(registrationForm.plainPassword) }}
     {{ form_errors(registrationForm) }}
 
     {{ form_start(registrationForm) }}
