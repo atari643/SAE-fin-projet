@@ -85,7 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'message' => 'This email was already used to register an account.',
         ]));
 
-        //$metadata->addPropertyConstraint('email', new Assert\Email(message: 'Invalid email address'));
+        $metadata->addPropertyConstraint('email', new Assert\Email(['message' => 'Invalid email address',]));
     }
 
 
