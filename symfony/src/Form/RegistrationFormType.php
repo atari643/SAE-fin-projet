@@ -12,14 +12,20 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
+use Gregwar\CaptchaBundle\Type\CaptchaType;
+
 
 class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('country')
             ->add('email', EmailType::class, ['attr' => ['placeholder' => 'example@mail.com'],'constraints' => [
-                new NotBlank(['message' => 'Please enter an email',]),
+                new NotBlank(['message' => 'Please enter a valid email',]),
+                //new Assert\Email(['message' => 'address must be valid',]),
+                //new Length(['min' => 5,'minMessage' => 'Please enter a valid email',]),
                 
             ],])
             ->add('agreeTerms', CheckboxType::class, [
@@ -47,6 +53,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('captcha', CaptchaType::class)
         ;
     }
 

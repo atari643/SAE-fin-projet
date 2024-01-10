@@ -63,7 +63,7 @@ body, input, button {
 
     padding: 10px;
 
-    background-color: #4CAF50;
+    background-color: #4a4a4a;
 
     color: white;
 
@@ -80,7 +80,7 @@ body, input, button {
 
   button:hover {
 
-    background-color: #45a049;
+    background-color: #6a6a6a;
 
   }
 
