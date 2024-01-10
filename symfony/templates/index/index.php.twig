@@ -51,6 +51,7 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
         </form>
     </div>
     <script>
+        
         const series = document.getElementsByClassName('showChildSeries');
 const seriesPoster = document.getElementsByClassName('posters');
 for (let i = 0; i < series.length; i++) {
@@ -71,7 +72,14 @@ for (let i = 0; i < series.length; i++) {
         }
         makeBannerLeft(series[i], seriesPoster[i]);
     });
+    
 }
+const page = document.querySelectorAll('a');
+        for (let j = 0; j < page.length; j++) {
+            page[j].addEventListener('click', function () {
+                location.reload();
+            });
+        }
 
 function posterHover(i) {
     const overlay = document.createElement('div');
