@@ -6,7 +6,6 @@ use App\Entity\Episode;
 use App\Entity\Season;
 use App\Entity\Series;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\Expr\Join;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,7 +33,6 @@ class IndexController extends AbstractController
                 ->getRepository(Series::class)
                 ->findAll();
             $session->set('series', $series);
-            
         }
         $series100 = array_slice($series, 0, 100);
         $series_limit = array_slice($series, ($page-1)*SERIES_PER_PAGE, SERIES_PER_PAGE);
