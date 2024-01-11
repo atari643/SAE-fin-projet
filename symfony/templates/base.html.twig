@@ -55,9 +55,7 @@
 						<a href="{{ path('app_register') }}" class="button register">Register</a>
 						<a href="{{ path('app_login') }}" class="button connect">Sign in</a>
 					{% else %}
-						<span class="material-symbols-outlined">
-							account_circle
-						</span>
+						<img src="https://ui-avatars.com/api/?name={{ app.user.name }}&size=32&background=random&rounded=true">
 					{% endif %}
 				</div>
 			</div>
@@ -93,6 +91,7 @@ accountNav.classList.add('déconnecter');
 accountNav.innerHTML = '<span class="material-symbols-outlined">logout</span><a href=" {{ path('app_logout') }}">Logout</a>';
 return accountNav;
 }
+const suivieButton = document.querySelector('#suivieButton');
 suivieButton.addEventListener('click', function () {
 if (suivieButton.querySelector('span').innerHTML == 'heart_plus') {
 suivieButton.querySelector('span').innerHTML = 'heart_check';

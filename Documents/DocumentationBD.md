@@ -241,6 +241,7 @@ Voici le schéma MCD de la base :
     _**Contraintes :**_
 
     - **id** : clé primaire.
+    - L'attribut **year_start** < **year_end**
     - Unicité des attributs **title**, **imdb**, **poster**, **youtube_trailer**.
     - Les attributs sont obligatoires sont **id**, **title**, **imdb**.
 

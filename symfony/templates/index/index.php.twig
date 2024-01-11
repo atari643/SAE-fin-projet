@@ -10,6 +10,19 @@
 {% endblock %}
 {% block body %}
 
+{% if is_granted('IS_IMPERSONATOR') %}
+    <a href="{{ impersonation_exit_path(path('app_login') ) }}">Exit impersonation</a>
+{% endif %}
+    
+    <div id="show">
+    {% for s in series %}
+            <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="4"
+            data-resum="{{s.plot}}">
+            <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="posters">
+            </div>
+    {% endfor %}
+    </div>
+
 	<div id="show">
 		{% for s in series %}
 			{% set totalEpisodes = 0 %}
