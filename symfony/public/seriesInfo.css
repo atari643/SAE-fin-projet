@@ -63,7 +63,7 @@ nav ul li a:hover {
     width: 95%;
 }
 #contentEpisode{
-    background-color: #f4f4f4;
+    background-color: #e3f7f5;
     width: 100%;
 }
 #contentEpisode li{
@@ -78,4 +78,53 @@ nav ul li a:hover {
     justify-content: space-between;
     width: 95%;
     color: #000000;
+}
+
+#rating {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #e3f7f5;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#rating form {
+    display: flex;
+    flex-direction: column;
+}
+
+#rating label {
+    font-weight: bold;
+    color: #221F1F;
+    margin-top: 20px;
+}
+
+#rating select, #rating textarea {
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+}
+
+#rating textarea {
+    height: 150px;
+    resize: none;
+}
+
+#rating input[type="submit"] {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #cba848;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#rating input[type="submit"]:hover {
+    background-color: #aba848;
 }

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Episode;
 use App\Entity\Season;
 use App\Entity\Series;
+use App\Entity\Rating;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -80,8 +81,26 @@ class IndexController extends AbstractController
     }
 
     #[Route('/series/{id}', name: 'app_index_series_info')]
-    public function seriesInfo(EntityManagerInterface $entityManager, int $id): Response
+    public function seriesInfo(EntityManagerInterface $entityManager, int $id, Request $request): Response
     {
+        if ($request->get("rating") != ""){
+            
+            $series = $entityManager->find(Series::class, $id);
+
+            $rating = new Rating();
+
+            $rating->setValue($request->request->get('rating'));
+            $rating->setComment($request->get('comment'));
+            $rating->setDate(new \DateTime());
+
+            $rating->setSeries($series);
+
+            $rating->setUser($this->getUser());
+
+            $entityManager->persist($rating);
+            $entityManager->flush();
+            
+        }
         $series = $entityManager
             ->getRepository(Series::class)
             ->find($id);
@@ -94,6 +113,7 @@ class IndexController extends AbstractController
             'seasons' => $seasons,
             'episodes' => null
         ]);
+        
     }
     #[Route('/series/{id}/{num}', name: 'app_index_season_info')]
     public function seasonInfo(EntityManagerInterface $entityManager, int $id, int $num): Response
@@ -128,6 +148,7 @@ class IndexController extends AbstractController
             'Content-Type', Response::HTTP_OK, ['content-type' => 'image/jpeg']);
         $response->setContent(stream_get_contents($series->getPoster()));
         return $response;
+        
     }
-
+    
 }

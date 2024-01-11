@@ -60,14 +60,35 @@
             </ul>
         {% endif %}
     </div>
-        
     </div>
+
+
+    <div id="rating">
+        <form action="{{ path('app_index_series_info', {id: series.id}) }}" method="post">
+            <label for="rating">Notez la série:</label>
+            <select id="rating" name="rating">
+                <option value="">Sélectionnez une note</option>
+                {% for i in 0..5 %}
+                    <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+            </select>
+            <label for="comment">Laisser une critique:</label>
+            <textarea id="comment" name="comment"></textarea>
+            <input type="submit" value="Submit">
+        </form>
+    </div>  
+
+    
     <script>
         window.onload = function() {
             var img = document.querySelector('#visual img');
             var trailer = document.querySelector('#trailer');
             trailer.style.width = getComputedStyle(img).width;
         }
+        /*document.querySelector('form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        e.target.reset();
+        });*/
     </script>
 {% endblock %}
 
