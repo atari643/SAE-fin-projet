@@ -11,7 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-
+use Symfony\Component\HttpFoundation\Session\Session;
+use Doctrine\ORM\Query\Expr\Join;
 const SERIES_PER_PAGE = 10;
 
 class IndexController extends AbstractController
@@ -19,19 +20,25 @@ class IndexController extends AbstractController
     #[Route('/', name: 'app_default', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager, Request $request): Response
     {
+        session_start();
         $page = $request->query->get('page');
         if($page == null){
             return $this->redirect('?page=1');
         }
-
-        $series = $entityManager
-            ->getRepository(Series::class);
-        $series_limit = $series->findBy(array(), null, SERIES_PER_PAGE, SERIES_PER_PAGE*($page-1));
-        $count = $series->createQueryBuilder('series')
-        ->select('count(series.id)')
-        ->getQuery()
-        ->getSingleScalarResult();
-
+        $session = new Session();
+        if($session->has('series')){
+            $series = $session->get('series');
+        }
+        else{
+            $series = $entityManager
+                ->getRepository(Series::class)
+                ->findAll();
+            $session->set('series', $series);
+            
+        }
+        $series100 = array_slice($series, 0, 100);
+        $series_limit = array_slice($series, ($page-1)*SERIES_PER_PAGE, SERIES_PER_PAGE);
+        $count = count($series);
         $numberOfPages = $count/SERIES_PER_PAGE;
         if($count % SERIES_PER_PAGE != 0){
             $numberOfPages += 1;
@@ -63,9 +70,11 @@ class IndexController extends AbstractController
             $infos['episode_count'] = $result['e_count'];
             $infos['season_count'] = $result['s_count'];
             $series_infos[] = $infos;
+            
         }
 
         return $this->render('index/index.php.twig', [
+            'seriesTotal'=>$series100,
             'series' => $series_infos,
             'numberOfPages' => $numberOfPages,
             'page' => $page,
