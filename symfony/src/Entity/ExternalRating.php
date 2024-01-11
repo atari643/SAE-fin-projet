@@ -4,10 +4,12 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: "external_rating", indexes: [
+#[ORM\Table(
+    name: "external_rating", indexes: [
     new ORM\Index(name: "IDX_AC0AB9CB953C1C61", columns: ["source_id"]),
     new ORM\Index(name: "IDX_AC0AB9CB5278319C", columns: ["series_id"])
-])]
+    ]
+)]
 #[ORM\Entity]
 class ExternalRating
 {

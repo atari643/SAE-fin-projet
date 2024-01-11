@@ -21,9 +21,17 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
             </div>
         </div>
         <h1>Vision Vibes</h1>
-        <div class="search">
-            <input type="text" placeholder="Search">
-            <span class="material-symbols-outlined">search</span>
+        <div class="advanced-search">
+            <form action="{{ path('app_default') }}#show" method="get">
+                <input type="text" name="search" id="search" placeholder="Search for a series" />
+                <select name="genre" id="genre">
+                    <option value="">All genres</option>
+                    {% for genre in genres %}
+                        <option value="{{ genre.id }}">{{ genre.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="material-symbols-outlined">search</button>
+            </form>
         </div>
     </header>
     {% endblock %}
