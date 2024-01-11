@@ -103,6 +103,7 @@ body {
     font-family: 'Bebas Neue', cursive;
     margin: 8px 0 0 0;
     text-shadow: 1px 1px 5px #000000;
+    text-align: right;
 }
 
 .durationPosterHover,
@@ -118,7 +119,7 @@ body {
     position: fixed;
     right: 0;
     bottom: 0;
-    width: 20%;
+    width: 21%;
     background-color: hsl(347, 79%, 30%, 30%);
     border-top-left-radius: 15px;
     flex-direction: column;
@@ -126,6 +127,14 @@ body {
     animation: 0.5s forwards ease bannerSpawn;
     border-left: 1px solid #cba848;
     border-top: 1px solid #cba848;
+}
+
+.banner:hover {
+    overflow: scroll;
+}
+
+.banner:hover body{
+    overflow: hidden;
 }
 
 @keyframes bannerSpawn {
@@ -143,18 +152,18 @@ body {
     font-size: 2rem;
     margin: 5px 0 0 10px;
     cursor: pointer;
+    width: fit-content;
 }
 
 .bannerTitle {
     color: #e3f7f5;
     font-size: 2rem;
     font-family: 'Bebas Neue', cursive;
-    margin: 10px 0 0 14px;
     text-shadow: 1px 1px 5px #000000;
 }
 
 .bannerImg {
-    width: calc(100% - 28px);
+    width: calc(100% - 38px);
     margin: 0 0 0 14px;
 }
 
@@ -162,7 +171,7 @@ body {
     color: #e3f7f5;
     font-size: 1rem;
     font-family: 'Roboto', sans-serif;
-    width: calc(100% - 28px);
+    width: calc(100% - 38px);
     margin: 15px 0 0 14px;
     text-align: justify;
 }
@@ -193,7 +202,7 @@ body {
 .headerBanner{
     display: flex;
     flex-direction: row;
-    width: 90%;
+    width: calc(100% - 38px);
     gap: 10px;
     margin: 10px 0 0 14px;
     align-items: center;
@@ -203,7 +212,6 @@ body {
     color: #cba848;
     font-size: 1.2rem;
     font-family: 'Roboto', sans-serif;
-    margin: 10px;
     text-decoration: none;
     transition: 0.5s;
     cursor: pointer;
