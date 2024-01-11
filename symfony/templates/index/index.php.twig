@@ -145,7 +145,7 @@ bannerButtonMore.classList.add('bannerButtonMore');
 bannerButtonMore.onclick = () => {
 window.location.href = "/series/" + poster.dataset.id;
 };
-bannerButtonMore.innerHTML = 'En savoir +';
+bannerButtonMore.innerHTML = 'Learn more';
 headerBanner.appendChild(bannerButtonMore);
 banner.appendChild(headerBanner);
 const bannerImg = document.createElement('img');
@@ -166,7 +166,7 @@ bannerDuration.innerHTML = poster.dataset.duration;
 } else if (poster.dataset.épisodes != null) {
 bannerDuration.innerHTML = poster.dataset.épisodes;
 } else {
-bannerDuration.innerHTML = 'Pas de durée estimée';
+bannerDuration.innerHTML = 'No duration estimated';
 } parentBottomBanner.appendChild(bannerDuration);
 const bannerParentStars = document.createElement('div');
 bannerParentStars.classList.add('bannerParentStars');
@@ -180,7 +180,29 @@ bannerParentStars.lastChild.style.color = '#e3f7f5';
 parentBottomBanner.appendChild(bannerParentStars);
 const suivieButton = document.createElement('div');
 suivieButton.classList.add('suivieButtonadd');
-suivieButton.innerHTML += '<span class="material-symbols-outlined">heart_plus</span>';
+
+{% if app.user != null %}
+
+    var find = false;
+    {% set sId = null %}
+    {% for s in app.user.getSeries() %}
+        if(poster.dataset.id == {{ s.getId() }}){
+            find = true;
+            {% set sId = s.getId() %}
+        }
+    {% endfor %}
+
+    if(find){
+        suivieButton.innerHTML += "<style>.material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 }</style>";
+        suivieButton.innerHTML += '<a href="{{ path('app_default') }}" style="color: white;"><span class="material-symbols-outlined unfollow">favorite</span></a>';
+    } else {
+        suivieButton.innerHTML += '<span class="material-symbols-outlined follow">heart_plus</span>';
+    }
+
+{% else %}
+    suivieButton.innerHTML += '<span class="material-symbols-outlined">heart_plus</span>';
+{% endif %}
+
 parentBottomBanner.appendChild(suivieButton);
 document.body.appendChild(banner);
 document.getElementById('show').style.width = '85%';

@@ -75,7 +75,7 @@ class IndexController extends AbstractController
             'seriesTotal'=>$series100,
             'series' => $series_infos,
             'numberOfPages' => $numberOfPages,
-            'page' => $page,
+            'page' => $page
         ]);
     }
 
