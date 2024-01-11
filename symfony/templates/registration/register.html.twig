@@ -9,34 +9,55 @@
 {% block body %}
     <h1>Register</h1>
 
-    {{ form_errors(registrationForm) }}
+    {#{ form_errors(registrationForm) }#}
 
-    {#% if not registrationForm.vars.valid %}
-        <div class="alert alert-danger">
-        {{ form_errors(registrationForm) }}
-        {% for children in registrationForm.children %}
-            {% if not children.vars.valid %}
-                {{ form_errors(children) }}
-            {% endif %}
-            {% for child in children %}
-                {% if not child.vars.valid %}
-                    {{ form_errors(child) }}
-                {% endif %}
-            {% endfor %}
-        {% endfor %}
-            </div>
-    {% endif %#}
+    <style>
+    .form_body ul{display:none;}
+    </style>
 
+    <script>
+    error_n = "{{ errorN|e('js') }}";
+    error_e = "{{ errorE|e('js') }}";
+    error_p = "{{ errorP|e('js') }}";
+    error_captcha = "{{ errorCaptcha|e('js') }}";
+    error_country = "{{ errorCountry|e('js') }}";
+    error_text = "";
+    if(error_n.length != 0){
+        error_text += error_n;
+    }
+    if(error_e.length != 0){
+        error_text += "\n"+error_e;
+    }
+    if(error_p.length != 0){
+        error_text += "\n"+error_p;
+    }
+    if(error_captcha.length != 0){
+        error_text += "\n"+error_c;
+    }
+    if(error_country.length != 0){
+        error_text += "\n"+error_c;
+    }
+
+    error_text = error_text.replaceAll("ERROR:", "");
+    console.log(error_text);
+    if(error_text.length != 0){
+        alert(error_text);
+    }
+    </script>
+
+
+    <div class="form_body">
     {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email, {label: 'Email'}) }}
+        {{ form_row(registrationForm.name)}}
+        {{ form_row(registrationForm.email, {label: 'Email'}) }}    
         
         {{ form_row(registrationForm.plainPassword, {
             label: 'Password'
         }) }}
         {{ form_row(registrationForm.country) }}
         {{ form_row(registrationForm.captcha) }}
-        {{ form_row(registrationForm.agreeTerms) }}
 
         <button type="submit" class="btn">Register</button>
     {{ form_end(registrationForm) }}
+    </div>
 {% endblock %}

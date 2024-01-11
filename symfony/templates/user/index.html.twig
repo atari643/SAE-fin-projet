@@ -13,6 +13,7 @@
         <thead>
             <tr>
                 <td></td>
+                <td>Name</td>
                 <td>Email</td>
                 <td>Creation Date</td>
                 <td>Role</td>
@@ -23,6 +24,7 @@
             <tr class="user">
             <td><img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random&rounded=true" style="display: inline;"></td>
             <td><p style="display: inline;">{{ user.name }}</p></td>
+            <td><p style="display: inline;">{{ user.email }}</p></td>
             <td><p style="display: inline;">{{ user.registerDate|date('Y-m-d') }}</p></td>
             <td>
                 {% if user.admin == '0' %}
