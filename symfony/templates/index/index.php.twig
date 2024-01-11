@@ -13,7 +13,7 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
     <header>
         <div class="caroussel">
             <div class="carousselChild">
-                {% for s in seriesTotal %}
+                {% for s in pagination %}
                 <div class="carousselChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" >
                     <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="affiche">
                 </div>
@@ -34,20 +34,18 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
 {% endif %}
     
     <div id="show">
-    {% for s in series %}
-            <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="4"
-            <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="4"
-            data-resum="{{s.plot}}">
-            <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="posters">
+        {% for s in pagination %}
+            <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="4" data-resum="{{s.plot}}">
+                <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="posters">
             </div>
-    {% endfor %}
+        {% endfor %}
     </div>
 
     {{ block('paging') }}
     
     <script>
         window.addEventListener('load', makeScript());
-        page=document.querySelectorAll('.page');
+        page=document.querySelectorAll('.pagination a');
         for(let i=0;i<page.length;i++){
             page[i].addEventListener('click',makeScript())
         
@@ -75,12 +73,6 @@ makeBannerLeft(series[i], seriesPoster[i]);
 });
 
 }
-const page = document.querySelectorAll('.number');
-        for (let j = 0; j < page.length; j++) {
-            page[j].addEventListener('click', function () {
-                window.location.href = '?page=' + (j+1) ;
-            });
-        }
 
 
 function posterHover(i) {

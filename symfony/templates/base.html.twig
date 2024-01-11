@@ -23,11 +23,13 @@
         {% endblock %}
 		<div id="menu">
 			<div id="parentItemMenuLeft">
+				{% if app.user!=null and app.user.admin %}
 				<div class="itemMenu">
 					<span class="material-symbols-outlined">
 						preview
 					</span>
 				</div>
+				{% endif %}
 				<div class="itemMenu" onclick="window.location.href = '/users'">
 					<span class="material-symbols-outlined">
 						groups
@@ -78,7 +80,8 @@
             items[3].classList.add('onThisPage');
             break;
     }
-		const accountButton = document.querySelector('#accountButton');
+
+const accountButton = document.querySelector('.itemMenu img');
 accountButton.addEventListener('click', function () {
 if (document.querySelector('.déconnecter')) {
 document.querySelector('.déconnecter').parentNode.removeChild(document.querySelector('.déconnecter'));

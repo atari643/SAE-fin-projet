@@ -9,13 +9,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Request;
-
+use Knp\Component\Pager\PaginatorInterface;
 const USERS_PER_PAGE = 10;
 
 class UserController extends AbstractController
 {
     #[Route('/users', name: 'app_users', methods: ['GET', 'POST'])]
-    public function index(EntityManagerInterface $entityManager, Request $request): Response
+    public function index(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
         $page = $request->query->get('page');
         if($page == null){
@@ -51,27 +51,30 @@ class UserController extends AbstractController
             ->select('count(users.id)')
             ->getQuery()
             ->getSingleScalarResult();
-
-        $numberOfPages = intdiv($count, USERS_PER_PAGE);
-        if($count % USERS_PER_PAGE != 0){
-            $numberOfPages += 1;
-        }
+        $pagination = $paginator->paginate(
+            $users_limit,
+            $request->query->getInt('page', 1),
+            USERS_PER_PAGE
+        );
 
         return $this->render('user/index.html.twig', [
-            'users' => $users_limit,
+            'pagination' => $pagination,
             'count' => $count,
-            'numberOfPages' => $numberOfPages,
-            'page' => $page,
         ]);
     }
 
     #[Route('/user/series', name: 'series_followed', methods: ['GET', 'POST'])]
-    public function seriesFollowed(EntityManagerInterface $entityManager, Request $request): Response
+    public function seriesFollowed(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
         $user = $this->getUser();
-
+        
+        $pagination = $paginator->paginate(
+            $user->getSeries(),
+            $request->query->getInt('page', 1),
+            10
+        );
         return $this->render('user/series_followed.html.twig', [
-            'series' => $user->getSeries()
+            'pagination' => $pagination
         ]);
     }
 

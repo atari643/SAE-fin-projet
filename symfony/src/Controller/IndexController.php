@@ -11,13 +11,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Knp\Component\Pager\PaginatorInterface;
+use DoctrineExtensions\Query\Mysql;
 use Doctrine\ORM\Query\Expr\Join;
 const SERIES_PER_PAGE = 10;
 
 class IndexController extends AbstractController
 {
     #[Route('/', name: 'app_default', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager, Request $request): Response
+    public function index(EntityManagerInterface $entityManager, Request $request,PaginatorInterface $paginator): Response
     {
         session_start();
         $page = $request->query->get('page');
@@ -26,56 +28,24 @@ class IndexController extends AbstractController
         }
         $session = new Session();
         if($session->has('series')){
-            $series = $session->get('series');
+            $series_infos = $session->get('series');
         }
         else{
-            $series = $entityManager
-                ->getRepository(Series::class)
-                ->findAll();
-            $session->set('series', $series);
+            $series_infos = $entityManager->createQueryBuilder()
+                ->select('s.id as id, s.title as title, s.poster, s.plot as plot, COUNT(DISTINCT se.number) as season_count, COUNT(e.number) as episode_count')
+                ->from('App:Series', 's')
+                ->leftJoin('App:Season', 'se', Join::WITH, 's = se.series')
+                ->leftJoin('App:Episode', 'e', Join::WITH, 'se = e.season')
+                ->groupBy('s.id')
+                ->getQuery();
         }
-        $series100 = array_slice($series, 0, 100);
-        $series_limit = array_slice($series, ($page-1)*SERIES_PER_PAGE, SERIES_PER_PAGE);
-        $count = count($series);
-        $numberOfPages = $count/SERIES_PER_PAGE;
-        if($count % SERIES_PER_PAGE != 0){
-            $numberOfPages += 1;
-        }
-
-        $series_infos = [];
-
-        for($i=0; $i < sizeof($series_limit); $i++){
-            $current_series = $series_limit[$i];
-            $infos = [];
-            $infos['id'] = $current_series->getId();
-            $infos['title'] = $current_series->getTitle();
-            $infos['plot'] = $current_series->getPlot();
-            $infos['rating'] = $current_series->getImdb();
-
-            $qb = $entityManager->createQueryBuilder();
-            $result = $qb
-                ->select(['count(DISTINCT(season.number)) as s_count',
-                        'count(episode.number) as e_count'])
-                ->from('App:Series','series')
-                ->innerJoin('App:Season', 'season',
-                    Join::WITH, 'series = season.series')
-                ->innerJoin('App:Episode', 'episode',
-                    Join::WITH, 'season = episode.season')
-                ->where('series.id = '.$infos['id'])
-                ->getQuery()
-                ->getSingleResult();
-
-            $infos['episode_count'] = $result['e_count'];
-            $infos['season_count'] = $result['s_count'];
-            $series_infos[] = $infos;
-            
-        }
-
+        $pagination = $paginator->paginate(
+            $series_infos,
+            $request->query->getInt('page', 1),
+            SERIES_PER_PAGE
+        );
         return $this->render('index/index.php.twig', [
-            'seriesTotal'=>$series100,
-            'series' => $series_infos,
-            'numberOfPages' => $numberOfPages,
-            'page' => $page,
+            'pagination' => $pagination
         ]);
     }
 
