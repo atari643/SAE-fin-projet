@@ -16,7 +16,7 @@ const SERIES_PER_PAGE = 10;
 
 class IndexController extends AbstractController
 {
-    #[Route('/', name: 'app_default', methods: ['GET'])]
+    #[Route('/', name: 'app_default', methods: ['GET', 'POST'])]
     public function index(EntityManagerInterface $entityManager, Request $request): Response
     {
         session_start();
@@ -69,6 +69,25 @@ class IndexController extends AbstractController
             $infos['season_count'] = $result['s_count'];
             $series_infos[] = $infos;
             
+        }
+
+        dump($request->get("idToRemove"));
+        if($request->get("idToRemove") != null){
+            $user = $this->getUser();
+
+            $i = 0;
+            $end = false;
+            $seriesToRemove = null;
+            while(!$end && $i < $user->getSeries()){
+                if($user->getSeries[$i] == $request->get("idToRemove")){
+                    $seriesToRemove = $user->getSeries[$i];
+                    $end = true;
+                }
+                $i += 1;
+            }
+
+            $user->removeSeries($seriesToRemove);
+            $entityManager->flush();
         }
 
         return $this->render('index/index.php.twig', [

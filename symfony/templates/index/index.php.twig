@@ -194,7 +194,7 @@ suivieButton.classList.add('suivieButtonadd');
 
     if(find){
         suivieButton.innerHTML += "<style>.material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 }</style>";
-        suivieButton.innerHTML += '<a href="{{ path('app_default') }}" style="color: white;"><span class="material-symbols-outlined unfollow">favorite</span></a>';
+        suivieButton.innerHTML += '<form action="{{ path('app_default') }}" method="POST"><input type="text" name="idToRemove" value="{{ sId }}" hidden><button type="submit"><span class="material-symbols-outlined unfollow">favorite</span></button></form>';
     } else {
         suivieButton.innerHTML += '<span class="material-symbols-outlined follow">heart_plus</span>';
     }
