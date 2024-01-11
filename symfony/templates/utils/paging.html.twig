@@ -5,19 +5,15 @@
 {% block body %}
     {% block paging %}
         <div class="paging">
+            <a href="?page=1"><p style="display: inline;">First Page</p></a>
+
             {% if page - 1 > 0 %}
                 <a href="?page={{ page - 1 }}"><p style="display: inline;">Previous</p></a>
             {% else %}
                 <a href="?page={{ page }}"><p style="display: inline;">Previous</p></a>
             {% endif %}
 
-            {% for nb in 1..numberOfPages %}
-                {% if page == nb %}
-                    <a class="number" href="?page={{ nb }}"><p style="display: inline; font-weight: bold;">{{ nb }}</p></a>
-                {% else %}
-                    <a class="number" href="?page={{ nb }}"><p style="display: inline;">{{ nb }}</p></a>
-                {% endif %}
-            {% endfor %}
+            <a class="number" href="?page={{ page }}"><p style="display: inline; font-weight: bold;">{{ page }}</p></a>
 
             {% if page + 1 <= numberOfPages %}
                 <a href="?page={{ page + 1 }}"><p style="display: inline;">Next</p></a>
@@ -25,10 +21,8 @@
                 <a href="?page={{ page }}"><p style="display: inline;">Next</p></a>
             {% endif %}
 
-            <form style="display: inline;">
-                <input name="page" type="number" min="1" max="{{ numberOfPages }}" placeholder="Page" required />
-                <input onClick="window.location.href = '?page=' + this.previousElementSibling.value; window.location.reload" type="button" value="Go">            
-            </form>
+            <a href="?page={{ numberOfPages|round }}"><p style="display: inline;">Last Page</p></a>
         </div>
+
     {% endblock %}
 {% endblock %}
