@@ -67,14 +67,17 @@
         <form action="{{ path('app_index_series_info', {id: series.id}) }}" method="post">
             <label for="rating">Notez la série:</label>
             <select id="rating" name="rating">
-                <option value="">Sélectionnez une note</option>
-                {% for i in 0..5 %}
-                    <option value="{{ i }}">{{ i }}</option>
+                <option value="" {% if userRating is null %}selected{% endif %}>Sélectionnez une note</option>
+                {% for i in 1..5 %}
+                    <option value="{{ i }}" {% if i == userRating %}selected{% endif %}>{{ i }}</option>
                 {% endfor %}
             </select>
             <label for="comment">Laisser une critique:</label>
-            <textarea id="comment" name="comment"></textarea>
-            <input type="submit" value="Submit">
+            <textarea id="comment" name="comment">{{ userComment }}</textarea>
+            <input type="submit" name="action" value="{{ userRating ? 'Modifier' : 'Envoyer' }}">
+            {% if userRating %}
+                <input type="submit" name="action" value="Supprimer">
+            {% endif %}
         </form>
     </div>  
 

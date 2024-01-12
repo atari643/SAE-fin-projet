@@ -83,22 +83,33 @@ class IndexController extends AbstractController
     #[Route('/series/{id}', name: 'app_index_series_info')]
     public function seriesInfo(EntityManagerInterface $entityManager, int $id, Request $request): Response
     {
-        if ($request->get("rating") != ""){
-            
-            $series = $entityManager->find(Series::class, $id);
+        $userRating = $entityManager->getRepository(Rating::class)->findOneBy([
+            'user' => $this->getUser(),
+            'series' => $id,
+        ]);
 
-            $rating = new Rating();
+        if ($request->get("rating") != "" && $this->getUser() != null){
+            if ($request->get("action") == "Supprimer"){
+                $entityManager->remove($userRating);
+                $entityManager->flush();
+                return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
+            } else{
+                $series = $entityManager->find(Series::class, $id);
 
-            $rating->setValue($request->request->get('rating'));
-            $rating->setComment($request->get('comment'));
-            $rating->setDate(new \DateTime());
+                $rating = new Rating();
 
-            $rating->setSeries($series);
+                $rating->setValue($request->request->get('rating'));
+                $rating->setComment($request->get('comment'));
+                $rating->setDate(new \DateTime());
 
-            $rating->setUser($this->getUser());
+                $rating->setSeries($series);
 
-            $entityManager->persist($rating);
-            $entityManager->flush();
+                $rating->setUser($this->getUser());
+
+                $entityManager->persist($rating);
+                $entityManager->flush();
+                return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
+            }
             
         }
         $series = $entityManager
@@ -111,7 +122,9 @@ class IndexController extends AbstractController
         return $this->render('index/seriesInfo.html.twig', [
             'series' => $series,
             'seasons' => $seasons,
-            'episodes' => null
+            'episodes' => null,
+            'userRating' => $userRating ? $userRating->getValue() : null,
+            'userComment' => $userRating ? $userRating->getComment() : null
         ]);
         
     }
