@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
     new ORM\UniqueConstraint(name: "UNIQ_3A10012D85489131", columns: ["imdb"])
     ]
 )]
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: "App\Repository\SeriesRepository")]
 class Series
 {
     #[ORM\Column(name: "id", type: "integer", nullable: false)]
