@@ -11,7 +11,7 @@
     {# {% include "./utils/searchUserData.html.twig" with { form : form} only %} #}
 
     <form action="{{ path('app_users') }}" method="get">
-        <input type="text" name="search" placeholder="Search for a user" />
+        <input type="text" name="search" placeholder="Search for a user" value="{{ username }}"/>
         <input type="submit" value="Submit">
 {#         <button type="submit" class="material-symbols-outlined">search</button>
  #}    </form>
