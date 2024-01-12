@@ -58,7 +58,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('captcha', CaptchaType::class, ['invalid_message' => 'Captcha code does not match'],)
+            ->add('captcha', CaptchaType::class, ['invalid_message' => 'Captcha code does not match.'],)
         ;
 
     }

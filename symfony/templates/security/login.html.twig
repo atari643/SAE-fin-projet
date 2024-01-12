@@ -7,14 +7,24 @@
 {% block body %}
 <form method="post">
     {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        <script>
+        error_text = "{{ error.messageKey|trans(error.messageData, 'security')|e('js') }}";
+        console.log(error_text);
+        if(error_text.length != 0){
+            alert(error_text);
+        }
+        </script>
+        {# <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div> #}
     {% endif %}
 
     {% if app.user %}
         <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+            You are logged in as <span id="Logout-username">{{ app.user.userIdentifier }}</span>
+            <a href="{{ path('app_logout') }}"><button class="btn btn-outline-light" type="submit">
+                Log out
+            </button></a>
         </div>
-    {% endif %}
+    {% else %}
 
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
     <label for="inputEmail">Email</label>
@@ -29,5 +39,6 @@
     <button class="btn btn-outline-light" type="submit">
         Sign in
     </button>
+    {% endif %}
 </form>
 {% endblock %}

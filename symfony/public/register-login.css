@@ -84,6 +84,12 @@ body, input, button {
 
   }
 
+  #Logout-username {
+
+    color: goldenrod;
+  
+  }
+
 
   /* Make the form responsive */
 
