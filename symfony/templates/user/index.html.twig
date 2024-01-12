@@ -11,7 +11,7 @@
     {# {% include "./utils/searchUserData.html.twig" with { form : form} only %} #}
 
     <form action="{{ path('app_users') }}" method="get">
-        <input type="text" name="search" placeholder="Search for a user" />
+        <input type="text" name="search" placeholder="Search for a user" value="{{ username }}"/>
         <input type="submit" value="Submit">
 {#         <button type="submit" class="material-symbols-outlined">search</button>
  #}    </form>
@@ -43,7 +43,8 @@
                     <p>Admin</p>
                 {% endif %}
             </td>
-            {% if app.user.admin == 1 %}
+            
+            {% if app.user and app.user.admin == 1 %}
             <td class="impersonate"><a href="http://localhost:8000/?page=1&_switch_user={{user.name}}"><span style="display: inline;" class="material-symbols-outlined">login</span>Impersonate</a></td>
             {% endif %}
             </tr>

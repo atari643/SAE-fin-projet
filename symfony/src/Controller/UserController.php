@@ -41,7 +41,6 @@ class UserController extends AbstractController
 
         if($id != null){
             $user = $usersRepository->find($id);
-            dump("id is valid");
             switch($role){
                 case 0:
                     $user->setAdmin(false);
@@ -62,19 +61,18 @@ class UserController extends AbstractController
             ->getQuery()
             ->getSingleScalarResult();
 
-        $searchQuery2 = $request->query->get('search');
-        $user_specific1 = $entityManager->createQueryBuilder()
+        $search_query = $request->query->get('search');
+        $user_specific = $entityManager->createQueryBuilder()
         ->select(
-            'u.id as id, u.name as name'
+            'u.id as id, u.name as name, u.registerDate as registerDate, u.admin'
         )
         ->from('App:User', 'u');
-        if(!empty($searchQuery2)) {
-            return $this->redirect('IT_FUCKING_WORKS');
-            $user_specific1 = $user_specific1->where('u.name LIKE :search')
-                ->setParameter('search', "%{$searchQuery2}%");
-                $user_specific1 = $user_specific1->getQuery();
+        if(!empty($search_query)) {
+            $user_specific = $user_specific->where('u.name LIKE :search')
+                ->setParameter('search', "$search_query%");
+                $user_specific = $user_specific->getQuery();
                 $pagination = $paginator->paginate(
-                    $user_specific1,
+                    $user_specific,
                     $request->query->getInt('page', 1),
                     USERS_PER_PAGE
                 );
@@ -84,10 +82,11 @@ class UserController extends AbstractController
                     //'form'=>$form->createView(),
                     'pagination' => $pagination,
                     'count' => $count,
-                    'username' => $user_specific1,
+                    'username' => $search_query,
                 ]);
         }
-        dump("Query:\n".$request->query->all());
+
+        dump($request->query->all());
         
         $pagination = $paginator->paginate(
             $users_limit,
