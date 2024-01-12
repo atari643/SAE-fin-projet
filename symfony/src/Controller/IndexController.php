@@ -39,14 +39,26 @@ class IndexController extends AbstractController
                 ->getQuery();
         }
 
-        if($request->get("idToRemove") != null){
+        if($request->get("idToAdd") != null && $request->get("remove") == null){
+            $user = $this->getUser();
+
+            $series = $entityManager
+            ->getRepository(Series::class);
+            $seriesToAdd = $series->findBy(['id' => $request->get("idToAdd")]);
+
+            $user->addSeries($seriesToAdd[0]);
+            $entityManager->persist($seriesToAdd[0]);
+            $entityManager->flush();
+        }
+
+        if($request->get("idToRemove") != null && $request->get("remove") != null){
             $user = $this->getUser();
 
             $i = 0;
             $end = false;
             $seriesToRemove = null;
             while(!$end && $i < $user->getSeries()->count()){
-                if($user->getSeries()[$i]->getId() == $request->get("idToRemove")){
+                if($user->getSeries()[$i]->getId() == ((int) $request->get("idToRemove"))){
                     $seriesToRemove = $user->getSeries()[$i];
                     $end = true;
                 }
