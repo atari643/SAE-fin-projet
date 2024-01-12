@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class Actor
 {
-
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
@@ -34,21 +33,18 @@ class Actor
     public function __construct()
     {
         $this->series = new ArrayCollection();
-
     }//end __construct()
 
 
     public function getId(): ?int
     {
         return $this->id;
-
     }//end getId()
 
 
     public function getName(): ?string
     {
         return $this->name;
-
     }//end getName()
 
 
@@ -57,7 +53,6 @@ class Actor
         $this->name = $name;
 
         return $this;
-
     }//end setName()
 
 
@@ -67,7 +62,6 @@ class Actor
     public function getSeries(): Collection
     {
         return $this->series;
-
     }//end getSeries()
 
 
@@ -78,7 +72,6 @@ class Actor
         }
 
         return $this;
-
     }//end addSeries()
 
 
@@ -87,8 +80,5 @@ class Actor
         $this->series->removeElement($series);
 
         return $this;
-
     }//end removeSeries()
-
-
 }//end class

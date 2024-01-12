@@ -17,8 +17,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegistrationFormType extends AbstractType
 {
-
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('country')->add(
@@ -69,7 +67,6 @@ class RegistrationFormType extends AbstractType
                 ],
             ]
         )->add('captcha', CaptchaType::class);
-
     }//end buildForm()
 
 
@@ -80,8 +77,5 @@ class RegistrationFormType extends AbstractType
                 'data_class' => User::class,
             ]
         );
-
     }//end configureOptions()
-
-
 }//end class

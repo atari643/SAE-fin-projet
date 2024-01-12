@@ -15,7 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class Season
 {
-
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
@@ -36,28 +35,24 @@ class Season
     public function __construct()
     {
         $this->episodes = new ArrayCollection();
-
     }//end __construct()
 
 
     public function getEpisodes(): Collection
     {
         return $this->episodes;
-
     }//end getEpisodes()
 
 
     public function getId(): ?int
     {
         return $this->id;
-
     }//end getId()
 
 
     public function getNumber(): ?int
     {
         return $this->number;
-
     }//end getNumber()
 
 
@@ -66,14 +61,12 @@ class Season
         $this->number = $number;
 
         return $this;
-
     }//end setNumber()
 
 
     public function getSeries(): ?Series
     {
         return $this->series;
-
     }//end getSeries()
 
 
@@ -82,7 +75,6 @@ class Season
         $this->series = $series;
 
         return $this;
-
     }//end setSeries()
 
 
@@ -94,7 +86,6 @@ class Season
         }
 
         return $this;
-
     }//end addEpisode()
 
 
@@ -108,8 +99,5 @@ class Season
         }
 
         return $this;
-
     }//end removeEpisode()
-
-
 }//end class

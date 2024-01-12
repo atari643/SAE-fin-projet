@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class ExternalRatingSource
 {
-
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
@@ -21,14 +20,12 @@ class ExternalRatingSource
     public function getId(): ?int
     {
         return $this->id;
-
     }//end getId()
 
 
     public function getName(): ?string
     {
         return $this->name;
-
     }//end getName()
 
 
@@ -37,8 +34,5 @@ class ExternalRatingSource
         $this->name = $name;
 
         return $this;
-
     }//end setName()
-
-
 }//end class

@@ -24,7 +24,6 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
     public function __construct(private UrlGeneratorInterface $urlGenerator)
     {
-
     }//end __construct()
 
 
@@ -41,7 +40,6 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
                 new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
             ]
         );
-
     }//end authenticate()
 
 
@@ -53,15 +51,11 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
         // For example:
         return new RedirectResponse($this->urlGenerator->generate('app_default'));
-
     }//end onAuthenticationSuccess()
 
 
     protected function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
-
     }//end getLoginUrl()
-
-
 }//end class

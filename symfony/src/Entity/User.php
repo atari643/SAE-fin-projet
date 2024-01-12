@@ -22,7 +22,6 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
 #[ORM\Entity]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
@@ -79,7 +78,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->series  = new ArrayCollection();
         $this->episode = new ArrayCollection();
-
     }//end __construct()
 
 
@@ -87,7 +85,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return $this->getEmail();
-
     }//end getUserIdentifier()
 
 
@@ -98,13 +95,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return ['ROLE_USER'];
-
     }//end getRoles()
 
 
     public function eraseCredentials()
     {
-
     }//end eraseCredentials()
 
 
@@ -120,21 +115,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         );
 
         $metadata->addPropertyConstraint('email', new Assert\Email(['message' => 'The email address is invalid']));
-
     }//end loadValidatorMetadata()
 
 
     public function getId(): ?int
     {
         return $this->id;
-
     }//end getId()
 
 
     public function getName(): ?string
     {
         return $this->name;
-
     }//end getName()
 
 
@@ -143,14 +135,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->name = $name;
 
         return $this;
-
     }//end setName()
 
 
     public function getEmail(): ?string
     {
         return $this->email;
-
     }//end getEmail()
 
 
@@ -159,14 +149,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->email = $email;
 
         return $this;
-
     }//end setEmail()
 
 
     public function getPassword(): ?string
     {
         return $this->password;
-
     }//end getPassword()
 
 
@@ -175,14 +163,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
 
         return $this;
-
     }//end setPassword()
 
 
     public function getRegisterDate()
     {
         return $this->registerDate;
-
     }//end getRegisterDate()
 
 
@@ -191,14 +177,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->registerDate = $registerDate;
 
         return $this;
-
     }//end setRegisterDate()
 
 
     public function isAdmin(): ?bool
     {
         return $this->admin;
-
     }//end isAdmin()
 
 
@@ -207,14 +191,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->admin = $admin;
 
         return $this;
-
     }//end setAdmin()
 
 
     public function getCountry(): ?Country
     {
         return $this->country;
-
     }//end getCountry()
 
 
@@ -223,7 +205,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->country = $country;
 
         return $this;
-
     }//end setCountry()
 
 
@@ -233,7 +214,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getSeries(): Collection
     {
         return $this->series;
-
     }//end getSeries()
 
 
@@ -244,7 +224,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
-
     }//end addSeries()
 
 
@@ -253,7 +232,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->series->removeElement($series);
 
         return $this;
-
     }//end removeSeries()
 
 
@@ -263,7 +241,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getEpisode(): Collection
     {
         return $this->episode;
-
     }//end getEpisode()
 
 
@@ -274,7 +251,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
-
     }//end addEpisode()
 
 
@@ -283,8 +259,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->episode->removeElement($episode);
 
         return $this;
-
     }//end removeEpisode()
-
-
 }//end class

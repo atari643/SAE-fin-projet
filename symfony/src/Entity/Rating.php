@@ -17,7 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class Rating
 {
-
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
@@ -44,14 +43,12 @@ class Rating
     public function getId(): ?int
     {
         return $this->id;
-
     }//end getId()
 
 
     public function getValue(): ?int
     {
         return $this->value;
-
     }//end getValue()
 
 
@@ -60,14 +57,12 @@ class Rating
         $this->value = $value;
 
         return $this;
-
     }//end setValue()
 
 
     public function getComment(): ?string
     {
         return $this->comment;
-
     }//end getComment()
 
 
@@ -76,14 +71,12 @@ class Rating
         $this->comment = $comment;
 
         return $this;
-
     }//end setComment()
 
 
     public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
-
     }//end getDate()
 
 
@@ -92,14 +85,12 @@ class Rating
         $this->date = $date;
 
         return $this;
-
     }//end setDate()
 
 
     public function getUser(): ?User
     {
         return $this->user;
-
     }//end getUser()
 
 
@@ -108,14 +99,12 @@ class Rating
         $this->user = $user;
 
         return $this;
-
     }//end setUser()
 
 
     public function getSeries(): ?Series
     {
         return $this->series;
-
     }//end getSeries()
 
 
@@ -124,8 +113,5 @@ class Rating
         $this->series = $series;
 
         return $this;
-
     }//end setSeries()
-
-
 }//end class

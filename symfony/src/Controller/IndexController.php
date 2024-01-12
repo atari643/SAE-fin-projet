@@ -17,8 +17,6 @@ const SERIES_PER_PAGE = 10;
 
 class IndexController extends AbstractController
 {
-
-
     #[Route('/', name: 'app_default', methods: ['GET', 'POST'])]
     public function index(SeriesRepository $repository, Request $request, PaginatorInterface $paginator, EntityManagerInterface $entityManager): Response
     {
@@ -29,7 +27,7 @@ class IndexController extends AbstractController
         $searchFollow    = $request->query->get('follow', '');
         $series_infos    = $repository->seriesInfo();
         if (null != $searchQuery) {
-            $series_infos = $series_infos->where('s.title LIKE :query OR s.plot LIKE :query')->setParameter('query', '%'.$searchQuery.'%')->orderBy('CASE WHEN s.title LIKE :query THEN 1 ELSE 2 END')->setParameter('query', '%'.$searchQuery.'%');
+            $series_infos = $series_infos->where('s.title LIKE :query OR s.plot LIKE :query')->setParameter('query', '%' . $searchQuery . '%')->orderBy('CASE WHEN s.title LIKE :query THEN 1 ELSE 2 END')->setParameter('query', '%' . $searchQuery . '%');
         }
 
         if (null != $searchGenre) {
@@ -100,7 +98,6 @@ class IndexController extends AbstractController
                 'genres'     => $genres,
             ]
         );
-
     }//end index()
 
 
@@ -168,7 +165,6 @@ class IndexController extends AbstractController
                 'comments'    => $comments,
             ]
         );
-
     }//end seriesInfo()
 
 
@@ -187,7 +183,6 @@ class IndexController extends AbstractController
                 'episodes' => $episodes,
             ]
         );
-
     }//end seasonInfo()
 
 
@@ -204,8 +199,5 @@ class IndexController extends AbstractController
         $response->setContent(stream_get_contents($series->getPoster()));
 
         return $response;
-
     }//end showPoster()
-
-
 }//end class

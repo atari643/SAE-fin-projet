@@ -14,7 +14,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class ExternalRating
 {
-
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
@@ -38,14 +37,12 @@ class ExternalRating
     public function getId(): ?int
     {
         return $this->id;
-
     }//end getId()
 
 
     public function getValue(): ?string
     {
         return $this->value;
-
     }//end getValue()
 
 
@@ -54,14 +51,12 @@ class ExternalRating
         $this->value = $value;
 
         return $this;
-
     }//end setValue()
 
 
     public function getVotes(): ?int
     {
         return $this->votes;
-
     }//end getVotes()
 
 
@@ -70,14 +65,12 @@ class ExternalRating
         $this->votes = $votes;
 
         return $this;
-
     }//end setVotes()
 
 
     public function getSource(): ?ExternalRatingSource
     {
         return $this->source;
-
     }//end getSource()
 
 
@@ -86,14 +79,12 @@ class ExternalRating
         $this->source = $source;
 
         return $this;
-
     }//end setSource()
 
 
     public function getSeries(): ?Series
     {
         return $this->series;
-
     }//end getSeries()
 
 
@@ -102,8 +93,5 @@ class ExternalRating
         $this->series = $series;
 
         return $this;
-
     }//end setSeries()
-
-
 }//end class

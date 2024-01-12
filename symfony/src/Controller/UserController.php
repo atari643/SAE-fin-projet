@@ -14,8 +14,6 @@ const USERS_PER_PAGE = 10;
 
 class UserController extends AbstractController
 {
-
-
     #[Route('/users', name: 'app_users', methods: ['GET', 'POST'])]
     public function index(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
@@ -26,7 +24,7 @@ class UserController extends AbstractController
             $get_string = '?';
             foreach (array_keys($get_args) as $key) {
                 $arg         = $get_args[$key];
-                $get_string .= $key.'='.$arg.'&';
+                $get_string .= $key . '=' . $arg . '&';
             }
 
             $get_string .= 'page=1';
@@ -85,7 +83,7 @@ class UserController extends AbstractController
             );
         }
 
-        dump("Query:\n".$request->query->all());
+        dump("Query:\n" . $request->query->all());
 
         $pagination = $paginator->paginate(
             $users_limit,
@@ -102,7 +100,6 @@ class UserController extends AbstractController
                 'username'   => '',
             ]
         );
-
     }//end index()
 
 
@@ -121,7 +118,6 @@ class UserController extends AbstractController
             'user/series_followed.html.twig',
             ['pagination' => $pagination]
         );
-
     }//end seriesFollowed()
 
 
@@ -140,7 +136,6 @@ class UserController extends AbstractController
             'user/series_followed.html.twig',
             ['pagination' => $pagination]
         );
-
     }//end seriesFollowedByUser()
 
 
@@ -160,7 +155,6 @@ class UserController extends AbstractController
             'user/profile.html.twig',
             ['user' => $name]
         );
-
     }//end userProfile()
 
 
@@ -178,8 +172,5 @@ class UserController extends AbstractController
             'user/profile.html.twig',
             ['user' => $username]
         );
-
     }//end userProfileSearch()
-
-
 }//end class

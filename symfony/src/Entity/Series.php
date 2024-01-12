@@ -15,7 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: 'App\Repository\SeriesRepository')]
 class Series
 {
-
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
@@ -75,21 +74,18 @@ class Series
         $this->actor   = new ArrayCollection();
         $this->country = new ArrayCollection();
         $this->seasons = new ArrayCollection();
-
     }//end __construct()
 
 
     public function getId(): ?int
     {
         return $this->id;
-
     }//end getId()
 
 
     public function getTitle(): ?string
     {
         return $this->title;
-
     }//end getTitle()
 
 
@@ -98,14 +94,12 @@ class Series
         $this->title = $title;
 
         return $this;
-
     }//end setTitle()
 
 
     public function getPlot(): ?string
     {
         return $this->plot;
-
     }//end getPlot()
 
 
@@ -114,14 +108,12 @@ class Series
         $this->plot = $plot;
 
         return $this;
-
     }//end setPlot()
 
 
     public function getImdb(): ?string
     {
         return $this->imdb;
-
     }//end getImdb()
 
 
@@ -130,14 +122,12 @@ class Series
         $this->imdb = $imdb;
 
         return $this;
-
     }//end setImdb()
 
 
     public function getDirector(): ?string
     {
         return $this->director;
-
     }//end getDirector()
 
 
@@ -146,14 +136,12 @@ class Series
         $this->director = $director;
 
         return $this;
-
     }//end setDirector()
 
 
     public function getYoutubeTrailer(): ?string
     {
         return str_replace('www.youtube.com/watch?v=', 'www.youtube.com/embed/', $this->youtubeTrailer);
-
     }//end getYoutubeTrailer()
 
 
@@ -162,14 +150,12 @@ class Series
         $this->youtubeTrailer = $youtubeTrailer;
 
         return $this;
-
     }//end setYoutubeTrailer()
 
 
     public function getAwards(): ?string
     {
         return $this->awards;
-
     }//end getAwards()
 
 
@@ -178,14 +164,12 @@ class Series
         $this->awards = $awards;
 
         return $this;
-
     }//end setAwards()
 
 
     public function getYearStart(): ?int
     {
         return $this->yearStart;
-
     }//end getYearStart()
 
 
@@ -194,14 +178,12 @@ class Series
         $this->yearStart = $yearStart;
 
         return $this;
-
     }//end setYearStart()
 
 
     public function getYearEnd(): ?int
     {
         return $this->yearEnd;
-
     }//end getYearEnd()
 
 
@@ -210,7 +192,6 @@ class Series
         $this->yearEnd = $yearEnd;
 
         return $this;
-
     }//end setYearEnd()
 
 
@@ -219,7 +200,6 @@ class Series
         $this->poster = file_get_contents($url);
 
         return $this;
-
     }//end setPosterFromUrl()
 
 
@@ -229,7 +209,6 @@ class Series
     public function getUser(): Collection
     {
         return $this->user;
-
     }//end getUser()
 
 
@@ -241,7 +220,6 @@ class Series
         }
 
         return $this;
-
     }//end addUser()
 
 
@@ -252,7 +230,6 @@ class Series
         }
 
         return $this;
-
     }//end removeUser()
 
 
@@ -262,7 +239,6 @@ class Series
     public function getGenre(): Collection
     {
         return $this->genre;
-
     }//end getGenre()
 
 
@@ -274,7 +250,6 @@ class Series
         }
 
         return $this;
-
     }//end addGenre()
 
 
@@ -285,7 +260,6 @@ class Series
         }
 
         return $this;
-
     }//end removeGenre()
 
 
@@ -295,7 +269,6 @@ class Series
     public function getActor(): Collection
     {
         return $this->actor;
-
     }//end getActor()
 
 
@@ -307,7 +280,6 @@ class Series
         }
 
         return $this;
-
     }//end addActor()
 
 
@@ -318,7 +290,6 @@ class Series
         }
 
         return $this;
-
     }//end removeActor()
 
 
@@ -328,7 +299,6 @@ class Series
     public function getCountry(): Collection
     {
         return $this->country;
-
     }//end getCountry()
 
 
@@ -340,7 +310,6 @@ class Series
         }
 
         return $this;
-
     }//end addCountry()
 
 
@@ -351,14 +320,12 @@ class Series
         }
 
         return $this;
-
     }//end removeCountry()
 
 
     public function getPoster()
     {
         return $this->poster;
-
     }//end getPoster()
 
 
@@ -367,7 +334,6 @@ class Series
         $this->poster = $poster;
 
         return $this;
-
     }//end setPoster()
 
 
@@ -377,7 +343,6 @@ class Series
     public function getSeasons(): Collection
     {
         return $this->seasons;
-
     }//end getSeasons()
 
 
@@ -389,7 +354,6 @@ class Series
         }
 
         return $this;
-
     }//end addSeason()
 
 
@@ -403,8 +367,5 @@ class Series
         }
 
         return $this;
-
     }//end removeSeason()
-
-
 }//end class

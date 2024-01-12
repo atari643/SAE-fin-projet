@@ -15,7 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class Episode
 {
-
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
@@ -50,21 +49,18 @@ class Episode
     public function __construct()
     {
         $this->user = new ArrayCollection();
-
     }//end __construct()
 
 
     public function getId(): ?int
     {
         return $this->id;
-
     }//end getId()
 
 
     public function getTitle(): ?string
     {
         return $this->title;
-
     }//end getTitle()
 
 
@@ -73,14 +69,12 @@ class Episode
         $this->title = $title;
 
         return $this;
-
     }//end setTitle()
 
 
     public function getImdb(): ?string
     {
         return $this->imdb;
-
     }//end getImdb()
 
 
@@ -89,14 +83,12 @@ class Episode
         $this->imdb = $imdb;
 
         return $this;
-
     }//end setImdb()
 
 
     public function getImdbrating(): ?float
     {
         return $this->imdbrating;
-
     }//end getImdbrating()
 
 
@@ -105,14 +97,12 @@ class Episode
         $this->imdbrating = $imdbrating;
 
         return $this;
-
     }//end setImdbrating()
 
 
     public function getNumber(): ?int
     {
         return $this->number;
-
     }//end getNumber()
 
 
@@ -121,14 +111,12 @@ class Episode
         $this->number = $number;
 
         return $this;
-
     }//end setNumber()
 
 
     public function getSeason(): ?Season
     {
         return $this->season;
-
     }//end getSeason()
 
 
@@ -137,7 +125,6 @@ class Episode
         $this->season = $season;
 
         return $this;
-
     }//end setSeason()
 
 
@@ -147,7 +134,6 @@ class Episode
     public function getUser(): Collection
     {
         return $this->user;
-
     }//end getUser()
 
 
@@ -159,7 +145,6 @@ class Episode
         }
 
         return $this;
-
     }//end addUser()
 
 
@@ -170,14 +155,12 @@ class Episode
         }
 
         return $this;
-
     }//end removeUser()
 
 
     public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
-
     }//end getDate()
 
 
@@ -186,8 +169,5 @@ class Episode
         $this->date = $date;
 
         return $this;
-
     }//end setDate()
-
-
 }//end class

@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class Country
 {
-
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
@@ -34,28 +33,24 @@ class Country
     public function __construct()
     {
         $this->series = new ArrayCollection();
-
     }//end __construct()
 
 
     public function getId(): ?int
     {
         return $this->id;
-
     }//end getId()
 
 
     public function __toString()
     {
         return $this->name;
-
     }//end __toString()
 
 
     public function getName(): ?string
     {
         return $this->name;
-
     }//end getName()
 
 
@@ -64,7 +59,6 @@ class Country
         $this->name = $name;
 
         return $this;
-
     }//end setName()
 
 
@@ -74,7 +68,6 @@ class Country
     public function getSeries(): Collection
     {
         return $this->series;
-
     }//end getSeries()
 
 
@@ -85,7 +78,6 @@ class Country
         }
 
         return $this;
-
     }//end addSeries()
 
 
@@ -94,8 +86,5 @@ class Country
         $this->series->removeElement($series);
 
         return $this;
-
     }//end removeSeries()
-
-
 }//end class
