@@ -126,6 +126,33 @@ class IndexController extends AbstractController
     {
         $infoRating = $this->getRatings($entityManager, $id);
 
+        #region Follow/Unfollow Series
+        $user = $this->getUser();
+        if($request->request->get("add") != null){
+
+            if($request->request->get("add") == "true"){
+
+                $series = $entityManager
+                ->getRepository(Series::class);
+                $seriesToAdd = $series->find($request->request->get("id"));
+    
+                $user->addSeries($seriesToAdd);
+                $entityManager->persist($seriesToAdd);
+                $entityManager->flush();
+    
+            } else {
+    
+                $series = $entityManager
+                ->getRepository(Series::class);
+                $seriesToRemove = $series->find($request->request->get("id"));
+                $user->removeSeries($seriesToRemove);
+                $entityManager->flush();
+    
+            }
+
+        }
+        #endregion
+
         if ($request->get("rating") && $this->getUser() != null){
             if ($request->get("action") == "Supprimer"){
 

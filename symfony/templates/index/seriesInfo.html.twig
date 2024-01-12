@@ -16,43 +16,7 @@
         </div>   
         <div id="information">
 
-            {% set found = false %}
-            {% if app.user != null %}
-                {% for s in app.user.getSeries() %}
-                    {% if series.getId() == s.getId() %}
-                        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
-                        <div id="seriesTitle" style="display: inline-block;">
-                            Title : {{ series.title }} ({{ series.yearStart }} - {{ series.yearEnd }})
-                            <form action="{{ path('app_index_series_info', {id: series.id}) }}" method="POST" id="formFollow" style="display: inline-block;">
-                                <input type="text" name="idToRemove" value="{{ series.getId() }}" hidden>
-                                <input type="text" name="remove" value="1" hidden>
-                                <button type="submit" id="unfollowButton" onclick="onUnfollowClick('{{ series.getId() }}')">
-                                    <span class="material-symbols-outlined unfollow">favorite</span>
-                                </button>
-                            </form>
-                        </div>
-                        {% set found = true %}
-                    {% endif %}
-                {% endfor %}
-                {% if found == false %}
-                    <div id="seriesTitle" style="display: inline-block;">
-                        Title : {{ series.title }} ({{ series.yearStart }} - {{ series.yearEnd }})
-                        <form action="{{ path('app_index_series_info', {id: series.id}) }}" method="POST" id="formFollow" style="display: inline-block;">
-                            <input type="text" name="idToAdd" value="{{ series.getId() }}" hidden>
-                            <input type="text" name="remove" value="0" hidden>
-                            <button type="submit" id="followButton" onclick="onFollowClick('{{ series.getId() }}')">
-                                <span class="material-symbols-outlined follow">heart_plus</span>
-                            </button>
-                        </form>
-                    </div>
-                {% endif %}
-            {% else %}
-                <div id="seriesTitle" style="display: inline-block;">
-                    Title : {{ series.title }} ({{ series.yearStart }} - {{ series.yearEnd }})
-                    <form action="{{ path('app_login') }}" method="POST" id="formFollow" style="display: inline-block"><button type="submit" id="followButton"><span class="material-symbols-outlined">heart_plus</span></button></form>
-                </div>
-            {% endif %}
-
+            <div id="seriesTitle" style="display: inline-block;">Title : {{ series.title }} ({{ series.yearStart }} - {{ series.yearEnd }})</div>
             <hr>
             <div id="seriesPlot">Description : {{ series.plot }}</div>
             <hr>
@@ -155,29 +119,63 @@
             var img = document.querySelector('#visual img');
             var trailer = document.querySelector('#trailer');
             trailer.style.width = getComputedStyle(img).width;
-        }
 
-        function onUnfollowClick(id){
-            const unfollow = document.getElementById('unfollowButton');
-            const form = document.getElementById('formFollow');
-            unfollow.outerHTML = '';
-            form.innerHTML = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />';
-            {% if app.request.query.get('page') == null %}
-                form.innerHTML += '<form action="{{ path('app_index_series_info', {'id': series.id}) }}" method="POST"><input type="text" name="idToAdd" value="' + id + '" hidden><input type="text" name="remove" value="1" hidden><button type="submit" id="followButton" onclick="onUnfollowClick()"><span class="material-symbols-outlined follow">heart_plus</span></button></form>';
-            {% else %}
-                form.innerHTML += '<form action="{{ path('app_index_series_info', {'id': series.id}) }}" method="POST"><input type="text" name="idToAdd" value="' + id + '" hidden><input type="text" name="remove" value="1" hidden><button type="submit" id="followButton" onclick="onUnfollowClick()"><span class="material-symbols-outlined follow">heart_plus</span></button></form>';
+            const title = document.getElementById("seriesTitle");
+            const div = document.createElement("div");
+            div.classList.add('suivieButtonadd');
+            div.style.display = "inline-block";
+
+            var found = false;
+            {% if app.user != null %}
+                {% for s in app.user.getSeries() %}
+                    if(poster.dataset.id == {{ s.getId() }}){
+                        div.innerHTML = '<span class="material-symbols-outlined">heart_minus</span>';
+                        found = true;
+                    }
+                {% endfor %}
             {% endif %}
-        }
 
-        function onFollowClick(id){
-            const follow = document.getElementById('followButton');
-            const form = document.getElementById('formFollow');
-            follow.outerHTML = '';
-            form.innerHTML = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />';
-            {% if app.request.query.get('page') == null %}
-                form.innerHTML += '<form action="{{ path('app_index_series_info', {'id': series.id}) }}" method="POST"><input type="text" name="idToRemove" value="' + id + '" hidden><button type="submit" id="unfollowButton" onclick="onUnfollowClick()"><span class="material-symbols-outlined unfollow">favorite</span></button></form>';
+            if(!found){
+                div.innerHTML = '<span class="material-symbols-outlined">heart_plus</span>';
+            }
+
+            title.appendChild(div);
+
+            {% if app.user == null %}
+                suivieButton.addEventListener('click', function () {
+                    window.location.replace("{{ path("app_login") }}");
+                });
             {% else %}
-                form.innerHTML += '<form action="{{ path('app_index_series_info', {'id': series.id}) }}" method="POST"><input type="text" name="idToRemove" value="' + id + '" hidden><button type="submit" id="unfollowButton" onclick="onFollowClick()"><span class="material-symbols-outlined unfollow">favorite</span></button></form>';
+            suivieButton.addEventListener('click', function () {
+                if (suivieButton.querySelector('span').innerHTML == 'heart_plus') {
+                    suivieButton.querySelector('span').innerHTML = 'heart_check';
+                    suivieButton.style.color = 'rgb(0, 105, 0)';
+                    setTimeout(function () {
+                        suivieButton.style.color = 'white';
+                        suivieButton.querySelector('span').innerHTML = 'heart_minus';
+                    }, 600);
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ path('app_default') }}",
+                        data: {add : true, id : poster.dataset.id}
+                    });
+
+                }else if(suivieButton.querySelector('span').innerHTML == 'heart_minus'){
+                    suivieButton.querySelector('span').innerHTML = 'heart_check';
+                    suivieButton.style.color = '#ac1536';
+                    setTimeout(function () {
+                        suivieButton.style.color = 'white';
+                        suivieButton.querySelector('span').innerHTML = 'heart_plus';
+                    }, 600);
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ path('app_default') }}",
+                        data: {add : false, id : poster.dataset.id}
+                    });
+                }
+            });
             {% endif %}
         }
     </script>
