@@ -26,24 +26,6 @@ class UserController extends AbstractController
 
         $usersRepository = $entityManager
             ->getRepository(User::class);
-
-        $role = $request->get('role');
-        $id = $request->get('id');
-
-        if($id != null) {
-            $user = $usersRepository->find($id);
-
-            switch($role){
-            case 0:
-                $user->setAdmin(false);
-                break;
-            case 1:
-                $user->setAdmin(true);
-                break;
-            }
-            $entityManager->flush();
-        }
-
         $users = $entityManager
             ->getRepository(User::class);
         $users_limit = $users->findBy(array(), null, USERS_PER_PAGE, USERS_PER_PAGE*($page-1));

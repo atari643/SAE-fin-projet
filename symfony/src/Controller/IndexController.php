@@ -19,7 +19,7 @@ const SERIES_PER_PAGE = 10;
 
 class IndexController extends AbstractController
 {
-    #[Route('/', name: 'app_default', methods: ['GET'])]
+    #[Route('/', name: 'app_default', methods: ['GET', 'POST'])]
     public function index(EntityManagerInterface $entityManager, Request $request,PaginatorInterface $paginator): Response
     {
         $searchQuery = $request->query->get('search', "");
@@ -65,6 +65,39 @@ class IndexController extends AbstractController
         }
         $genres = $entityManager->getRepository(Genre::class)->findAll();
         $series_infos = $series_infos->getQuery();
+
+        #region Follow/Unfollow Series
+        if($request->get("idToAdd") != null && $request->get("remove") == null){
+            $user = $this->getUser();
+
+            $series = $entityManager
+            ->getRepository(Series::class);
+            $seriesToAdd = $series->findBy(['id' => $request->get("idToAdd")]);
+
+            $user->addSeries($seriesToAdd[0]);
+            $entityManager->persist($seriesToAdd[0]);
+            $entityManager->flush();
+        }
+
+        if($request->get("idToRemove") != null && $request->get("remove") != null){
+            $user = $this->getUser();
+
+            $i = 0;
+            $end = false;
+            $seriesToRemove = null;
+            while(!$end && $i < $user->getSeries()->count()){
+                if($user->getSeries()[$i]->getId() == ((int) $request->get("idToRemove"))){
+                    $seriesToRemove = $user->getSeries()[$i];
+                    $end = true;
+                }
+                $i += 1;
+            }
+
+            $user->removeSeries($seriesToRemove);
+            $entityManager->flush();
+        }
+        #endregion
+
         $pagination = $paginator->paginate(
             $series_infos,
             $request->query->getInt('page', 1),
