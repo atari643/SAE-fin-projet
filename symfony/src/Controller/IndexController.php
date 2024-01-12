@@ -21,24 +21,17 @@ class IndexController extends AbstractController
     #[Route('/', name: 'app_default', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager, Request $request,PaginatorInterface $paginator): Response
     {
-        session_start();
         $page = $request->query->get('page');
         if($page == null){
             return $this->redirect('?page=1');
         }
-        $session = new Session();
-        if($session->has('series')){
-            $series_infos = $session->get('series');
-        }
-        else{
-            $series_infos = $entityManager->createQueryBuilder()
-                ->select('s.id as id, s.title as title, s.poster, s.plot as plot, COUNT(DISTINCT se.number) as season_count, COUNT(e.number) as episode_count')
-                ->from('App:Series', 's')
-                ->leftJoin('App:Season', 'se', Join::WITH, 's = se.series')
-                ->leftJoin('App:Episode', 'e', Join::WITH, 'se = e.season')
-                ->groupBy('s.id')
-                ->getQuery();
-        }
+        $series_infos = $entityManager->createQueryBuilder()
+            ->select('s.id as id, s.title as title, s.poster, s.plot as plot, COUNT(DISTINCT se.number) as season_count, COUNT(e.number) as episode_count')
+            ->from('App:Series', 's')
+            ->leftJoin('App:Season', 'se', Join::WITH, 's = se.series')
+            ->leftJoin('App:Episode', 'e', Join::WITH, 'se = e.season')
+            ->groupBy('s.id')
+            ->getQuery();
         $pagination = $paginator->paginate(
             $series_infos,
             $request->query->getInt('page', 1),

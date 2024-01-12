@@ -78,4 +78,42 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route('/user/series/{username}', name: 'series_followed_search_user', methods: ['GET', 'POST'])]
+    public function seriesFollowedByUser(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, string $username): Response
+    {
+        $users = $entityManager
+        ->getRepository(User::class);
+        $user = $users->findOneBy(array('name' => $username));
+        $pagination = $paginator->paginate(
+            $user->getSeries(),
+            $request->query->getInt('page', 1),
+            10
+        );
+        return $this->render('user/series_followed.html.twig', [
+            'pagination' => $pagination
+        ]);
+    }
+    
+    #[Route('/user/profile', name: 'user_profile', methods: ['GET', 'POST'])]
+    public function userProfile(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
+    {
+        $user = $this->getUser();
+        $name = $user->getName();
+
+        return $this->render('user/profile.html.twig', [
+            'user' => $name,
+        ]);
+    }
+
+    #[Route('/user/profile/{username}', name: 'user_profile_search', methods: ['GET', 'POST'])]
+    public function userProfileSearch(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, string $username): Response
+    {
+        return $this->render('user/profile.html.twig', [
+            'user' => $username,
+        ]);
+    }
+
+
+    
+
 }
