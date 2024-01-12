@@ -47,10 +47,50 @@ class UserController extends AbstractController
         $users = $entityManager
             ->getRepository(User::class);
         $users_limit = $users->findBy(array(), null, USERS_PER_PAGE, USERS_PER_PAGE*($page-1));
+
+        ##########################################
+        /* $searchQuery = $request->query->get('search', "");
+        $searchGenre = $request->query->get('genre', "");
+        $series_infos = $entityManager->createQueryBuilder()
+            ->select(
+                's.id as id, s.title as title, s.poster, s.plot as plot, 
+            COUNT(DISTINCT se.number) as season_count, COUNT(e.number) as episode_count'
+            )
+            ->from('App:Series', 's')
+            ->leftJoin('App:Season', 'se', Join::WITH, 's = se.series')
+            ->leftJoin('App:Episode', 'e', Join::WITH, 'se = e.season')
+            ->leftJoin("s.genre", "genre", Join::WITH)
+        
+            ->groupBy('s.id');
+        if($searchQuery!=null) {
+            $series_infos = $series_infos->where('s.title LIKE :query OR s.plot LIKE :query')
+                ->setParameter('query', '%'.$searchQuery.'%')
+                ->orderBy('CASE WHEN s.title LIKE :query THEN 1 ELSE 2 END')
+                ->setParameter('query', '%'.$searchQuery.'%');
+        }
+        if($searchGenre!=null) {
+            $series_infos = $series_infos->andWhere('genre.id = :genre')
+                ->setParameter('genre', $searchGenre);
+        }
+        $genres = $entityManager->getRepository(Genre::class)->findAll();
+        $series_infos = $series_infos->getQuery(); */
+        ##########################################
+        $searchQuery2 = $request->query->get('search', "");
+
+
+        ###
         $count = $usersRepository->createQueryBuilder('users')
             ->select('count(users.id)')
             ->getQuery()
             ->getSingleScalarResult();
+        ###########################################
+        if($searchQuery2!=null) {
+            $count = $count->where('users.name LIKE :query')
+                ->setParameter('query', '%'.$searchQuery2.'%')
+                ->orderBy('CASE WHEN s.title LIKE :query THEN 1 ELSE 2 END')
+                ->setParameter('query', '%'.$searchQuery2.'%');
+        }
+        ###
         $pagination = $paginator->paginate(
             $users_limit,
             $request->query->getInt('page', 1),
