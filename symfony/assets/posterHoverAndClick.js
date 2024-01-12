@@ -1,21 +1,28 @@
 const series = document.getElementsByClassName('showChildSeries');
 const seriesPoster = document.getElementsByClassName('posters');
 for (let i = 0; i < series.length; i++) {
-    seriesPoster[i].addEventListener('mouseover', function () {
-        posterHover(i);
-    });
-    seriesPoster[i].addEventListener('mouseleave', function () {
-        const overlay = series[i].querySelector('.overlay');
-        if (overlay) {
-            overlay.parentNode.removeChild(overlay);
+    seriesPoster[i].addEventListener(
+        'mouseover', function () {
+            posterHover(i);
         }
-    });
-    seriesPoster[i].addEventListener('click', function () {
-        makeBannerLeft(series[i], seriesPoster[i]);
-    });
+    );
+    seriesPoster[i].addEventListener(
+        'mouseleave', function () {
+            const overlay = series[i].querySelector('.overlay');
+            if (overlay) {
+                overlay.parentNode.removeChild(overlay);
+            }
+        }
+    );
+    seriesPoster[i].addEventListener(
+        'click', function () {
+            makeBannerLeft(series[i], seriesPoster[i]);
+        }
+    );
 }
 
-function posterHover(i) {
+function posterHover(i)
+{
     const overlay = document.createElement('div');
     overlay.classList.add('overlay');
     series[i].appendChild(overlay);
@@ -47,7 +54,8 @@ function posterHover(i) {
     overlay.style.transform = 'translateY(' + (seriesPoster[i].offsetHeight - overlay.offsetHeight + Math.round(overlay.offsetHeight * 0.08)) + 'px) translateX(' + (seriesPoster[i].offsetLeft - overlay.offsetLeft + 1) + 'px) scale(1.08)';
 }
 
-function makeBannerLeft(poster, posterImg) {
+function makeBannerLeft(poster, posterImg)
+{
     const banner = document.createElement('div');
     banner.classList.add('banner');
     const bannerTitle = document.createElement('p');

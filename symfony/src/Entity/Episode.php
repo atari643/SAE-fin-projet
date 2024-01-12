@@ -7,9 +7,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: "episode", indexes: [
+#[ORM\Table(
+    name: "episode", indexes: [
     new ORM\Index(name: "IDX_DDAA1CDA4EC001D1", columns: ["season_id"])
-])]
+    ]
+)]
 #[ORM\Entity]
 class Episode
 {

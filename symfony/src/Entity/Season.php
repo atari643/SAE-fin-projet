@@ -5,9 +5,11 @@ namespace App\Entity;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: "season", indexes: [
+#[ORM\Table(
+    name: "season", indexes: [
     new ORM\Index(name: "IDX_F0E45BA95278319C", columns: ["series_id"])
-])]
+    ]
+)]
 #[ORM\Entity]
 class Season
 {
@@ -27,7 +29,8 @@ class Season
     private Collection $episodes;
 
 
-    public function getEpisodes() : Collection{
+    public function getEpisodes() : Collection
+    {
         return $this->episodes;
     }
     public function getId(): ?int

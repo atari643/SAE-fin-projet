@@ -18,7 +18,7 @@ class UserController extends AbstractController
     public function index(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
         $page = $request->query->get('page');
-        if($page == null){
+        if($page == null) {
 
             return $this->redirect('?page=1');
 
@@ -30,16 +30,16 @@ class UserController extends AbstractController
         $role = $request->get('role');
         $id = $request->get('id');
 
-        if($id != null){
+        if($id != null) {
             $user = $usersRepository->find($id);
 
             switch($role){
-                case 0:
-                    $user->setAdmin(false);
-                    break;
-                case 1:
-                    $user->setAdmin(true);
-                    break;
+            case 0:
+                $user->setAdmin(false);
+                break;
+            case 1:
+                $user->setAdmin(true);
+                break;
             }
             $entityManager->flush();
         }
@@ -57,10 +57,12 @@ class UserController extends AbstractController
             USERS_PER_PAGE
         );
 
-        return $this->render('user/index.html.twig', [
+        return $this->render(
+            'user/index.html.twig', [
             'pagination' => $pagination,
             'count' => $count,
-        ]);
+            ]
+        );
     }
 
     #[Route('/user/series', name: 'series_followed', methods: ['GET', 'POST'])]
@@ -73,9 +75,11 @@ class UserController extends AbstractController
             $request->query->getInt('page', 1),
             10
         );
-        return $this->render('user/series_followed.html.twig', [
+        return $this->render(
+            'user/series_followed.html.twig', [
             'pagination' => $pagination
-        ]);
+            ]
+        );
     }
 
 }

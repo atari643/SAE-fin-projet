@@ -22,45 +22,58 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('country')
-            ->add('email', EmailType::class, ['attr' => ['placeholder' => 'example@mail.com'],'constraints' => [
+            ->add(
+                'email', EmailType::class, ['attr' => ['placeholder' => 'example@mail.com'],'constraints' => [
                 new NotBlank(['message' => 'Please enter a valid email',]),
                 //new Assert\Email(['message' => 'address must be valid',]),
                 //new Length(['min' => 5,'minMessage' => 'Please enter a valid email',]),
                 
-            ],])
-            ->add('agreeTerms', CheckboxType::class, [
+                ],]
+            )
+            ->add(
+                'agreeTerms', CheckboxType::class, [
                                 'mapped' => false,
                 'constraints' => [
-                    new IsTrue([
+                    new IsTrue(
+                        [
                         'message' => 'You should agree to our terms.',
-                    ]),
-                ],
-            ])
-            ->add('plainPassword', PasswordType::class, [
+                        ]
+                    ),
+                                ],
+                ]
+            )
+            ->add(
+                'plainPassword', PasswordType::class, [
                                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password', 'placeholder' => '6 characters min'],
                 'constraints' => [
-                    new NotBlank([
+                    new NotBlank(
+                        [
                         'message' => 'Please enter a password',
-                    ]),
-                    new Length([
+                        ]
+                    ),
+                    new Length(
+                        [
                         'min' => 6,
                         'minMessage' => 'Your password should be at least {{ limit }} characters',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
-                    ]),
+                        ]
+                    ),
                 ],
-            ])
-            ->add('captcha', CaptchaType::class)
-        ;
+                ]
+            )
+            ->add('captcha', CaptchaType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(
+            [
             'data_class' => User::class,
-        ]);
+            ]
+        );
     }
 }
