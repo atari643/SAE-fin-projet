@@ -107,14 +107,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'fields' => 'name',
             'message' => 'This name already exists.',
         ]));
-        $metadata->addConstraint(
-            new UniqueEntity(
-                [
-                'fields' => 'email',
-                'message' => 'This email was already used to register an account.',
-                ]
-            )
-        );
 
         $metadata->addPropertyConstraint('email', new Assert\Email(['message' => 'The email address is invalid',]));
     }
