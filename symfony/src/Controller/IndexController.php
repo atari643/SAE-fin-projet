@@ -112,8 +112,8 @@ class IndexController extends AbstractController
             ]);
     }
 
-    #[Route('/series/{id}', name: 'app_index_series_info')]
-    public function seriesInfo(EntityManagerInterface $entityManager, int $id): Response
+    #[Route('/series/{id}', name: 'app_index_series_info', methods: ['GET', 'POST'])]
+    public function seriesInfo(EntityManagerInterface $entityManager, Request $request, int $id): Response
     {
         $series = $entityManager
             ->getRepository(Series::class)
@@ -122,6 +122,43 @@ class IndexController extends AbstractController
             ['series' => $series],
             ['number' => 'ASC']
         );
+
+        #region Follow/Unfollow Series
+        dump($request->get("idToAdd"));
+        dump($request->get("idToRemove"));
+        dump($request->get("remove"));
+
+        if($request->get("idToAdd") != null && $request->get("remove") == "1"){
+            $user = $this->getUser();
+
+            $series = $entityManager
+            ->getRepository(Series::class);
+            $seriesToAdd = $series->findBy(['id' => $request->get("idToAdd")]);
+
+            $user->addSeries($seriesToAdd[0]);
+            $entityManager->persist($seriesToAdd[0]);
+            $entityManager->flush();
+        }
+
+        if($request->get("idToRemove") != null && $request->get("remove") == "1"){
+            $user = $this->getUser();
+
+            $i = 0;
+            $end = false;
+            $seriesToRemove = null;
+            while(!$end && $i < $user->getSeries()->count()){
+                if($user->getSeries()[$i]->getId() == ((int) $request->get("idToRemove"))){
+                    $seriesToRemove = $user->getSeries()[$i];
+                    $end = true;
+                }
+                $i += 1;
+            }
+
+            $user->removeSeries($seriesToRemove);
+            $entityManager->flush();
+        }
+        #endregion
+
         return $this->render(
             'index/seriesInfo.html.twig', [
             'series' => $series,
