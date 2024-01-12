@@ -98,6 +98,12 @@ class UserController extends AbstractController
     public function userProfile(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
         $user = $this->getUser();
+        if($user == null){
+
+            $login = $this->generateUrl('app_login');
+            return $this->redirect($login);
+
+        }
         $name = $user->getName();
 
         return $this->render('user/profile.html.twig', [
@@ -108,6 +114,12 @@ class UserController extends AbstractController
     #[Route('/user/profile/{username}', name: 'user_profile_search', methods: ['GET', 'POST'])]
     public function userProfileSearch(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, string $username): Response
     {
+        $user = $this->getUser();
+        if($user == null){
+
+            $login = $this->generateUrl('app_login');
+            return $this->redirect($login);
+        }
         return $this->render('user/profile.html.twig', [
             'user' => $username,
         ]);
