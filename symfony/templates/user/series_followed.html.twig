@@ -15,7 +15,7 @@
                 <td>Link</td>
             </tr>
         </thead>
-        {% for s in series %}
+        {% for s in pagination %}
         <tbody>
             <tr class="series">
             <td><img src="{{ path('app_series_poster',{id: s.id}) }}" style="width: 8%;"></td>

@@ -13,7 +13,7 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
     <header>
         <div class="caroussel">
             <div class="carousselChild">
-                {% for s in seriesTotal %}
+                {% for s in pagination %}
                 <div class="carousselChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" >
                     <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="affiche">
                 </div>
@@ -34,20 +34,18 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
 {% endif %}
     
     <div id="show">
-    {% for s in series %}
-            <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="4"
-            <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="4"
-            data-resum="{{s.plot}}">
-            <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="posters">
+        {% for s in pagination %}
+            <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="4" data-resum="{{s.plot}}">
+                <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="posters">
             </div>
-    {% endfor %}
+        {% endfor %}
     </div>
 
     {{ block('paging') }}
     
     <script>
         window.addEventListener('load', makeScript());
-        page=document.querySelectorAll('.page');
+        page=document.querySelectorAll('.pagination a');
         for(let i=0;i<page.length;i++){
             page[i].addEventListener('click',makeScript())
         
@@ -75,12 +73,6 @@ makeBannerLeft(series[i], seriesPoster[i]);
 });
 
 }
-const page = document.querySelectorAll('.number');
-        for (let j = 0; j < page.length; j++) {
-            page[j].addEventListener('click', function () {
-                window.location.href = '?page=' + (j+1) ;
-            });
-        }
 
 
 function posterHover(i) {
@@ -184,18 +176,23 @@ suivieButton.classList.add('suivieButtonadd');
 {% if app.user != null %}
 
     var find = false;
-    {% set sId = null %}
     {% for s in app.user.getSeries() %}
         if(poster.dataset.id == {{ s.getId() }}){
+            suivieButton.innerHTML += "<style>"
+            + ".material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 }"
+            + " #unfollowButton { background: none; color: inherit; border: none; padding: 0; font: inherit; cursor: pointer; outline: inherit; }"
+            + "</style>";
+            console.log({{ app.request.query.get('page') }});
+            {% if app.request.query.get('page') == null %}
+                suivieButton.innerHTML += '<form action="{{ path('app_default') }}?page=1" method="POST"><input type="text" name="idToRemove" value="{{ s.getId() }}" hidden><button type="submit" id="unfollowButton" onclick="onUnfollowClick()"><span class="material-symbols-outlined unfollow">favorite</span></button></form>';
+            {% else %}
+                suivieButton.innerHTML += '<form action="{{ path('app_default') }}?page={{ app.request.query.get('page') }}" method="POST"><input type="text" name="idToRemove" value="{{ s.getId() }}" hidden><button type="submit" id="unfollowButton" onclick="onUnfollowClick()"><span class="material-symbols-outlined unfollow">favorite</span></button></form>';
+            {% endif %}
             find = true;
-            {% set sId = s.getId() %}
         }
     {% endfor %}
 
-    if(find){
-        suivieButton.innerHTML += "<style>.material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 }</style>";
-        suivieButton.innerHTML += '<form action="{{ path('app_default') }}" method="POST"><input type="text" name="idToRemove" value="{{ sId }}" hidden><button type="submit"><span class="material-symbols-outlined unfollow">favorite</span></button></form>';
-    } else {
+    if(!find){
         suivieButton.innerHTML += '<span class="material-symbols-outlined follow">heart_plus</span>';
     }
 
@@ -219,6 +216,13 @@ banner.style.borderTopLeftRadius = '0';
 banner.style.borderTopLeftRadius = '15px';
 }
 }
+
+    function onUnfollowClick(){
+        
+        const unfollow = document.getElementById('unfollowButton');
+        unfollow.innerHTML = '<span class="material-symbols-outlined follow">heart_plus</span>';
+
+    }
 	</script>
 
 {% endblock %}
