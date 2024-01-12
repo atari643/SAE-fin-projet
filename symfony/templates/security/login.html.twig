@@ -19,7 +19,7 @@
 
     {% if app.user %}
         <div class="mb-3">
-            You are logged in as <span id="Logout-username">{{ app.user.userIdentifier }}</span>
+            <p>You are logged in as <span id="Logout-username">{{ app.user.userIdentifier }}</span></p>
             <a href="{{ path('app_logout') }}"><button class="btn btn-outline-light" type="submit">
                 Log out
             </button></a>
