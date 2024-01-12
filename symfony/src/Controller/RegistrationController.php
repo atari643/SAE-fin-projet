@@ -15,6 +15,8 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class RegistrationController extends AbstractController
 {
+
+
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
@@ -34,17 +36,21 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email
-
             return $userAuthenticator->authenticateUser(
                 $user,
                 $authenticator,
                 $request
             );
         }
+
         return $this->render(
-            'registration/register.html.twig', [
-            'registrationForm' => $form->createView(),
+            'registration/register.html.twig',
+            [
+                'registrationForm' => $form->createView(),
             ]
         );
-    }
-}
+
+    }//end register()
+
+
+}//end class

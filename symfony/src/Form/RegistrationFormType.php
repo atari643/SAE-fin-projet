@@ -3,77 +3,85 @@
 namespace App\Form;
 
 use App\Entity\User;
+use Gregwar\CaptchaBundle\Type\CaptchaType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints as Assert;
-use Gregwar\CaptchaBundle\Type\CaptchaType;
-
 
 class RegistrationFormType extends AbstractType
 {
+
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder
-            ->add('country')
-            ->add(
-                'email', EmailType::class, ['attr' => ['placeholder' => 'example@mail.com'],'constraints' => [
-                new NotBlank(['message' => 'Please enter a valid email',]),
-                //new Assert\Email(['message' => 'address must be valid',]),
-                //new Length(['min' => 5,'minMessage' => 'Please enter a valid email',]),
-                
-                ],]
-            )
-            ->add(
-                'agreeTerms', CheckboxType::class, [
-                                'mapped' => false,
+        $builder->add('country')->add(
+            'email',
+            EmailType::class,
+            [
+                'attr'        => ['placeholder' => 'example@mail.com'],
+                'constraints' => [
+                    new NotBlank(['message' => 'Please enter a valid email']),
+                // new Assert\Email(['message' => 'address must be valid',]),
+                // new Length(['min' => 5,'minMessage' => 'Please enter a valid email',]),
+                ],
+            ]
+        )->add(
+            'agreeTerms',
+            CheckboxType::class,
+            [
+                'mapped'      => false,
                 'constraints' => [
                     new IsTrue(
-                        [
-                        'message' => 'You should agree to our terms.',
-                        ]
+                        ['message' => 'You should agree to our terms.']
                     ),
-                                ],
-                ]
-            )
-            ->add(
-                'plainPassword', PasswordType::class, [
+                ],
+            ]
+        )->add(
+            'plainPassword',
+            PasswordType::class,
+            [
                                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
-                'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password', 'placeholder' => '6 characters min'],
+                'mapped'      => false,
+                'attr'        => [
+                    'autocomplete' => 'new-password',
+                    'placeholder'  => '6 characters min',
+                ],
                 'constraints' => [
                     new NotBlank(
-                        [
-                        'message' => 'Please enter a password',
-                        ]
+                        ['message' => 'Please enter a password']
                     ),
                     new Length(
                         [
-                        'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
-                        'max' => 4096,
+                            'min'        => 6,
+                            'minMessage' => 'Your password should be at least {{ limit }} characters',
+                            // max length allowed by Symfony for security reasons
+                            'max'        => 4096,
                         ]
                     ),
                 ],
-                ]
-            )
-            ->add('captcha', CaptchaType::class);
-    }
+            ]
+        )->add('captcha', CaptchaType::class);
+
+    }//end buildForm()
+
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(
             [
-            'data_class' => User::class,
+                'data_class' => User::class,
             ]
         );
-    }
-}
+
+    }//end configureOptions()
+
+
+}//end class
