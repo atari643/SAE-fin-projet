@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Rating;
 use App\Form\SearchUserFormType;
 use App\Model\SearchUserData;
 use Doctrine\ORM\EntityManagerInterface;
@@ -163,6 +164,55 @@ class UserController extends AbstractController
         }
         return $this->render('user/profile.html.twig', [
             'user' => $username,
+        ]);
+    }
+
+    private function getUserRatings(EntityManagerInterface $entityManager, string $id) {
+
+       
+        
+        // Récup tous les commentaires de la serie
+        $comments = $entityManager->getRepository(Rating::class)->findBy([
+            'user' => $id,
+        ]);
+    
+        return [
+            'comments' => $comments,
+        ];
+    }
+
+    #[Route('/user/ratings', name: 'series_reviews', methods: ['GET', 'POST'])]
+    public function seriesReviews(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
+    {
+        $user = $this->getUser();
+        $name = $user->getName();
+        $pagination = $paginator->paginate(
+            $this->getUserRatings($entityManager, $name),
+            $request->query->getInt('page', 1),
+            10
+        );
+        return $this->render(
+            'user/ratings.html.twig', [
+            'pagination' => $pagination
+            ]
+        );
+    }
+
+    #[Route('/user/ratings/{username}', name: 'series_reviews_by_user', methods: ['GET', 'POST'])]
+    public function seriesReviewsByUser(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, string $username): Response
+    {
+        $users = $entityManager
+        ->getRepository(User::class);
+        $user = $users->findOneBy(array('name' => $username));
+        $name = $user->getName();
+        $pagination = $paginator->paginate(
+            $this->getUserRatings($entityManager, $name),
+            $request->query->getInt('page', 1),
+            10
+        );
+        return $this->render(
+            'user/ratings.html.twig', [
+            'pagination' => $pagination
         ]);
     }
 

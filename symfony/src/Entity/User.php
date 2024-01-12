@@ -65,6 +65,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         joinColumns: [new ORM\JoinColumn(name: "user_id", referencedColumnName: "id")],
         inverseJoinColumns: [new ORM\JoinColumn(name: "episode_id", referencedColumnName: "id")]
     )]
+    
     private $episode = array();
 
     /**
