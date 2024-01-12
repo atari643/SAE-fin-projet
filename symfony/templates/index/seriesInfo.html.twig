@@ -52,9 +52,10 @@
             <h2 style="color:black">Episodes</h2>
             <ul id="episodeList">
                 {% for episode in episodes %}
-                    <li>{{ episode.number }} episode
-                    <h2>{{ episode.title }}</h2>
-                    <p>{{ episode.date|date('d/m/Y') }}</p>
+                    <li>
+                        {{ episode.number }} episode
+                        <h2>{{ episode.title }}</h2>
+                        <p>{{ episode.date|date('d/m/Y') }}</p>
                     </li>
                 {% endfor %}
             </ul>
