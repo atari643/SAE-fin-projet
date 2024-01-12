@@ -106,7 +106,7 @@ class IndexController extends AbstractController
     }
 
     #[Route('/series/{id}', name: 'app_index_series_info')]
-    public function seriesInfo(SeriesRepository $repository, int $id, Request $request): Response
+    public function seriesInfo(SeriesRepository $repository, int $id, Request $request, EntityManagerInterface $entityManager): Response
     {
         $userRating = $entityManager->getRepository(Rating::class)->findOneBy([
             'user' => $this->getUser(),
