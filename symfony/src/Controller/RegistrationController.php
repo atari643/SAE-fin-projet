@@ -30,7 +30,7 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
-            $user->setName($form->get('email')->getData());
+            //$user->setName($form->get('email')->getData()); replaced by 'name' in form
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email
@@ -41,11 +41,14 @@ class RegistrationController extends AbstractController
             );
         }
 
-        return $this->render(
-            'registration/register.html.twig',
-            [
-                'registrationForm' => $form->createView(),
-            ]
-        );
-    }//end register()
-}//end class
+        return $this->render('registration/register.html.twig', [
+            'registrationForm' => $form->createView(),
+            'errors' => $form->getErrors(true),
+            'errorN' => $form['name']->getErrors(true),
+            'errorE' => $form['email']->getErrors(true),
+            'errorP' => $form['plainPassword']->getErrors(true),
+            'errorCaptcha' => $form['captcha']->getErrors(true),
+            'errorCountry' => $form['country']->getErrors(true),
+        ]);
+    }
+}

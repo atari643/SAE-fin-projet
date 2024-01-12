@@ -27,7 +27,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
-    #[ORM\Column(name: 'name', type: 'string', length: 128, nullable: false)]
+    #[ORM\Column(name: "name", type: "string", length: 128, nullable: false)]
+    //#[Assert\NotBlank(message:'Empty name')]
     private $name;
 
     #[ORM\Column(name: 'email', type: 'string', length: 128, nullable: false)]
@@ -105,14 +106,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public static function loadValidatorMetadata(ClassMetadata $metadata): void
     {
-        $metadata->addConstraint(
-            new UniqueEntity(
-                [
-                    'fields'  => 'email',
-                    'message' => 'This email was already used to register an account.',
-                ]
-            )
-        );
+        $metadata->addConstraint(new UniqueEntity([
+            'fields' => 'email',
+            'message' => 'This email was already used to register an account.',
+        ]));
+        $metadata->addConstraint(new UniqueEntity([
+            'fields' => 'name',
+            'message' => 'This name already exists.',
+        ]));
 
         $metadata->addPropertyConstraint('email', new Assert\Email(['message' => 'The email address is invalid']));
     }//end loadValidatorMetadata()

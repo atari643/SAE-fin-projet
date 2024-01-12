@@ -39,8 +39,7 @@ class UserController extends AbstractController
 
         if (null != $id) {
             $user = $usersRepository->find($id);
-            dump('id is valid');
-            switch ($role) {
+            switch($role){
                 case 0:
                     $user->setAdmin(false);
                     break;
@@ -58,33 +57,33 @@ class UserController extends AbstractController
 
         $count = $usersRepository->createQueryBuilder('users')->select('count(users.id)')->getQuery()->getSingleScalarResult();
 
-        $searchQuery2   = $request->query->get('search');
-        $user_specific1 = $entityManager->createQueryBuilder()->select(
-            'u.id as id, u.name as name'
-        )->from('App:User', 'u');
-        if (!empty($searchQuery2)) {
-            return $this->redirect('IT_FUCKING_WORKS');
-            $user_specific1 = $user_specific1->where('u.name LIKE :search')->setParameter('search', "%{$searchQuery2}%");
-            $user_specific1 = $user_specific1->getQuery();
-            $pagination     = $paginator->paginate(
-                $user_specific1,
-                $request->query->getInt('page', 1),
-                USERS_PER_PAGE
-            );
-
-            return $this->render(
-                'user/index.html.twig',
-                [
-                // 'form'=>$form->createView(),
+        $search_query = $request->query->get('search');
+        $user_specific = $entityManager->createQueryBuilder()
+        ->select(
+            'u.id as id, u.name as name, u.registerDate as registerDate, u.admin'
+        )
+        ->from('App:User', 'u');
+        if(!empty($search_query)) {
+            $user_specific = $user_specific->where('u.name LIKE :search')
+                ->setParameter('search', "$search_query%");
+                $user_specific = $user_specific->getQuery();
+                $pagination = $paginator->paginate(
+                    $user_specific,
+                    $request->query->getInt('page', 1),
+                    USERS_PER_PAGE
+                );
+                
+                
+                return $this->render('user/index.html.twig', [
+                    //'form'=>$form->createView(),
                     'pagination' => $pagination,
-                    'count'      => $count,
-                    'username'   => $user_specific1,
-                ]
-            );
+                    'count' => $count,
+                    'username' => $search_query,
+                ]);
         }
 
-        dump("Query:\n" . $request->query->all());
-
+        dump($request->query->all());
+        
         $pagination = $paginator->paginate(
             $users_limit,
             $request->query->getInt('page', 1),

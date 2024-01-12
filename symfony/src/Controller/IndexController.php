@@ -101,44 +101,56 @@ class IndexController extends AbstractController
     }//end index()
 
 
-    #[Route('/series/{id}', name: 'app_index_series_info')]
-    public function seriesInfo(SeriesRepository $repository, int $id, Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $userRating = $entityManager->getRepository(Rating::class)->findOneBy(
-            [
-                'user'   => $this->getUser(),
-                'series' => $id,
-            ]
-        );
+    private function getRatings(EntityManagerInterface $entityManager, int $id) {
 
-        if ('' != $request->get('rating') && null != $this->getUser()) {
-            if ('Supprimer' == $request->get('action')) {
-                $entityManager->remove($userRating);
+        // Recupérer l'avis de l'utilisateur actif
+        $userRating = $entityManager->getRepository(Rating::class)->findOneBy([
+            'user' => $this->getUser(),
+            'series' => $id,
+        ]);
+        
+        // Récup tous les commentaires de la serie
+        $comments = $entityManager->getRepository(Rating::class)->findBy([
+            'series' => $id,
+        ]);
+    
+        return [
+            'userRating' => $userRating ? $userRating : null,
+            'userValue' => $userRating ? $userRating->getValue() : null,
+            'userComment' => $userRating ? $userRating->getComment() : null,
+            'comments' => $comments,
+        ];
+    }
+
+    #[Route('/series/{id}', name: 'app_index_series_info')]
+    public function seriesInfo(SeriesRepository $repository, EntityManagerInterface $entityManager, int $id, Request $request): Response
+    {
+        $infoRating = $this->getRatings($entityManager, $id);
+
+        if ($request->get("rating") && $this->getUser() != null){
+            if ($request->get("action") == "Supprimer"){
+
+                $entityManager->remove($infoRating['userRating']);
                 $entityManager->flush();
 
                 return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
-            } else {
-                if ('Modifier' == $request->get('action')) {
-                    if ($userRating->getValue() == $request->get('value') && $userRating->getComment() == $request->get('comment')) {
+                
+            } else{
+
+                if ($request->get("action") == "Modifier"){
+                    if ($infoRating['userValue'] == $request->get("value") && $infoRating['userComment'] == $request->get("comment")){
                         return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
                     }
-
-                    $entityManager->remove($userRating);
+                    $entityManager->remove($infoRating['userRating']);
                     $entityManager->flush();
                 }
-
                 $series = $entityManager->find(Series::class, $id);
-
                 $rating = new Rating();
-
                 $rating->setValue($request->request->get('rating'));
                 $rating->setComment($request->get('comment'));
                 $rating->setDate(new \DateTime());
-
                 $rating->setSeries($series);
-
                 $rating->setUser($this->getUser());
-
                 $entityManager->persist($rating);
                 $entityManager->flush();
 
@@ -155,32 +167,31 @@ class IndexController extends AbstractController
         $seasons = $series->getSeasons();
 
         return $this->render(
-            'index/seriesInfo.html.twig',
-            [
-                'series'      => $series,
-                'seasons'     => $seasons,
-                'episodes'    => null,
-                'userRating'  => $userRating ? $userRating->getValue() : null,
-                'userComment' => $userRating ? $userRating->getComment() : null,
-                'comments'    => $comments,
-            ]
-        );
-    }//end seriesInfo()
-
-
-    #[Route('/series/{id}/{num}', name: 'app_index_season_info')]
-    public function seasonInfo(SeriesRepository $repository, int $id, int $num): Response
+            'index/seriesInfo.html.twig', [
+            'series' => $series,
+            'seasons' => $seasons,
+            'episodes' => null,
+            'userRating' => $infoRating['userRating'] ? $infoRating['userValue'] : null,
+            'userComment' => $infoRating['userRating'] ? $infoRating['userComment'] : null,
+            'comments' => $infoRating['comments'],
+        ]);
+        
+    }
+    #[Route('/series/{id}/season/{num}', name: 'app_index_season_info')]
+    public function seasonInfo(SeriesRepository $repository, int $id, int $num, EntityManagerInterface $entityManager): Response
     {
-        $series   = $repository->seriesInfoById($id);
-        $seasons  = $series->getSeasons();
-        $episodes = $repository->seriesInfoByIdAndSeason($id, $num)->getSeasons()->get($num - 1)->getEpisodes();
-
+        $series = $repository->seriesInfoById($id);
+        $seasons = $series->getSeasons();
+        $infoRating = $this->getRatings($entityManager, $id);
+        $episodes = $repository->seriesInfoByIdAndSeason($id, $num)->getSeasons()->get($num-1)->getEpisodes();
         return $this->render(
-            'index/seriesInfo.html.twig',
-            [
-                'series'   => $series,
-                'seasons'  => $seasons,
-                'episodes' => $episodes,
+            'index/seriesInfo.html.twig', [
+            'series' => $series,
+            'seasons' => $seasons,
+            'episodes' => $episodes,
+            'userRating' => $infoRating['userRating'] ? $infoRating['userValue'] : null,
+            'userComment' => $infoRating['userRating'] ? $infoRating['userComment'] : null,
+            'comments' => $infoRating['comments'],
             ]
         );
     }//end seasonInfo()
