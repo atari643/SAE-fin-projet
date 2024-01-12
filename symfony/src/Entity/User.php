@@ -12,10 +12,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity; //under the assu
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-#[ORM\Table(name: "user", uniqueConstraints: [
+#[ORM\Table(
+    name: "user", uniqueConstraints: [
     new ORM\UniqueConstraint(name: "UNIQ_8D93D649E7927C74", columns: ["email"]),
     new ORM\UniqueConstraint(name: "IDX_8D93D649F92F3E70", columns: ["country_id"]),
-])]
+    ]
+)]
 #[ORM\Entity]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -75,10 +77,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     //added (see TD4 Authentification)
-    public function getUserIdentifier(): string { return $this->getEmail(); }
-    public function getRoles(): array {
+    public function getUserIdentifier(): string
+    {
+        return $this->getEmail(); 
+    }
+    public function getRoles(): array
+    {
 
-        if($this->isAdmin()){
+        if($this->isAdmin()) {
 
             return ['ROLE_ADMIN'];
 
@@ -87,7 +93,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return ['ROLE_USER'];
 
     }
-    public function eraseCredentials() { }
+    public function eraseCredentials()
+    { 
+    }
 
     public static function loadValidatorMetadata(ClassMetadata $metadata): void
     {
@@ -99,6 +107,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'fields' => 'name',
             'message' => 'This name already exists.',
         ]));
+        $metadata->addConstraint(
+            new UniqueEntity(
+                [
+                'fields' => 'email',
+                'message' => 'This email was already used to register an account.',
+                ]
+            )
+        );
 
         $metadata->addPropertyConstraint('email', new Assert\Email(['message' => 'The email address is invalid',]));
     }
