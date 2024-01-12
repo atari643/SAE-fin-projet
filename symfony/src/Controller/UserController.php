@@ -48,6 +48,62 @@ class UserController extends AbstractController
             ->getRepository(User::class);
         $users_limit = $users->findBy(array(), null, USERS_PER_PAGE, USERS_PER_PAGE*($page-1));
 
+
+        /* $searchQuery = $request->query->get('search', "");
+        $searchGenre = $request->query->get('genre', "");
+        $searchYearStart = $request->query->get('yearStart', "");
+        $searchYearEnd = $request->query->get('yearEnd', "");
+        $searchFollow = $request->query->get('follow', "");
+        $series_infos = $entityManager->createQueryBuilder()
+            ->select(
+                's.id as id, s.title as title, s.poster, s.plot as plot, 
+            COUNT(DISTINCT se.number) as season_count, COUNT(e.number) as episode_count'
+            )
+            ->from('App:Series', 's')
+            ->leftJoin('App:Season', 'se', Join::WITH, 's = se.series')
+            ->leftJoin('App:Episode', 'e', Join::WITH, 'se = e.season')
+            ->leftJoin("s.genre", "genre", Join::WITH)
+            ->leftJoin("s.user", "user", Join::WITH )
+            ->groupBy('s.id');
+        if($searchQuery!=null) {
+            $series_infos = $series_infos->where('s.title LIKE :query OR s.plot LIKE :query')
+                ->setParameter('query', '%'.$searchQuery.'%')
+                ->orderBy('CASE WHEN s.title LIKE :query THEN 1 ELSE 2 END')
+                ->setParameter('query', '%'.$searchQuery.'%');
+        }
+        if($searchGenre!=null) {
+            $series_infos = $series_infos->andWhere('genre.id = :genre')
+                ->setParameter('genre', $searchGenre);
+        }
+        if($searchYearStart!=null) {
+            $series_infos = $series_infos->andWhere('s.yearStart >= :yearStart')
+                ->setParameter('yearStart', $searchYearStart);
+        }
+        if($searchYearEnd!=null) {
+            $series_infos = $series_infos->andWhere('s.yearEnd <= :yearEnd')
+                ->setParameter('yearEnd', $searchYearEnd);
+        }
+        if($this->getUser()!=null && $searchFollow!=0 && $searchFollow!=null) {
+            $series_infos = $series_infos->andWhere('user.id = :user')
+                ->setParameter('user', $this->getUser()->getId());
+        }
+        if($searchFollow!=null && $searchFollow==0) {
+            $series_infos = $series_infos->andWhere('user.id IS NULL');
+        }
+        $genres = $entityManager->getRepository(Genre::class)->findAll();
+        $series_infos = $series_infos->getQuery();
+        $pagination = $paginator->paginate(
+            $series_infos,
+            $request->query->getInt('page', 1),
+            SERIES_PER_PAGE
+        );
+        
+        return $this->render(
+            'index/index.php.twig', [
+            'pagination' => $pagination,
+            'genres' => $genres,
+
+            ]); */
         ##########################################
         /* $searchQuery = $request->query->get('search', "");
         $searchGenre = $request->query->get('genre', "");
@@ -84,12 +140,18 @@ class UserController extends AbstractController
             ->getQuery()
             ->getSingleScalarResult();
         ###########################################
+        $user_specific = $entityManager->createQueryBuilder()
+        ->select(
+            'u.id as id, u.name as name'
+        )
+        ->from('App:User', 'u');
         if($searchQuery2!=null) {
-            $count = $count->where('users.name LIKE :query')
+            $user_specific = $user_specific->where('u.name LIKE :query')
                 ->setParameter('query', '%'.$searchQuery2.'%')
-                ->orderBy('CASE WHEN s.title LIKE :query THEN 1 ELSE 2 END')
+                ->orderBy('CASE WHEN u.name LIKE :query THEN 1 ELSE 2 END')
                 ->setParameter('query', '%'.$searchQuery2.'%');
         }
+        $user_specific = $user_specific->getQuery();
         ###
         $pagination = $paginator->paginate(
             $users_limit,
