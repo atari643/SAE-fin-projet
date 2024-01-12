@@ -22,7 +22,7 @@
                     {% if series.getId() == s.getId() %}
                         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
                         <div id="seriesTitle" style="display: inline-block;">
-                            Title : {{ series.title }}
+                            Title : {{ series.title }} ({{ series.yearStart }} - {{ series.yearEnd }})
                             <form action="{{ path('app_index_series_info', {id: series.id}) }}" method="POST" id="formFollow" style="display: inline-block;">
                                 <input type="text" name="idToRemove" value="{{ series.getId() }}" hidden>
                                 <input type="text" name="remove" value="1" hidden>
@@ -36,7 +36,7 @@
                 {% endfor %}
                 {% if found == false %}
                     <div id="seriesTitle" style="display: inline-block;">
-                        Title : {{ series.title }}
+                        Title : {{ series.title }} ({{ series.yearStart }} - {{ series.yearEnd }})
                         <form action="{{ path('app_index_series_info', {id: series.id}) }}" method="POST" id="formFollow" style="display: inline-block;">
                             <input type="text" name="idToAdd" value="{{ series.getId() }}" hidden>
                             <input type="text" name="remove" value="0" hidden>
@@ -48,7 +48,7 @@
                 {% endif %}
             {% else %}
                 <div id="seriesTitle" style="display: inline-block;">
-                    Title : {{ series.title }}
+                    Title : {{ series.title }} ({{ series.yearStart }} - {{ series.yearEnd }})
                     <form action="{{ path('app_login') }}" method="POST" id="formFollow" style="display: inline-block"><button type="submit" id="followButton"><span class="material-symbols-outlined">heart_plus</span></button></form>
                 </div>
             {% endif %}
@@ -68,6 +68,8 @@
             {% endfor %}
             <hr>
             <div id="seriesDirector">Director : {{ series.director }}</div>
+            <hr>
+            <div id="seriesIMDB"><a href="https://www.imdb.com/title/{{ series.imdb }}" target="_BLANK">Go to IMDB</a></div>
         </div>
     </div>
     
