@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\SearchUserFormType;
+use App\Model\SearchUserData;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,21 +21,27 @@ class UserController extends AbstractController
     public function index(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
         $page = $request->query->get('page');
+        $get_args = $request->query->all();
+        //not here box
         if($page == null){
-
-            return $this->redirect('?page=1');
+            $get_string = "?";
+            foreach (array_keys($get_args) as $key){
+                $arg = $get_args[$key]; 
+                $get_string .= $key."=".$arg."&";
+            }
+            $get_string.="page=1";
+            return $this->redirect($get_string);
 
         }
-
+        //not here box
         $usersRepository = $entityManager
             ->getRepository(User::class);
-
         $role = $request->get('role');
         $id = $request->get('id');
 
         if($id != null){
             $user = $usersRepository->find($id);
-
+            dump("id is valid");
             switch($role){
                 case 0:
                     $user->setAdmin(false);
@@ -48,122 +57,51 @@ class UserController extends AbstractController
             ->getRepository(User::class);
         $users_limit = $users->findBy(array(), null, USERS_PER_PAGE, USERS_PER_PAGE*($page-1));
 
-
-        /* $searchQuery = $request->query->get('search', "");
-        $searchGenre = $request->query->get('genre', "");
-        $searchYearStart = $request->query->get('yearStart', "");
-        $searchYearEnd = $request->query->get('yearEnd', "");
-        $searchFollow = $request->query->get('follow', "");
-        $series_infos = $entityManager->createQueryBuilder()
-            ->select(
-                's.id as id, s.title as title, s.poster, s.plot as plot, 
-            COUNT(DISTINCT se.number) as season_count, COUNT(e.number) as episode_count'
-            )
-            ->from('App:Series', 's')
-            ->leftJoin('App:Season', 'se', Join::WITH, 's = se.series')
-            ->leftJoin('App:Episode', 'e', Join::WITH, 'se = e.season')
-            ->leftJoin("s.genre", "genre", Join::WITH)
-            ->leftJoin("s.user", "user", Join::WITH )
-            ->groupBy('s.id');
-        if($searchQuery!=null) {
-            $series_infos = $series_infos->where('s.title LIKE :query OR s.plot LIKE :query')
-                ->setParameter('query', '%'.$searchQuery.'%')
-                ->orderBy('CASE WHEN s.title LIKE :query THEN 1 ELSE 2 END')
-                ->setParameter('query', '%'.$searchQuery.'%');
-        }
-        if($searchGenre!=null) {
-            $series_infos = $series_infos->andWhere('genre.id = :genre')
-                ->setParameter('genre', $searchGenre);
-        }
-        if($searchYearStart!=null) {
-            $series_infos = $series_infos->andWhere('s.yearStart >= :yearStart')
-                ->setParameter('yearStart', $searchYearStart);
-        }
-        if($searchYearEnd!=null) {
-            $series_infos = $series_infos->andWhere('s.yearEnd <= :yearEnd')
-                ->setParameter('yearEnd', $searchYearEnd);
-        }
-        if($this->getUser()!=null && $searchFollow!=0 && $searchFollow!=null) {
-            $series_infos = $series_infos->andWhere('user.id = :user')
-                ->setParameter('user', $this->getUser()->getId());
-        }
-        if($searchFollow!=null && $searchFollow==0) {
-            $series_infos = $series_infos->andWhere('user.id IS NULL');
-        }
-        $genres = $entityManager->getRepository(Genre::class)->findAll();
-        $series_infos = $series_infos->getQuery();
-        $pagination = $paginator->paginate(
-            $series_infos,
-            $request->query->getInt('page', 1),
-            SERIES_PER_PAGE
-        );
-        
-        return $this->render(
-            'index/index.php.twig', [
-            'pagination' => $pagination,
-            'genres' => $genres,
-
-            ]); */
-        ##########################################
-        /* $searchQuery = $request->query->get('search', "");
-        $searchGenre = $request->query->get('genre', "");
-        $series_infos = $entityManager->createQueryBuilder()
-            ->select(
-                's.id as id, s.title as title, s.poster, s.plot as plot, 
-            COUNT(DISTINCT se.number) as season_count, COUNT(e.number) as episode_count'
-            )
-            ->from('App:Series', 's')
-            ->leftJoin('App:Season', 'se', Join::WITH, 's = se.series')
-            ->leftJoin('App:Episode', 'e', Join::WITH, 'se = e.season')
-            ->leftJoin("s.genre", "genre", Join::WITH)
-        
-            ->groupBy('s.id');
-        if($searchQuery!=null) {
-            $series_infos = $series_infos->where('s.title LIKE :query OR s.plot LIKE :query')
-                ->setParameter('query', '%'.$searchQuery.'%')
-                ->orderBy('CASE WHEN s.title LIKE :query THEN 1 ELSE 2 END')
-                ->setParameter('query', '%'.$searchQuery.'%');
-        }
-        if($searchGenre!=null) {
-            $series_infos = $series_infos->andWhere('genre.id = :genre')
-                ->setParameter('genre', $searchGenre);
-        }
-        $genres = $entityManager->getRepository(Genre::class)->findAll();
-        $series_infos = $series_infos->getQuery(); */
-        ##########################################
-        $searchQuery2 = $request->query->get('search', "");
-
-
-        ###
         $count = $usersRepository->createQueryBuilder('users')
             ->select('count(users.id)')
             ->getQuery()
             ->getSingleScalarResult();
-        ###########################################
-        $user_specific = $entityManager->createQueryBuilder()
+
+        $searchQuery2 = $request->query->get('search');
+        $user_specific1 = $entityManager->createQueryBuilder()
         ->select(
             'u.id as id, u.name as name'
         )
         ->from('App:User', 'u');
-        if($searchQuery2!=null) {
-            $user_specific = $user_specific->where('u.name LIKE :query')
-                ->setParameter('query', '%'.$searchQuery2.'%')
-                ->orderBy('CASE WHEN u.name LIKE :query THEN 1 ELSE 2 END')
-                ->setParameter('query', '%'.$searchQuery2.'%');
+        if(!empty($searchQuery2)) {
+            return $this->redirect('IT_FUCKING_WORKS');
+            $user_specific1 = $user_specific1->where('u.name LIKE :search')
+                ->setParameter('search', "%{$searchQuery2}%");
+                $user_specific1 = $user_specific1->getQuery();
+                $pagination = $paginator->paginate(
+                    $user_specific1,
+                    $request->query->getInt('page', 1),
+                    USERS_PER_PAGE
+                );
+                
+                
+                return $this->render('user/index.html.twig', [
+                    //'form'=>$form->createView(),
+                    'pagination' => $pagination,
+                    'count' => $count,
+                    'username' => $user_specific1,
+                ]);
         }
-        $user_specific = $user_specific->getQuery();
-        ###
+        dump("Query:\n".$request->query->all());
+        
         $pagination = $paginator->paginate(
             $users_limit,
             $request->query->getInt('page', 1),
             USERS_PER_PAGE
         );
-
         return $this->render('user/index.html.twig', [
+//            'form'=>$form->createView(),
             'pagination' => $pagination,
             'count' => $count,
+            'username' => '',
         ]);
-    }
+    }   
+    
 
     #[Route('/user/series', name: 'series_followed', methods: ['GET', 'POST'])]
     public function seriesFollowed(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response

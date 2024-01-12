@@ -8,9 +8,13 @@
     <link rel="stylesheet" href="/css/users.css" />
 
     <h1>Users List</h1>
+    {# {% include "./utils/searchUserData.html.twig" with { form : form} only %} #}
+
     <form action="{{ path('app_users') }}" method="get">
-                <input type="text" name="search" id="search" placeholder="Search for a user" />
-    </form>
+        <input type="text" name="search" placeholder="Search for a user" />
+        <input type="submit" value="Submit">
+{#         <button type="submit" class="material-symbols-outlined">search</button>
+ #}    </form>
 
     <table style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
         <thead>
@@ -23,6 +27,9 @@
             </tr>
         </thead>
         {% for user in pagination %}
+            {% if username is not empty %}
+                {{username}}
+            {% endif %}
         <tbody>
             <tr class="user">
             <td><img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random&rounded=true" style="display: inline;"></td>
@@ -54,7 +61,7 @@
             '<input type="text" name="id" value="' + values[1] + '" hidden />' +
             '</form>');
             $('body').append(form);
-            form.submit();#
+            form.submit();
         }
     </script>
 {% endblock %}
