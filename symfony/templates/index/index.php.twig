@@ -21,9 +21,27 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
             </div>
         </div>
         <h1>Vision Vibes</h1>
-        <div class="search">
-            <input type="text" placeholder="Search">
-            <span class="material-symbols-outlined">search</span>
+        <div class="advanced-search">
+            <form action="{{ path('app_default') }}" method="get">
+                <input type="text" name="search" id="search" placeholder="Search for a series" />
+
+                <select name="genre" id="genre">
+                    <option value="">All genres</option>
+                    {% for genre in genres %}
+                        <option value="{{ genre.id }}">{{ genre.name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="number" name="yearStart" id="yearStart" placeholder="Start Year" min="1900" max="{{ "now"|date("Y") }}" />
+                <input type="number" name="yearEnd" id="yearEnd" placeholder="End Year" min="1900" max="{{ "now"|date("Y") }}" />
+                {% if app.user %}
+                    <select name="follow" id="follow" placeholder="Followed">
+                        <option value="">All</option>
+                        <option value="1">Followed</option>
+                        <option value="0">Not followed</option>
+                    </select>
+                {% endif %}
+                <button type="submit" class="material-symbols-outlined">search</button>
+            </form>
         </div>
     </header>
     {% endblock %}
@@ -137,7 +155,7 @@ bannerButtonMore.classList.add('bannerButtonMore');
 bannerButtonMore.onclick = () => {
 window.location.href = "/series/" + poster.dataset.id;
 };
-bannerButtonMore.innerHTML = 'En savoir +';
+bannerButtonMore.innerHTML = 'Learn more';
 headerBanner.appendChild(bannerButtonMore);
 banner.appendChild(headerBanner);
 const bannerImg = document.createElement('img');
@@ -158,7 +176,7 @@ bannerDuration.innerHTML = poster.dataset.duration;
 } else if (poster.dataset.épisodes != null) {
 bannerDuration.innerHTML = poster.dataset.épisodes;
 } else {
-bannerDuration.innerHTML = 'Pas de durée estimée';
+bannerDuration.innerHTML = 'No duration estimated';
 } parentBottomBanner.appendChild(bannerDuration);
 const bannerParentStars = document.createElement('div');
 bannerParentStars.classList.add('bannerParentStars');
@@ -172,7 +190,41 @@ bannerParentStars.lastChild.style.color = '#e3f7f5';
 parentBottomBanner.appendChild(bannerParentStars);
 const suivieButton = document.createElement('div');
 suivieButton.classList.add('suivieButtonadd');
-suivieButton.innerHTML += '<span class="material-symbols-outlined">heart_plus</span>';
+
+suivieButton.innerHTML += "<style>"
++ " #followButton, #unfollowButton { background: none; color: inherit; border: none; padding: 0; font: inherit; cursor: pointer; outline: inherit; }"
++ "</style>";
+
+{% if app.user != null %}
+
+    var find = false;
+    {% for s in app.user.getSeries() %}
+        if(poster.dataset.id == {{ s.getId() }}){
+            suivieButton.innerHTML += "<style>"
+            + ".material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 }"
+            + "</style>";
+            {% if app.request.query.get('page') == null %}
+                suivieButton.innerHTML += '<form action="{{ path('app_default') }}?page=1" method="POST"><input type="text" name="idToRemove" value="{{ s.getId() }}" hidden><input type="text" name="remove" value="1" hidden><button type="submit" id="unfollowButton" onclick="onUnfollowClick(\'' + poster.dataset.id + '\')"><span class="material-symbols-outlined unfollow">favorite</span></button></form>';
+            {% else %}
+                suivieButton.innerHTML += '<form action="{{ path('app_default') }}?page={{ app.request.query.get('page') }}" method="POST"><input type="text" name="idToRemove" value="{{ s.getId() }}" hidden><input type="text" name="remove" value="1" hidden><button type="submit" id="unfollowButton" onclick="onUnfollowClick(\'' + poster.dataset.id + '\')"><span class="material-symbols-outlined unfollow">favorite</span></button></form>';
+            {% endif %}
+            find = true;
+            console.log("find");
+        }
+    {% endfor %}
+
+    if(!find){
+        {% if app.request.query.get('page') == null %}
+            suivieButton.innerHTML += '<form action="{{ path('app_default') }}?page=1" method="POST"><input type="text" name="idToAdd" value="' + poster.dataset.id + '" hidden><button type="submit" id="followButton" onclick="onFollowClick(\'' + poster.dataset.id + '\')"><span class="material-symbols-outlined follow">heart_plus</span></button></form>';
+        {% else %}
+            suivieButton.innerHTML += '<form action="{{ path('app_default') }}?page={{ app.request.query.get('page') }}" method="POST"><input type="text" name="idToAdd" value="' + poster.dataset.id + '" hidden><button type="submit" id="followButton" onclick="onFollowClick(\'' + poster.dataset.id + '\')"><span class="material-symbols-outlined follow">heart_plus</span></button></form>';
+        {% endif %}
+    }
+
+{% else %}
+    suivieButton.innerHTML += '<form action="{{ path('app_login') }}" method="POST"><button type="submit" id="followButton"><span class="material-symbols-outlined">heart_plus</span></button></form>';
+{% endif %}
+
 parentBottomBanner.appendChild(suivieButton);
 document.body.appendChild(banner);
 document.getElementById('show').style.width = '85%';
@@ -189,6 +241,28 @@ banner.style.borderTopLeftRadius = '0';
 banner.style.borderTopLeftRadius = '15px';
 }
 }
+
+    function onUnfollowClick(id){
+        
+        const unfollow = document.getElementById('unfollowButton');
+        {% if app.request.query.get('page') == null %}
+            unfollow.innerHTML = '<form action="{{ path('app_default') }}?page=1" method="POST"><input type="text" name="idToAdd" value="' + id + '" hidden><input type="text" name="remove" value="1" hidden><button type="submit" id="followButton" onclick="onUnfollowClick()"><span class="material-symbols-outlined follow">heart_plus</span></button></form>';
+        {% else %}
+            unfollow.innerHTML = '<form action="{{ path('app_default') }}?page={{ app.request.query.get('page') }}" method="POST"><input type="text" name="idToAdd" value="' + id + '" hidden><input type="text" name="remove" value="1" hidden><button type="submit" id="followButton" onclick="onUnfollowClick()"><span class="material-symbols-outlined follow">heart_plus</span></button></form>';
+        {% endif %}
+
+    }
+
+    function onFollowClick(id){
+        
+        const follow = document.getElementById('followButton');
+        {% if app.request.query.get('page') == null %}
+            follow.innerHTML = '<form action="{{ path('app_default') }}?page=1" method="POST"><input type="text" name="idToRemove" value="' + id + '" hidden><button type="submit" id="unfollowButton" onclick="onUnfollowClick()"><span class="material-symbols-outlined unfollow">favorite</span></button></form>';
+        {% else %}
+            follow.innerHTML = '<form action="{{ path('app_default') }}?page={{ app.request.query.get('page') }}" method="POST"><input type="text" name="idToRemove" value="' + id + '" hidden><button type="submit" id="unfollowButton" onclick="onFollowClick()"><span class="material-symbols-outlined unfollow">favorite</span></button></form>';
+        {% endif %}
+
+    }
 	</script>
 
 {% endblock %}

@@ -7,9 +7,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: "series", uniqueConstraints: [
+#[ORM\Table(
+    name: "series", uniqueConstraints: [
     new ORM\UniqueConstraint(name: "UNIQ_3A10012D85489131", columns: ["imdb"])
-])]
+    ]
+)]
 #[ORM\Entity]
 class Series
 {
@@ -304,7 +306,7 @@ class Series
     /**
      * @return Collection<int, Season>
      */
-     public function getSeasons(): Collection
+    public function getSeasons(): Collection
     {
         return $this->seasons;
     }

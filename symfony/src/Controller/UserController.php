@@ -21,6 +21,7 @@ class UserController extends AbstractController
     public function index(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
         $page = $request->query->get('page');
+<<<<<<< HEAD
         $get_args = $request->query->all();
         //not here box
         if($page == null){
@@ -31,11 +32,17 @@ class UserController extends AbstractController
             }
             $get_string.="page=1";
             return $this->redirect($get_string);
+=======
+        if($page == null) {
+
+            return $this->redirect('?page=1');
+>>>>>>> main
 
         }
         //not here box
         $usersRepository = $entityManager
             ->getRepository(User::class);
+<<<<<<< HEAD
         $role = $request->get('role');
         $id = $request->get('id');
 
@@ -53,6 +60,8 @@ class UserController extends AbstractController
             $entityManager->flush();
         }
 
+=======
+>>>>>>> main
         $users = $entityManager
             ->getRepository(User::class);
         $users_limit = $users->findBy(array(), null, USERS_PER_PAGE, USERS_PER_PAGE*($page-1));
@@ -94,6 +103,7 @@ class UserController extends AbstractController
             $request->query->getInt('page', 1),
             USERS_PER_PAGE
         );
+<<<<<<< HEAD
         return $this->render('user/index.html.twig', [
 //            'form'=>$form->createView(),
             'pagination' => $pagination,
@@ -102,6 +112,16 @@ class UserController extends AbstractController
         ]);
     }   
     
+=======
+
+        return $this->render(
+            'user/index.html.twig', [
+            'pagination' => $pagination,
+            'count' => $count,
+            ]
+        );
+    }
+>>>>>>> main
 
     #[Route('/user/series', name: 'series_followed', methods: ['GET', 'POST'])]
     public function seriesFollowed(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
@@ -113,9 +133,11 @@ class UserController extends AbstractController
             $request->query->getInt('page', 1),
             10
         );
-        return $this->render('user/series_followed.html.twig', [
+        return $this->render(
+            'user/series_followed.html.twig', [
             'pagination' => $pagination
-        ]);
+            ]
+        );
     }
 
     #[Route('/user/series/{username}', name: 'series_followed_search_user', methods: ['GET', 'POST'])]
