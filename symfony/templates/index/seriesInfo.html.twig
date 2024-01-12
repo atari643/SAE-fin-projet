@@ -81,6 +81,32 @@
         </form>
     </div>  
 
+    <table style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
+        <tbody>
+            {% for comment in comments|reverse %}
+                <tr>
+                    <td><img src="https://ui-avatars.com/api/?name={{ comment.user.name }}&background=random&rounded=true" style="display: inline;">{{comment.user.name}}</td>
+                    <td>{{ comment.value }}</td>
+                    <td> {{ comment.comment }}</td>
+
+                    <td>
+                        {% set diff = date().diff(comment.date) %}
+                        {% if diff.y > 0 %}
+                            Publié il y a {{ diff.y }} an(s)
+                        {% elseif diff.m > 0 %}
+                            Publié il y a {{ diff.m }} mois
+                        {% elseif diff.d > 0 %}
+                            Publié il y a {{ diff.d }} jour(s)
+                        {% elseif diff.h > 0 %}
+                            Publié il y a {{ diff.h }} heure(s)
+                        {% else %}
+                            Publié il y a {{ diff.i }} minute(s)
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     
     <script>
         window.onload = function() {

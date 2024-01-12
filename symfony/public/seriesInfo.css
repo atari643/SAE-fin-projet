@@ -137,3 +137,26 @@ nav ul li a:hover {
 #rating input:nth-of-type(2):hover{
     background-color: #85102a;
 }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
+}
+
+th, td {
+    border: 2px solid #cba848;
+    padding: 8px;
+    text-align: left;    
+}
+
+tr:hover {
+    background-color: #cba848;
+}
+tr img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+}

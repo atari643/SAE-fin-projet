@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Episode;
+use App\Entity\User;
 use App\Entity\Season;
 use App\Entity\Series;
 use App\Entity\Rating;
@@ -90,10 +91,21 @@ class IndexController extends AbstractController
 
         if ($request->get("rating") != "" && $this->getUser() != null){
             if ($request->get("action") == "Supprimer"){
+
                 $entityManager->remove($userRating);
                 $entityManager->flush();
                 return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
+                
             } else{
+
+                if ($request->get("action") == "Modifier"){
+                    if ($userRating->getValue() == $request->get("value") && $userRating->getComment() == $request->get("comment")){
+                        return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
+                    }
+                    $entityManager->remove($userRating);
+                    $entityManager->flush();
+                }
+
                 $series = $entityManager->find(Series::class, $id);
 
                 $rating = new Rating();
@@ -112,6 +124,12 @@ class IndexController extends AbstractController
             }
             
         }
+
+        // Récupérez tous les commentaires pour la série
+        $comments = $entityManager->getRepository(Rating::class)->findBy([
+            'series' => $id,
+        ]);
+
         $series = $entityManager
             ->getRepository(Series::class)
             ->find($id);
@@ -124,7 +142,8 @@ class IndexController extends AbstractController
             'seasons' => $seasons,
             'episodes' => null,
             'userRating' => $userRating ? $userRating->getValue() : null,
-            'userComment' => $userRating ? $userRating->getComment() : null
+            'userComment' => $userRating ? $userRating->getComment() : null,
+            'comments' => $comments,
         ]);
         
     }
