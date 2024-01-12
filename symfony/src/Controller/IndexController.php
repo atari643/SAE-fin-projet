@@ -20,10 +20,16 @@ class IndexController extends AbstractController
     public function index(EntityManagerInterface $entityManager, Request $request): Response
     {
         session_start();
+        if (isset($_SESSION['user'])) {
+            $user = $_SESSION['user'];
+            $this->addFlash('success', 'Welcome back '.$user->getUsername());
+            unset($_SESSION['user']);
+        }
         $page = $request->query->get('page');
         if($page == null){
             return $this->redirect('?page=1');
         }
+
         $session = new Session();
         if($session->has('series')){
             $series = $session->get('series');
@@ -51,6 +57,7 @@ class IndexController extends AbstractController
             $infos['title'] = $current_series->getTitle();
             $infos['plot'] = $current_series->getPlot();
             $infos['rating'] = $current_series->getImdb();
+            $infos['youtubeTrailer'] = $current_series->getYoutubeTrailer();
 
             $qb = $entityManager->createQueryBuilder();
             $result = $qb
@@ -70,14 +77,16 @@ class IndexController extends AbstractController
             $series_infos[] = $infos;
             
         }
-
+        //if justConnected 
         return $this->render('index/index.php.twig', [
             'seriesTotal'=>$series100,
             'series' => $series_infos,
             'numberOfPages' => $numberOfPages,
             'page' => $page,
+            'justConnected' => true,
         ]);
     }
+    
 
     #[Route('/series/{id}', name: 'app_index_series_info')]
     public function seriesInfo(EntityManagerInterface $entityManager, int $id): Response

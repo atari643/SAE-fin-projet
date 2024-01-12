@@ -11,7 +11,7 @@ body {
     background-color: #221F1F;
     display: flex;
     flex-direction: column;
-    padding: 5px 10% 0 10%;
+    padding: 0 10%;
     width: 80%;
     height: fit-content;
     align-items: center;
@@ -27,6 +27,8 @@ body {
     justify-content: space-between;
     border-bottom: 1px solid #c4bdaa;
     padding-bottom: 10px;
+    padding-top: 5px;
+    background-color: #221F1F;
 }
 
 .itemMenu{
@@ -65,7 +67,15 @@ body {
     align-items: end;
 }
 
+#parentItemMenuLeft{
+    align-items: center;
+}
 
+#parentItemMenuCenter{
+    transform: translateX(-50%);
+    position: absolute;
+    left: 50%;
+}
 
 .onThisPage {
     background-color: hsl(347, 79%, 30%, 30%);
@@ -122,4 +132,65 @@ body {
 
 #parentItemMenuRight>div>a:hover{
     color: #e3f7f5;
+}
+
+.search{
+    background-color: transparent;
+    border: none;
+    border-bottom: #cba848 1px solid;
+    color: #e3f7f5;
+    font-family: 'Roboto', sans-serif;
+    animation: forwards 0.5s searchSpawning;
+    font-size: 1rem;
+    padding-bottom: 7px;
+}
+
+.search:focus{
+    outline: none;
+}
+
+@keyframes searchSpawning {
+    from {
+        width: 0;
+    }
+    to {
+        width: 250px;
+    }
+}
+
+@keyframes searchUnSpawning {
+    from {
+        width: 250px;
+    }
+    to {
+        width: 0px;
+    }
+}
+
+.researchButton{
+    background-color: transparent;
+    border: none;
+    color: #cba848;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.4s;
+    padding: 0;
+    margin: 0;
+    width: fit-content;
+    height: fit-content;
+}
+
+.closeResearch{
+    background-color: transparent;
+    border: none;
+    color: #cba848;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: 0.4s;
+    padding: 0;
+    margin: 0;
+    width: fit-content;
+    height: fit-content;
 }
