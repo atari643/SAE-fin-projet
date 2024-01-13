@@ -123,7 +123,7 @@ class IndexController extends AbstractController
     }
 
     #[Route('/series/{id}', name: 'app_index_series_info')]
-    public function seriesInfo(SeriesRepository $repository, EntityManagerInterface $entityManager, int $id, Request $request): Response
+    public function seriesInfo(SeriesRepository $repository, EntityManagerInterface $entityManager, int $id, Request $request, PaginatorInterface $paginator): Response
     {
         $infoRating = $this->getRatings($entityManager, $id);
 
@@ -165,12 +165,17 @@ class IndexController extends AbstractController
 
         $series  = $repository->seriesInfoById($id);
         $seasons = $series->getSeasons();
+        $paginationSeason = $paginator->paginate(
+            $seasons,
+            $request->query->getInt('page', 1),
+            SERIES_PER_PAGE
+        );
 
         return $this->render(
             'index/seriesInfo.html.twig', [
             'series' => $series,
-            'seasons' => $seasons,
-            'episodes' => null,
+            'paginationSeason' => $paginationSeason,
+            'pagination' => null,
             'userRating' => $infoRating['userRating'] ? $infoRating['userValue'] : null,
             'userComment' => $infoRating['userRating'] ? $infoRating['userComment'] : null,
             'comments' => $infoRating['comments'],
@@ -178,17 +183,29 @@ class IndexController extends AbstractController
         
     }
     #[Route('/series/{id}/season/{num}', name: 'app_index_season_info')]
-    public function seasonInfo(SeriesRepository $repository, int $id, int $num, EntityManagerInterface $entityManager): Response
+    public function seasonInfo(SeriesRepository $repository, int $id, int $num, EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
     {
         $series = $repository->seriesInfoById($id);
         $seasons = $series->getSeasons();
         $infoRating = $this->getRatings($entityManager, $id);
         $episodes = $repository->seriesInfoByIdAndSeason($id, $num)->getSeasons()->get($num-1)->getEpisodes();
+        $pagination = $paginator->paginate(
+            $episodes,
+            $request->query->getInt('page', 1),
+            SERIES_PER_PAGE
+        );
+        $paginationSeason = $paginator->paginate(
+            $seasons,
+            $request->query->getInt('pageS', 1),
+            SERIES_PER_PAGE
+        );
+        
+        
         return $this->render(
             'index/seriesInfo.html.twig', [
             'series' => $series,
-            'seasons' => $seasons,
-            'episodes' => $episodes,
+            'paginationSeason' => $paginationSeason,
+            'pagination' => $pagination,
             'userRating' => $infoRating['userRating'] ? $infoRating['userValue'] : null,
             'userComment' => $infoRating['userRating'] ? $infoRating['userComment'] : null,
             'comments' => $infoRating['comments'],
@@ -196,7 +213,15 @@ class IndexController extends AbstractController
         );
     }//end seasonInfo()
 
-
+    #[Route('/series/{id}/season/{num}/episode/{numE}', name: 'app_index_episode_followBack')]
+    public function followBack(SeriesRepository $repository, int $id, int $num, int $numE, EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
+    {
+        $series = $repository->seriesInfoById($id);
+        $episode = $repository->seriesInfoByIdAndSeasonAndEpisode($id, $num, $numE)->getSeasons()->get($num-1)->getEpisodes()->get($numE-1);
+        
+        
+        
+    }//end followBack()
     #[Route('/poster/{id}', name: 'app_series_poster')]
     public function showPoster(EntityManagerInterface $entityManager, int $id): ?Response
     {
