@@ -5,24 +5,7 @@
 {% block body %}
     {% block paging %}
         <div class="paging">
-            <a href="?page=1"><p style="display: inline;">First Page</p></a>
-
-            {% if page - 1 > 0 %}
-                <a href="?page={{ page - 1 }}"><p style="display: inline;">Previous</p></a>
-            {% else %}
-                <a href="?page={{ page }}"><p style="display: inline;">Previous</p></a>
-            {% endif %}
-
-            <a class="number" href="?page={{ page }}"><p style="display: inline; font-weight: bold;">{{ page }}</p></a>
-
-            {% if page + 1 <= numberOfPages %}
-                <a href="?page={{ page + 1 }}"><p style="display: inline;">Next</p></a>
-            {% else %}
-                <a href="?page={{ page }}"><p style="display: inline;">Next</p></a>
-            {% endif %}
-
-            <a href="?page={{ numberOfPages|round }}"><p style="display: inline;">Last Page</p></a>
+            {{ knp_pagination_render(pagination) }}
         </div>
-
     {% endblock %}
 {% endblock %}

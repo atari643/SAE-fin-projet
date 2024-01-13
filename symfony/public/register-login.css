@@ -84,6 +84,13 @@ body, input, button {
 
   }
 
+  #Logout-username {
+
+    color: goldenrod;
+    padding-bottom: 50px;
+    
+  }
+
 
   /* Make the form responsive */
 

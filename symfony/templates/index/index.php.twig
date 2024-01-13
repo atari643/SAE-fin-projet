@@ -13,22 +13,54 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
 {% endblock %}
 
 {% block header %}
-{% endblock %}
+    <header>
+        <div class="caroussel">
+            <div class="carousselChild">
+                {% for s in pagination %}
+                <div class="carousselChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" >
+                    <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="affiche">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <h1>Vision Vibes</h1>
+        <div class="advanced-search">
+            <form action="{{ path('app_default') }}" method="get">
+                <input type="text" name="search" id="search" placeholder="Search for a series" />
+
+                <select name="genre" id="genre">
+                    <option value="">All genres</option>
+                    {% for genre in genres %}
+                        <option value="{{ genre.id }}">{{ genre.name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="number" name="yearStart" id="yearStart" placeholder="Start Year" min="1900" max="{{ "now"|date("Y") }}" />
+                <input type="number" name="yearEnd" id="yearEnd" placeholder="End Year" min="1900" max="{{ "now"|date("Y") }}" />
+                {% if app.user %}
+                    <select name="follow" id="follow" placeholder="Followed">
+                        <option value="">All</option>
+                        <option value="1">Followed</option>
+                        <option value="0">Not followed</option>
+                    </select>
+                {% endif %}
+                <button type="submit" class="material-symbols-outlined">search</button>
+            </form>
+        </div>
+    </header>
+    {% endblock %}
 {% block body %}
 
 {% if is_granted('IS_IMPERSONATOR') %}
     <a href="{{ impersonation_exit_path(path('app_login') ) }}">Exit impersonation</a>
 {% endif %}
     <div id="show">
-    {% for s in series %}
-            <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="4"
-            <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="4"
-            data-resum="{{s.plot}}" data-trailer="{{s.youtubeTrailer}}">
-            <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="posters">
+        {% for s in pagination %}
+            <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="4" data-resum="{{s.plot}}" data-trailer="{{s.youtubeTrailer}}">
+                <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="posters">
             </div>
-    {% endfor %}
+        {% endfor %}
     </div>
-
+    
     {{ block('paging') }}
     
     <script>

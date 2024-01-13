@@ -2,141 +2,239 @@
 
 namespace App\Controller;
 
-use App\Entity\Episode;
-use App\Entity\Season;
+use App\Entity\Genre;
+use App\Entity\Rating;
 use App\Entity\Series;
+use App\Repository\SeriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Doctrine\ORM\Query\Expr\Join;
+
 const SERIES_PER_PAGE = 10;
 
 class IndexController extends AbstractController
 {
-    #[Route('/', name: 'app_default', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager, Request $request): Response
+    #[Route('/', name: 'app_default', methods: ['GET', 'POST'])]
+    public function index(SeriesRepository $repository, Request $request, PaginatorInterface $paginator, EntityManagerInterface $entityManager): Response
     {
-        session_start();
-        if (isset($_SESSION['user'])) {
-            $user = $_SESSION['user'];
-            $this->addFlash('success', 'Welcome back '.$user->getUsername());
-            unset($_SESSION['user']);
-        }
-        $page = $request->query->get('page');
-        if($page == null){
-            return $this->redirect('?page=1');
-        }
-
-        $session = new Session();
-        if($session->has('series')){
-            $series = $session->get('series');
-        }
-        else{
-            $series = $entityManager
-                ->getRepository(Series::class)
-                ->findAll();
-            $session->set('series', $series);
-        }
-        $series100 = array_slice($series, 0, 100);
-        $series_limit = array_slice($series, ($page-1)*SERIES_PER_PAGE, SERIES_PER_PAGE);
-        $count = count($series);
-        $numberOfPages = $count/SERIES_PER_PAGE;
-        if($count % SERIES_PER_PAGE != 0){
-            $numberOfPages += 1;
+        $searchQuery     = $request->query->get('search', '');
+        $searchGenre     = $request->query->get('genre', '');
+        $searchYearStart = $request->query->get('yearStart', '');
+        $searchYearEnd   = $request->query->get('yearEnd', '');
+        $searchFollow    = $request->query->get('follow', '');
+        $series_infos    = $repository->seriesInfo();
+        if (null != $searchQuery) {
+            $series_infos = $series_infos->where('s.title LIKE :query OR s.plot LIKE :query')->setParameter('query', '%' . $searchQuery . '%')->orderBy('CASE WHEN s.title LIKE :query THEN 1 ELSE 2 END')->setParameter('query', '%' . $searchQuery . '%');
         }
 
-        $series_infos = [];
-
-        for($i=0; $i < sizeof($series_limit); $i++){
-            $current_series = $series_limit[$i];
-            $infos = [];
-            $infos['id'] = $current_series->getId();
-            $infos['title'] = $current_series->getTitle();
-            $infos['plot'] = $current_series->getPlot();
-            $infos['rating'] = $current_series->getImdb();
-            $infos['youtubeTrailer'] = $current_series->getYoutubeTrailer();
-
-            $qb = $entityManager->createQueryBuilder();
-            $result = $qb
-                ->select(['count(DISTINCT(season.number)) as s_count',
-                        'count(episode.number) as e_count'])
-                ->from('App:Series','series')
-                ->innerJoin('App:Season', 'season',
-                    Join::WITH, 'series = season.series')
-                ->innerJoin('App:Episode', 'episode',
-                    Join::WITH, 'season = episode.season')
-                ->where('series.id = '.$infos['id'])
-                ->getQuery()
-                ->getSingleResult();
-
-            $infos['episode_count'] = $result['e_count'];
-            $infos['season_count'] = $result['s_count'];
-            $series_infos[] = $infos;
-            
+        if (null != $searchGenre) {
+            $series_infos = $series_infos->andWhere('genre.id = :genre')->setParameter('genre', $searchGenre);
         }
-        //if justConnected 
-        return $this->render('index/index.php.twig', [
-            'seriesTotal'=>$series100,
-            'series' => $series_infos,
-            'numberOfPages' => $numberOfPages,
-            'page' => $page,
-            'justConnected' => true,
+
+        if (null != $searchYearStart) {
+            $series_infos = $series_infos->andWhere('s.yearStart >= :yearStart')->setParameter('yearStart', $searchYearStart);
+        }
+
+        if (null != $searchYearEnd) {
+            $series_infos = $series_infos->andWhere('s.yearEnd <= :yearEnd')->setParameter('yearEnd', $searchYearEnd);
+        }
+
+        if (null != $this->getUser() && 0 != $searchFollow && null != $searchFollow) {
+            $series_infos = $series_infos->andWhere('user.id = :user')->setParameter('user', $this->getUser()->getId());
+        }
+
+        if (null != $searchFollow && 0 == $searchFollow) {
+            $series_infos = $series_infos->andWhere('user.id IS NULL');
+        }
+
+        $genres       = $entityManager->getRepository(Genre::class)->findAll();
+        $series_infos = $series_infos->getQuery();
+
+        // region Follow/Unfollow Series
+        if (null != $request->get('idToAdd') && null == $request->get('remove')) {
+            $user = $this->getUser();
+
+            $series      = $entityManager->getRepository(Series::class);
+            $seriesToAdd = $series->findBy(['id' => $request->get('idToAdd')]);
+
+            $user->addSeries($seriesToAdd[0]);
+            $entityManager->persist($seriesToAdd[0]);
+            $entityManager->flush();
+        }
+
+        if (null != $request->get('idToRemove') && null != $request->get('remove')) {
+            $user = $this->getUser();
+
+            $i              = 0;
+            $end            = false;
+            $seriesToRemove = null;
+            while (!$end && $i < $user->getSeries()->count()) {
+                if ($user->getSeries()[$i]->getId() == ((int) $request->get('idToRemove'))) {
+                    $seriesToRemove = $user->getSeries()[$i];
+                    $end            = true;
+                }
+
+                ++$i;
+            }
+
+            $user->removeSeries($seriesToRemove);
+            $entityManager->flush();
+        }
+
+        // endregion
+        $pagination = $paginator->paginate(
+            $series_infos,
+            $request->query->getInt('page', 1),
+            SERIES_PER_PAGE
+        );
+
+        return $this->render(
+            'index/index.php.twig',
+            [
+                'pagination' => $pagination,
+                'genres'     => $genres,
+            ]
+        );
+    }//end index()
+
+
+    private function getRatings(EntityManagerInterface $entityManager, int $id) {
+
+        // Recupérer l'avis de l'utilisateur actif
+        $userRating = $entityManager->getRepository(Rating::class)->findOneBy([
+            'user' => $this->getUser(),
+            'series' => $id,
         ]);
+        
+        // Récup tous les commentaires de la serie
+        $comments = $entityManager->getRepository(Rating::class)->findBy([
+            'series' => $id,
+        ]);
+    
+        return [
+            'userRating' => $userRating ? $userRating : null,
+            'userValue' => $userRating ? $userRating->getValue() : null,
+            'userComment' => $userRating ? $userRating->getComment() : null,
+            'comments' => $comments,
+        ];
     }
     
 
     #[Route('/series/{id}', name: 'app_index_series_info')]
-    public function seriesInfo(EntityManagerInterface $entityManager, int $id): Response
+    public function seriesInfo(SeriesRepository $repository, EntityManagerInterface $entityManager, int $id, Request $request, PaginatorInterface $paginator): Response
     {
-        $series = $entityManager
-            ->getRepository(Series::class)
-            ->find($id);
-        $seasons = $entityManager->getRepository(Season::class)->findBy(
-            ['series' => $series],
-            ['number' => 'ASC']
+        $infoRating = $this->getRatings($entityManager, $id);
+
+        if ($request->get("rating") && $this->getUser() != null){
+            if ($request->get("action") == "Supprimer"){
+
+                $entityManager->remove($infoRating['userRating']);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
+                
+            } else{
+
+                if ($request->get("action") == "Modifier"){
+                    if ($infoRating['userValue'] == $request->get("value") && $infoRating['userComment'] == $request->get("comment")){
+                        return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
+                    }
+                    $entityManager->remove($infoRating['userRating']);
+                    $entityManager->flush();
+                }
+                $series = $entityManager->find(Series::class, $id);
+                $rating = new Rating();
+                $rating->setValue($request->request->get('rating'));
+                $rating->setComment($request->get('comment'));
+                $rating->setDate(new \DateTime());
+                $rating->setSeries($series);
+                $rating->setUser($this->getUser());
+                $entityManager->persist($rating);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
+            }//end if
+        }//end if
+
+        // Récupérez tous les commentaires pour la série
+        $comments = $entityManager->getRepository(Rating::class)->findBy(
+            ['series' => $id]
         );
-        return $this->render('index/seriesInfo.html.twig', [
+
+        $series  = $repository->seriesInfoById($id);
+        $seasons = $series->getSeasons();
+        $paginationSeason = $paginator->paginate(
+            $seasons,
+            $request->query->getInt('page', 1),
+            SERIES_PER_PAGE
+        );
+
+        return $this->render(
+            'index/seriesInfo.html.twig', [
             'series' => $series,
-            'seasons' => $seasons,
-            'episodes' => null
+            'paginationSeason' => $paginationSeason,
+            'pagination' => null,
+            'userRating' => $infoRating['userRating'] ? $infoRating['userValue'] : null,
+            'userComment' => $infoRating['userRating'] ? $infoRating['userComment'] : null,
+            'comments' => $infoRating['comments'],
         ]);
+        
     }
-    #[Route('/series/{id}/{num}', name: 'app_index_season_info')]
-    public function seasonInfo(EntityManagerInterface $entityManager, int $id, int $num): Response
+    #[Route('/series/{id}/season/{num}', name: 'app_index_season_info')]
+    public function seasonInfo(SeriesRepository $repository, int $id, int $num, EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
     {
-        $series = $entityManager
-            ->getRepository(Series::class)
-            ->find($id);
-        $seasons = $entityManager->getRepository(Season::class)->findBy(
-            ['series' => $series],
-            ['number' => 'ASC']
-            
+        $series = $repository->seriesInfoById($id);
+        $seasons = $series->getSeasons();
+        $infoRating = $this->getRatings($entityManager, $id);
+        $episodes = $repository->seriesInfoByIdAndSeason($id, $num)->getSeasons()->get($num-1)->getEpisodes();
+        $pagination = $paginator->paginate(
+            $episodes,
+            $request->query->getInt('page', 1),
+            SERIES_PER_PAGE
         );
-        $episodes = $entityManager->getRepository(Episode::class)->findBy(
-            ['season' => $seasons[$num-1]],
-            ['number' => 'ASC']
+        $paginationSeason = $paginator->paginate(
+            $seasons,
+            $request->query->getInt('pageS', 1),
+            SERIES_PER_PAGE
         );
         
-        return $this->render('index/seriesInfo.html.twig', [
+        
+        return $this->render(
+            'index/seriesInfo.html.twig', [
             'series' => $series,
-            'seasons' => $seasons,
-            'episodes' => $episodes
-        ]);
-    }
+            'paginationSeason' => $paginationSeason,
+            'pagination' => $pagination,
+            'userRating' => $infoRating['userRating'] ? $infoRating['userValue'] : null,
+            'userComment' => $infoRating['userRating'] ? $infoRating['userComment'] : null,
+            'comments' => $infoRating['comments'],
+            ]
+        );
+    }//end seasonInfo()
 
-    #[Route('/poster/{id}', name: 'app_series_poster')]
-    public function showPoster(EntityManagerInterface $entityManager, int $id) : ?Response
+    #[Route('/series/{id}/season/{num}/episode/{numE}', name: 'app_index_episode_followBack')]
+    public function followBack(SeriesRepository $repository, int $id, int $num, int $numE, EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
     {
-        $series = $entityManager
-            ->find(Series::class, $id);
+        $series = $repository->seriesInfoById($id);
+        $episode = $repository->seriesInfoByIdAndSeasonAndEpisode($id, $num, $numE)->getSeasons()->get($num-1)->getEpisodes()->get($numE-1);
+        
+        
+        
+    }//end followBack()
+    #[Route('/poster/{id}', name: 'app_series_poster')]
+    public function showPoster(EntityManagerInterface $entityManager, int $id): ?Response
+    {
+        $series = $entityManager->find(Series::class, $id);
         header('Content-Type: image/jpeg');
         $response = new Response(
-            'Content-Type', Response::HTTP_OK, ['content-type' => 'image/jpeg']);
+            'Content-Type',
+            Response::HTTP_OK,
+            ['content-type' => 'image/jpeg']
+        );
         $response->setContent(stream_get_contents($series->getPoster()));
-        return $response;
-    }
 
-}
+        return $response;
+    }//end showPoster()
+}//end class

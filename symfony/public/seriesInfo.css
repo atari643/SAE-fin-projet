@@ -2,80 +2,287 @@
 @import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
-#pageInfo{
-    display: flex;
-}
 #visual{
-    max-width: 25%;
-}
-#seriesTitle{
-    color: #e3f7f5;
-    font-size: 2rem;
-    font-family: 'Bebas Neue', cursive;
-    margin: 10px 0 0 14px;
-    text-shadow: 1px 1px 5px #000000;
-}
-#seriesPlot, .genre, #seriesDirector, #seriesGenre {
-    color: #e3f7f5;
-    font-size: 1rem;
-    font-family: 'Roboto', sans-serif;
-    width: calc(100% - 28px);
-    margin: 15px 0 0 14px;
-    text-align: justify;
-}
-nav{
-    display: flex;
-    align-items: center;
-    width: 100%;
-    height: 50px;
-    background-color: #e3f7f5;
-    margin: 0;
-    padding: 0;
-    flex-direction: column;
-}
-nav ul{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
     width: 100%;
     height: 100%;
-    margin: 0;
-    padding: 0;
+    display: flex;
+    margin: 5px
+    
 }
-nav ul li{
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-nav ul li a {
-    transition: background-color 0.3s ease, color 0.3s ease;
-    color: black;
-    text-decoration: none;
+#trailer{
+    width: 75% !important;
+    margin-left: 5px;
 }
 
-nav ul li a:hover {
-    background-color: #f4f4f4;
-    color: blue;
+#seriesTitle{
+    font-family: 'Bebas Neue', cursive;
+    font-size: 50px;
+    color: #cba848;
+    margin: 0;
+    padding: 0;
 }
-#listeEpisode{
+#seriesDate{
+    font-family: 'Oswald', sans-serif;
+    font-size: 20px;
+    color: #cba848;
+    margin: 0;
+    padding: 0;
+}
+#seriesCountry{
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    color: #cba848;
+    margin: 0;
+    padding: 0;
+}
+#seriesSeasons{
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    color: #cba848;
+    margin: 0;
+    padding: 0;
+}
+#seriesEpisodes{
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    color: #cba848;
+    margin: 0;
+    padding: 0;
+}
+#seriesActors{
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    color: #cba848;
+    margin: 0;
+    padding: 0;
+    
+}
+#seriesActors ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+#seriesGenre {
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    color: #cba848;
+    margin: 0;
+    padding: 0;
+}
+#seriesGenre ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+
+}
+
+#seriesGenre ul li{
+    margin-right: 10px;
+    border: 1px solid #cba848;
+    border-radius: 5px;
+    padding: 5px;
+}
+#seriesGenre ul li:hover{
+    background-color: #cba848;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#seriesPlot{
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    color: #cba848;
+    margin: 0;
+    padding: 0;
+}
+hr{
+    border: 1px solid white;
+    margin: 10px 0;
+}
+nav{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    padding: 10px;
+}
+nav ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+nav ul li{
+    margin: 10px 0;
+}
+nav ul li a{
+    text-decoration: none;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    padding: 5px;
+    border-radius: 5px;
+    transition: 0.3s;
+    background-color: #cba848;
+}
+nav ul li a:hover{
+    background-color: white;
+    color: #cba848;
+    border-radius: 5px;
+    transition: 0.3s;
+    padding: 5px;
+
+}
+.paging {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.paging a {
+    color: #007BFF;
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+.paging a:hover {
+    color: #0056B3;
+}
+
+.paging a:active {
+    color: #004085;
+    
+}
+
+.paging input[type="number"] {
+    width: 50px;
+    text-align: center;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    margin: 0 5px;
+}
+
+.paging input[type="submit"] {
+    display: none;
+}
+#contentEpisode {
+    padding: 20px;
+    background-color: #221F1F;
+    color: #e3f7f5;
+    border-bottom: 1px solid #dee2e6;
+}
+
+#contentEpisode h2 {
+    font-size: 1.5em;
+    font-weight: 300;
+    margin: 0 0 10px 0;
+    color: #cba848;
+}
+
+#episodeList {
+    list-style-type: none;
+    padding: 0;
+}
+
+#episodeList li {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+}
+
+#episodeList li h2 {
+    font-size: 1.2em;
+    margin: 0;
+}
+
+#episodeList li p {
+    margin: 5px 0 0;
+    font-size: 0.9em;
+    color: #6c757d;
+}
+#rating {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #e3f7f5;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#rating form {
     display: flex;
     flex-direction: column;
-    width: 95%;
 }
-#contentEpisode{
-    background-color: #f4f4f4;
+
+#rating label {
+    font-weight: bold;
+    color: #221F1F;
+    margin-top: 20px;
+}
+
+#rating select, #rating textarea {
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
     width: 100%;
 }
-#contentEpisode li{
-    background-color: antiquewhite;
-    border-color: #000000 2px solid;
-    margin-bottom: 10px;
-    list-style: none;
-    width: 95%;
+
+#rating textarea {
+    height: 150px;
+    resize: none;
 }
-#episodeList li{
-    display: flex;
-    justify-content: space-between;
-    width: 95%;
-    color: #000000;
+
+#rating input[type="submit"] {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #cba848;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#rating input:nth-of-type(2){
+    background-color: #ac1536;
+}
+
+
+#rating input[type="submit"]:hover {
+    background-color: #aba848;
+}
+
+#rating input:nth-of-type(2):hover{
+    background-color: #85102a;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
+}
+
+th, td {
+    border: 2px solid #cba848;
+    padding: 8px;
+    text-align: left;    
+}
+
+tr:hover {
+    background-color: #cba848;
+}
+tr img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
 }

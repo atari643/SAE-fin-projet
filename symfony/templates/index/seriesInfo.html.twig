@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends './utils/paging.html.twig' %}
 
 {% block title %}Series Info{% endblock %}
 {% block stylesheets %}
@@ -8,38 +8,61 @@
 
 {% block body %}
     <div id="pageInfo">
+    <div id="header">
+        <div id="seriesTitle">{{ series.title }}</div>
+        <div id="seriesDate">Date : {{ series.yearStart|date('d/m/Y') }} - {{ series.yearEnd|date('d/m/Y') }}</div>
+        <div id="seriesCountry">Country : 
+        {% for country in series.country %}
+            {{ country.name }}
+        {% endfor %}
+        </div>
+        <div id="seriesSeasons">Seasons : {{ series.seasons|length }}</div>
+        <div id="seriesEpisodes">Episodes : 
+        {% set episodes = 0 %}
+        {% for season in series.seasons %}
+            {% set episodes = episodes + season.episodes|length %}
+        {% endfor %}
+        {{ episodes }}
+        </div>
+        <div id="seriesActors">
+        <ul>Actors :  
+        {% for actor in series.actor %}
+            <li> {{ actor.name }}</li>
+        {% endfor %}
+        </ul>
+        </div>
+        
+    </div>
+    <hr>
+    <div id="content">
         <div id="visual">
             <img id="imagePoster" src="{{ path('app_series_poster',{id: series.id}) }}" alt='Series Poster'>
             <iframe id="trailer" src="{{ series.youtubeTrailer }}" frameborder="0" allowfullscreen autoplay></iframe>
         </div>   
         <div id="information">
-            <div id="seriesTitle">Title : {{ series.title }}</div>
+            <div id="seriesGenre">
+                <ul>
+                {% for genre in series.genre %}
+                    <li> {{ genre.name }}</li>
+                {% endfor %}
+                </ul>
+            </div>
             <hr>
-            <div id="seriesPlot">Description : {{ series.plot }}</div>
+            <div id="seriesPlot">{{ series.plot }}</div>
             <hr>
-
-            {% if series.genre|length > 1 %}
-                <div id="seriesGenre">Genres : </div>
-            {% else %}
-                <div id="seriesGenre">Genre : </div>
-            {% endif %}
-
-            {% for genre in series.genre %}
-                <p class="genre">{{ genre.name }}</p>
-            {% endfor %}
-            <hr>
-            <div id="seriesDirector">Director : {{ series.director }}</div>
+            <div id="seriesDirector">{{ series.director }}</div>
         </div>
     </div>
-    
+    <div class="paging">
+        {{ knp_pagination_render(paginationSeason) }}
+    </div>
     <nav>
         <ul>
             {% set route = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) %}
             {% set seasonNumber = route|slice(route|length-1, route|length) %}
-
-            {% for s in seasons %}
+            {% for s in paginationSeason %}
                 {% if s.number == seasonNumber %}
-                    <li ><a style="color: #cba848;" href="{{ path('app_index_season_info', {id: series.id, num: s.number}) }}">Season {{ s.number }}</a></li>
+                    <li ><a href="{{ path('app_index_season_info', {id: series.id, num: s.number}) }}">Season {{ s.number }}</a></li>
                 {% else %}
                     <li ><a href="{{ path('app_index_season_info', {id: series.id, num: s.number}) }}">Season {{ s.number }}</a></li>
                 {% endif %}
@@ -47,29 +70,81 @@
         </ul>
     </nav> 
     <div id="contentEpisode">
-        
-        {% if episodes != null %}
-            <h2 style="color:black">Episodes</h2>
+        {% if pagination != null %}
+            <h2 style="color:white">Episodes</h2>
             <ul id="episodeList">
-                {% for episode in episodes %}
-                    <li>{{ episode.number }} episode
-                    <h2>{{ episode.title }}</h2>
-                    <p>{{ episode.date|date('d/m/Y') }}</p>
+                {% for episode in pagination %}
+                    <li>
+                        {{ episode.number }} episode
+                        <h2>{{ episode.title }}</h2>
+                        <p>{{ episode.date|date('d/m/Y') }}</p>
                     </li>
                 {% endfor %}
             </ul>
         {% endif %}
-    </div>
-        
+        {% if pagination != null %}
+            {{ block('paging') }}
+        {% endif %}
     </div>
     
+    </div>
+
+
+    <div id="rating">
+        <form action="{{ path('app_index_series_info', {id: series.id}) }}" method="post">
+            <label for="rating">Notez la série:</label>
+            <select id="rating" name="rating">
+                <option value="" {% if userRating is null %}selected{% endif %}>Sélectionnez une note</option>
+                {% for i in 1..5 %}
+                    <option value="{{ i }}" {% if i == userRating %}selected{% endif %}>{{ i }}</option>
+                {% endfor %}
+            </select>
+            <label for="comment">Laisser une critique:</label>
+            <textarea id="comment" name="comment">{{ userComment }}</textarea>
+            <input type="submit" name="action" value="{{ userRating ? 'Modifier' : 'Envoyer' }}">
+            {% if userRating %}
+                <input type="submit" name="action" value="Supprimer">
+            {% endif %}
+        </form>
+    </div>  
+
+    <table style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
+        <tbody>
+            {% for comment in comments|reverse %}
+                <tr>
+                    <td><img src="https://ui-avatars.com/api/?name={{ comment.user.name }}&background=random&rounded=true" style="display: inline;">{{comment.user.name}}</td>
+                    <td>{{ comment.value }}</td>
+                    <td> {{ comment.comment }}</td>
+
+                    <td>
+                        {% set diff = date().diff(comment.date) %}
+                        {% if diff.y > 0 %}
+                            Publié il y a {{ diff.y }} an(s)
+                        {% elseif diff.m > 0 %}
+                            Publié il y a {{ diff.m }} mois
+                        {% elseif diff.d > 0 %}
+                            Publié il y a {{ diff.d }} jour(s)
+                        {% elseif diff.h > 0 %}
+                            Publié il y a {{ diff.h }} heure(s)
+                        {% else %}
+                            Publié il y a {{ diff.i }} minute(s)
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+
     <script>
         window.onload = function() {
             var img = document.querySelector('#visual img');
             var trailer = document.querySelector('#trailer');
             trailer.style.width = getComputedStyle(img).width;
         }
+
     </script>
+
 {% endblock %}
 
 
