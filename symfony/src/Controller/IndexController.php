@@ -19,7 +19,9 @@ class IndexController extends AbstractController
     #[Route('/', name: 'app_default', methods: ['GET', 'POST'])]
     public function index(SeriesRepository $repository, Request $request, PaginatorInterface $paginator, EntityManagerInterface $entityManager): Response
     {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         if (!isset($_SESSION['seed'])) {
             $_SESSION['seed'] = rand();
         }
@@ -28,7 +30,7 @@ class IndexController extends AbstractController
         $searchYearStart = $request->query->get('yearStart', '');
         $searchYearEnd   = $request->query->get('yearEnd', '');
         $searchFollow    = $request->query->get('follow', '');
-        if($request->query->get('page') == null){
+        if($request->query->get('page') == null and !$request->isMethod('POST')){
             return $this->redirectToRoute('app_default', [
                 'page' => 1,
                 'search' => $searchQuery,
@@ -286,9 +288,9 @@ class IndexController extends AbstractController
         );
     }//end seasonInfo()
     #[Route('/series/{id}/season/{num}', name: 'app_index_episode_add')]
-    public function episodeAdd(SeriesRepository $repository, int $id, int $num, int $idE, EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
-    {
-        $series = $repository->seriesInfoById($id);
+    public function episodeAdd(int $id, int $num, int $idE, EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
+    {   
+        $series = $entityManager->find(Series::class, $id);
         $seasons = $series->getSeasons();
         $infoRating = $this->getRatings($entityManager, $id);
         $this->getUser()->addSeries($series);

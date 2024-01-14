@@ -9,7 +9,8 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
 <link rel="stylesheet" href="/style.css" />
 <link rel="stylesheet" href="/intro.css" />
 <link rel="stylesheet" href="/glitch.css" />
-<link rel="stylesheet" href="/scroll.css" /><script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/scroll.css" />
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
 {% endblock %}
 
@@ -466,7 +467,7 @@ bannerButtonMore.classList.add('bannerButtonMore');
 bannerButtonMore.onclick = () => {
 window.location.href = "/series/" + poster.dataset.id;
 };
-bannerButtonMore.innerHTML = 'Learn more';
+bannerButtonMore.innerHTML = '<span class="material-symbols-outlined">info</span>';
 headerBanner.appendChild(bannerButtonMore);
 banner.appendChild(headerBanner);
 const bannerImg = document.createElement('img');

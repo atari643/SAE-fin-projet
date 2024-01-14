@@ -203,6 +203,9 @@ body {
     align-items: center;
     justify-content: center;
     transition: 0.2s;
+    background-color: transparent;
+    border: none;
+    
 }
 
 .bannerButtonMore:hover {

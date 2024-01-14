@@ -8,7 +8,6 @@
 
 {% block body %}
     <div id="pageInfo">
-        <style>#followButton, #unfollowButton { background: none; color: inherit; border: none; padding: 0; font: inherit; cursor: pointer; outline: inherit; }</style>
 
     <div id="header">
         <div id="seriesTitle">{{ series.title }}</div>
@@ -38,7 +37,7 @@
     <hr>
     <div id="content">
         <div id="visual">
-            <img id="imagePoster" src="{{ path('app_series_poster',{id: series.id}) }}" alt='Series Poster'>
+            <img id="imagePoster" src="{{ path('app_series_poster',{id: series.id}) }}" data-id="{{ series.id }}">
             <iframe id="trailer" src="{{ series.youtubeTrailer }}" frameborder="0" allowfullscreen autoplay></iframe>
         </div>   
         <div id="information">
@@ -52,9 +51,8 @@
             <hr>
             <div id="seriesPlot">{{ series.plot }}</div>
             <hr>
-            <div id="seriesDirector">Director : {{ series.director }}</div>
-            <hr>
             <div id="seriesIMDB"><a href="https://www.imdb.com/title/{{ series.imdb }}" target="_BLANK">Go to IMDB</a></div>
+            <hr>
         </div>
     </div>
     <div class="paging">
@@ -66,9 +64,10 @@
             {% set seasonNumber = route|slice(route|length-1, route|length) %}
             {% for s in paginationSeason %}
                 {% if s.number == seasonNumber %}
-                    <li ><a href="{{ path('app_index_season_info', {id: series.id, num: s.number}) }}">Season {{ s.number }}</a></li>
+                    <li ><a onclick="window.location.reload()"
+                     href="{{ path('app_index_season_info', {id: series.id, num: s.number}) }}">Season {{ s.number }}</a></li>
                 {% else %}
-                    <li ><a href="{{ path('app_index_season_info', {id: series.id, num: s.number}) }}">Season {{ s.number }}</a></li>
+                    <li ><a onclick="window.location.reload()" href="{{ path('app_index_season_info', {id: series.id, num: s.number}) }}">Season {{ s.number }}</a></li>
                 {% endif %}
             {% endfor %}
         </ul>
@@ -82,15 +81,6 @@
                         {{ episode.number }} episode
                         <h2>{{ episode.title }}</h2>
                         <p>{{ episode.date|date('d/m/Y') }}</p>
-                        {% if app.user != null %}
-                            {% if app.user.episode.contains(episode) %}
-                                <a href="{{ path('app_index_episode_remove', {id: episode.season.series.id , num: episode.season.number, idE: episode.id }) }}">Remove</a>
-                            {% else %}
-                                <a href="{{ path('app_index_episode_add', {id: episode.season.series.id , num: episode.season.number, idE: episode.id}) }}">Add</a>
-                            {% endif %}
-                       {% else %}
-                            <a href="{{ path('app_login') }}">Add</a>
-                        {% endif %}
                     </li>
                 {% endfor %}
             </ul>
@@ -101,7 +91,6 @@
     </div>
     
     </div>
-
 
     <div id="rating">
         <form action="{{ path('app_index_series_info', {id: series.id}) }}" method="post">
@@ -148,33 +137,35 @@
         </tbody>
     </table>
     
-
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+      
         window.onload = function() {
             var img = document.querySelector('#visual img');
             var trailer = document.querySelector('#trailer');
             trailer.style.width = getComputedStyle(img).width;
-
-            const title = document.getElementById("seriesTitle");
-            const div = document.createElement("div");
-            div.classList.add('suivieButtonadd');
-            div.style.display = "inline-block";
+            const poster = document.querySelector('#imagePoster');
+            const title = document.querySelector('#seriesTitle');
+            const suivieButton = document.createElement("div");
+            suivieButton.classList.add('suivieButtonadd');
+            suivieButton.style.display = "inline-block";
 
             var found = false;
             {% if app.user != null %}
                 {% for s in app.user.getSeries() %}
                     if(poster.dataset.id == {{ s.getId() }}){
-                        div.innerHTML = '<span class="material-symbols-outlined">heart_minus</span>';
+                        suivieButton.innerHTML = '<span class="material-symbols-outlined">heart_minus</span>';
                         found = true;
                     }
                 {% endfor %}
+            {% else %}
+                suivieButton.innerHTML = '<span class="material-symbols-outlined">heart_plus</span>';
             {% endif %}
 
             if(!found){
-                div.innerHTML = '<span class="material-symbols-outlined">heart_plus</span>';
+                suivieButton.innerHTML = '<span class="material-symbols-outlined">heart_plus</span>';
             }
-
-            title.appendChild(div);
+            title.appendChild(suivieButton);
 
             {% if app.user == null %}
                 suivieButton.addEventListener('click', function () {
