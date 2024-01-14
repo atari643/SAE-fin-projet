@@ -50,7 +50,9 @@
             <hr>
             <div id="seriesPlot">{{ series.plot }}</div>
             <hr>
-            <div id="seriesDirector">{{ series.director }}</div>
+            <div id="seriesDirector">Director : {{ series.director }}</div>
+            <hr>
+            <div id="seriesIMDB"><a href="https://www.imdb.com/title/{{ series.imdb }}" target="_BLANK">Go to IMDB</a></div>
         </div>
     </div>
     <div class="paging">
@@ -78,6 +80,15 @@
                         {{ episode.number }} episode
                         <h2>{{ episode.title }}</h2>
                         <p>{{ episode.date|date('d/m/Y') }}</p>
+                        {% if app.user != null %}
+                            {% if app.user.episode.contains(episode) %}
+                                <a href="{{ path('app_index_episode_remove', {id: episode.season.series.id , num: episode.season.number, idE: episode.id }) }}">Remove</a>
+                            {% else %}
+                                <a href="{{ path('app_index_episode_add', {id: episode.season.series.id , num: episode.season.number, idE: episode.id}) }}">Add</a>
+                            {% endif %}
+                       {% else %}
+                            <a href="{{ path('app_login') }}">Add</a>
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ul>
@@ -141,8 +152,65 @@
             var img = document.querySelector('#visual img');
             var trailer = document.querySelector('#trailer');
             trailer.style.width = getComputedStyle(img).width;
-        }
 
+            const title = document.getElementById("seriesTitle");
+            const div = document.createElement("div");
+            div.classList.add('suivieButtonadd');
+            div.style.display = "inline-block";
+
+            var found = false;
+            {% if app.user != null %}
+                {% for s in app.user.getSeries() %}
+                    if(poster.dataset.id == {{ s.getId() }}){
+                        div.innerHTML = '<span class="material-symbols-outlined">heart_minus</span>';
+                        found = true;
+                    }
+                {% endfor %}
+            {% endif %}
+
+            if(!found){
+                div.innerHTML = '<span class="material-symbols-outlined">heart_plus</span>';
+            }
+
+            title.appendChild(div);
+
+            {% if app.user == null %}
+                suivieButton.addEventListener('click', function () {
+                    window.location.replace("{{ path("app_login") }}");
+                });
+            {% else %}
+            suivieButton.addEventListener('click', function () {
+                if (suivieButton.querySelector('span').innerHTML == 'heart_plus') {
+                    suivieButton.querySelector('span').innerHTML = 'heart_check';
+                    suivieButton.style.color = 'rgb(0, 105, 0)';
+                    setTimeout(function () {
+                        suivieButton.style.color = 'white';
+                        suivieButton.querySelector('span').innerHTML = 'heart_minus';
+                    }, 600);
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ path('app_default') }}",
+                        data: {add : true, id : poster.dataset.id}
+                    });
+
+                }else if(suivieButton.querySelector('span').innerHTML == 'heart_minus'){
+                    suivieButton.querySelector('span').innerHTML = 'heart_check';
+                    suivieButton.style.color = '#ac1536';
+                    setTimeout(function () {
+                        suivieButton.style.color = 'white';
+                        suivieButton.querySelector('span').innerHTML = 'heart_plus';
+                    }, 600);
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ path('app_default') }}",
+                        data: {add : false, id : poster.dataset.id}
+                    });
+                }
+            });
+            {% endif %}
+        }
     </script>
 
 {% endblock %}
