@@ -78,6 +78,15 @@
                         {{ episode.number }} episode
                         <h2>{{ episode.title }}</h2>
                         <p>{{ episode.date|date('d/m/Y') }}</p>
+                        {% if app.user != null %}
+                            {% if app.user.episode.contains(episode) %}
+                                <a href="{{ path('app_index_episode_remove', {id: episode.season.series.id , num: episode.season.number, idE: episode.id }) }}">Remove</a>
+                            {% else %}
+                                <a href="{{ path('app_index_episode_add', {id: episode.season.series.id , num: episode.season.number, idE: episode.id}) }}">Add</a>
+                            {% endif %}
+                       {% else %}
+                            <a href="{{ path('app_login') }}">Add</a>
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ul>

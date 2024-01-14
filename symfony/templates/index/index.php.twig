@@ -12,42 +12,7 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
 <link rel="stylesheet" href="/scroll.css" />
 {% endblock %}
 
-{% block header %}
-    <header>
-        <div class="caroussel">
-            <div class="carousselChild">
-                {% for s in pagination %}
-                <div class="carousselChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" >
-                    <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="affiche">
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        <h1>Vision Vibes</h1>
-        <div class="advanced-search">
-            <form action="{{ path('app_default') }}" method="get">
-                <input type="text" name="search" id="search" placeholder="Search for a series" />
 
-                <select name="genre" id="genre">
-                    <option value="">All genres</option>
-                    {% for genre in genres %}
-                        <option value="{{ genre.id }}">{{ genre.name }}</option>
-                    {% endfor %}
-                </select>
-                <input type="number" name="yearStart" id="yearStart" placeholder="Start Year" min="1900" max="{{ "now"|date("Y") }}" />
-                <input type="number" name="yearEnd" id="yearEnd" placeholder="End Year" min="1900" max="{{ "now"|date("Y") }}" />
-                {% if app.user %}
-                    <select name="follow" id="follow" placeholder="Followed">
-                        <option value="">All</option>
-                        <option value="1">Followed</option>
-                        <option value="0">Not followed</option>
-                    </select>
-                {% endif %}
-                <button type="submit" class="material-symbols-outlined">search</button>
-            </form>
-        </div>
-    </header>
-    {% endblock %}
 {% block body %}
 
 {% if is_granted('IS_IMPERSONATOR') %}
@@ -55,7 +20,8 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
 {% endif %}
     <div id="show">
         {% for s in pagination %}
-            <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="4" data-resum="{{s.plot}}" data-trailer="{{s.youtubeTrailer}}">
+            {% set youtubeTrailer = s.youtubeTrailer|replace({'watch?v=': 'embed/'}) %}
+            <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="4" data-resum="{{s.plot}}" data-trailer="{{ youtubeTrailer }}">
                 <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="posters">
             </div>
         {% endfor %}
@@ -64,7 +30,7 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
     {{ block('paging') }}
     
     <script>
-    if (document.location.href.includes('page=1')) {
+    if (document.location.href.includes('?page=1')) {
         document.body.innerHTML +=
         '<div id="container">' +
    '<netflixintro letter="X">' +
@@ -245,7 +211,7 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
         document.body.removeChild(document.getElementById('container'));
         document.body.style.overflow = 'auto';
         window.addEventListener('load', makeScript());
-        page = document.querySelectorAll('.page');
+        page = document.querySelectorAll('.pagine .pagination a');
         for (let i = 0; i < page.length; i++) {
           page[i].addEventListener('click', makeScript())
 
@@ -304,7 +270,7 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
       }, 5000);
     }else{
       window.addEventListener('load', makeScript());
-      page = document.querySelectorAll('.page');
+      page = document.querySelectorAll('.pagine .pagination a');
       for (let i = 0; i < page.length; i++) {
         page[i].addEventListener('click', makeScript())
       }
@@ -324,21 +290,16 @@ function makeScript() {
     close.innerHTML = '<span class="material-symbols-outlined">arrow_left</span>';
     menu.appendChild(close);
     close.addEventListener('click', function () {
-      search.style.animation = 'searchUnSpawning 0.5s forwards';
+      researchButton.style.animation = 'searchUnSpawning 0.5s forwards';
       setTimeout(function () {
         menu.removeChild(close);
-        menu.removeChild(search);
         menu.removeChild(researchButton);
         menu.appendChild(research);
       }, 500);
     });
-    const search = document.createElement('input');
-    search.classList.add('search');
-    search.placeholder = 'Rechercher...';
-    menu.appendChild(search);
     const researchButton = document.createElement('button');
     researchButton.classList.add('researchButton');
-    researchButton.innerHTML = '<span class="material-symbols-outlined">search</span>';
+    researchButton.innerHTML = '<form action="{{ path('app_default') }}" method="get"><input type="text" name="search" class="search" placeholder="Rechercher... for a series" /><select name="genre" id="genre"><option value="">All genres</option>{% for genre in genres %}<option value="{{ genre.id }}">{{ genre.name }}</option>{% endfor %}</select><input type="number" name="yearStart" id="yearStart" placeholder="Start Year" min="1900" max="{{ "now"|date("Y") }}" /><input type="number" name="yearEnd" id="yearEnd" placeholder="End Year" min="1900" max="{{ "now"|date("Y") }}" />{% if app.user %}<select name="follow" id="follow" placeholder="Followed"><option value="">All</option><option value="1">Followed</option><option value="0">Not followed</option></select>{% endif %}<button type="submit" class="material-symbols-outlined">search</button></form>';
     menu.appendChild(researchButton);
   });
   const series = document.getElementsByClassName('showChildSeries');

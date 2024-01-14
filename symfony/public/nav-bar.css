@@ -180,7 +180,38 @@ body {
     width: fit-content;
     height: fit-content;
 }
+.researchButton form{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}   
+.researchButton form input{
+    background-color: transparent;
+    border: none;
+    border-bottom: #cba848 1px solid;
+    color: #e3f7f5;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    padding-bottom: 7px;
+    width: 100%;
+}
+.researchButton form input:focus{
+    outline: none;
+}
 
+.researchButton form select{
+    background-color: transparent;
+    border: none;
+    border-bottom: #cba848 1px solid;
+    color: #e3f7f5;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    padding-bottom: 7px;
+    width: 100%;
+}
 .closeResearch{
     background-color: transparent;
     border: none;
