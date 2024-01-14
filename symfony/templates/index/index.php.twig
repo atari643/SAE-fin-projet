@@ -7,54 +7,22 @@
 <link rel="stylesheet"
 href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 <link rel="stylesheet" href="/style.css" />
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/intro.css" />
+<link rel="stylesheet" href="/glitch.css" />
+<link rel="stylesheet" href="/scroll.css" /><script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
 {% endblock %}
-{% block header %}
-    <header>
-        <div class="caroussel">
-            <div class="carousselChild">
-                {% for s in pagination %}
-                <div class="carousselChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" >
-                    <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="affiche">
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        <h1>Vision Vibes</h1>
-        <div class="advanced-search">
-            <form action="{{ path('app_default') }}" method="get">
-                <input type="text" name="search" id="search" placeholder="Search for a series" />
 
-                <select name="genre" id="genre">
-                    <option value="">All genres</option>
-                    {% for genre in genres %}
-                        <option value="{{ genre.id }}">{{ genre.name }}</option>
-                    {% endfor %}
-                </select>
-                <input type="number" name="yearStart" id="yearStart" placeholder="Start Year" min="1900" max="{{ "now"|date("Y") }}" />
-                <input type="number" name="yearEnd" id="yearEnd" placeholder="End Year" min="1900" max="{{ "now"|date("Y") }}" />
-                {% if app.user %}
-                    <select name="follow" id="follow" placeholder="Followed">
-                        <option value="">All</option>
-                        <option value="1">Followed</option>
-                        <option value="0">Not followed</option>
-                    </select>
-                {% endif %}
-                <button type="submit" class="material-symbols-outlined">search</button>
-            </form>
-        </div>
-    </header>
-    {% endblock %}
+
 {% block body %}
 
 {% if is_granted('IS_IMPERSONATOR') %}
     <a href="{{ impersonation_exit_path(path('app_login') ) }}">Exit impersonation</a>
 {% endif %}
-    
     <div id="show">
         {% for s in pagination %}
-            <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="4" data-resum="{{s.plot}}">
+            {% set youtubeTrailer = s.youtubeTrailer|replace({'watch?v=': 'embed/'}) %}
+            <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="4" data-resum="{{s.plot}}" data-trailer="{{ youtubeTrailer }}">
                 <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="posters">
             </div>
         {% endfor %}
@@ -63,71 +31,413 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
     {{ block('paging') }}
     
     <script>
+    if (document.location.href.includes('?page=1')) {
+        document.body.innerHTML +=
+        '<div id="container">' +
+   '<netflixintro letter="X">' +
+    '<div class="helper-1">' +
+      '<div class="effect-brush">' +
+        '<span class="fur-31"></span>' +
+        '<span class="fur-30"></span>' +
+        '<span class="fur-29"></span>' +
+        '<span class="fur-28"></span>' +
+        '<span class="fur-27"></span>' +
+        '<span class="fur-26"></span>' +
+        '<span class="fur-25"></span>' +
+        '<span class="fur-24"></span>' +
+        '<span class="fur-23"></span>' +
+        '<span class="fur-22"></span>' +
+        '<span class="fur-21"></span>' +
+        '<span class="fur-20"></span>' +
+        '<span class="fur-19"></span>' +
+        '<span class="fur-18"></span>' +
+        '<span class="fur-17"></span>' +
+        '<span class="fur-16"></span>' +
+        '<span class="fur-15"></span>' +
+        '<span class="fur-14"></span>' +
+        '<span class="fur-13"></span>' +
+        '<span class="fur-12"></span>' +
+        '<span class="fur-11"></span>' +
+        '<span class="fur-10"></span>' +
+        '<span class="fur-9"></span>' +
+        '<span class="fur-8"></span>' +
+        '<span class="fur-7"></span>' +
+        '<span class="fur-6"></span>' +
+        '<span class="fur-5"></span>' +
+        '<span class="fur-4"></span>' +
+        '<span class="fur-3"></span>' +
+        '<span class="fur-2"></span>' +
+        '<span class="fur-1"></span>' +
+      '</div>' +
+      '<div class="effect-lumieres">' +
+        '<span class="lamp-1"></span>' +
+        '<span class="lamp-2"></span>' +
+        '<span class="lamp-3"></span>' +
+        '<span class="lamp-4"></span>' +
+        '<span class="lamp-5"></span>' +
+        '<span class="lamp-6"></span>' +
+        '<span class="lamp-7"></span>' +
+        '<span class="lamp-8"></span>' +
+        '<span class="lamp-9"></span>' +
+        '<span class="lamp-10"></span>' +
+        '<span class="lamp-11"></span>' +
+        '<span class="lamp-12"></span>' +
+        '<span class="lamp-13"></span>' +
+        '<span class="lamp-14"></span>' +
+        '<span class="lamp-15"></span>' +
+        '<span class="lamp-16"></span>' +
+        '<span class="lamp-17"></span>' +
+        '<span class="lamp-18"></span>' +
+        '<span class="lamp-19"></span>' +
+        '<span class="lamp-20"></span>' +
+        '<span class="lamp-21"></span>' +
+        '<span class="lamp-22"></span>' +
+        '<span class="lamp-23"></span>' +
+        '<span class="lamp-24"></span>' +
+        '<span class="lamp-25"></span>' +
+        '<span class="lamp-26"></span>' +
+        '<span class="lamp-27"></span>' +
+        '<span class="lamp-28"></span>' +
+        '</div>' +
+        '</div>' +
+        '<div class="helper-2">' +
+        '<div class="effect-brush">' +
+        '<span class="fur-31"></span>' +
+        '<span class="fur-30"></span>' +
+        '<span class="fur-29"></span>' +
+        '<span class="fur-28"></span>' +
+        '<span class="fur-27"></span>' +
+        '<span class="fur-26"></span>' +
+        '<span class="fur-25"></span>' +
+        '<span class="fur-24"></span>' +
+        '<span class="fur-23"></span>' +
+        '<span class="fur-22"></span>' +
+        '<span class="fur-21"></span>' +
+        '<span class="fur-20"></span>' +
+        '<span class="fur-19"></span>' +
+        '<span class="fur-18"></span>' +
+        '<span class="fur-17"></span>' +
+        '<span class="fur-16"></span>' +
+        '<span class="fur-15"></span>' +
+        '<span class="fur-14"></span>' +
+        '<span class="fur-13"></span>' +
+        '<span class="fur-12"></span>' +
+        '<span class="fur-11"></span>' +
+        '<span class="fur-10"></span>' +
+        '<span class="fur-9"></span>' +
+        '<span class="fur-8"></span>' +
+        '<span class="fur-7"></span>' +
+        '<span class="fur-6"></span>' +
+        '<span class="fur-5"></span>' +
+        '<span class="fur-4"></span>' +
+        '<span class="fur-3"></span>' +
+        '<span class="fur-2"></span>' +
+        '<span class="fur-1"></span>' +
+      '</div>' +
+    '</div>' +
+    '<div class="helper-3">' +
+      '<div class="effect-brush">' +
+        '<span class="fur-31"></span>' +
+        '<span class="fur-30"></span>' +
+        '<span class="fur-29"></span>' +
+        '<span class="fur-28"></span>' +
+        '<span class="fur-27"></span>' +
+        '<span class="fur-26"></span>' +
+        '<span class="fur-25"></span>' +
+        '<span class="fur-24"></span>' +
+        '<span class="fur-23"></span>' +
+        '<span class="fur-22"></span>' +
+        '<span class="fur-21"></span>' +
+        '<span class="fur-20"></span>' +
+        '<span class="fur-19"></span>' +
+        '<span class="fur-18"></span>' +
+        '<span class="fur-17"></span>' +
+        '<span class="fur-16"></span>' +
+        '<span class="fur-15"></span>' +
+        '<span class="fur-14"></span>' +
+        '<span class="fur-13"></span>' +
+        '<span class="fur-12"></span>' +
+        '<span class="fur-11"></span>' +
+        '<span class="fur-10"></span>' +
+        '<span class="fur-9"></span>' +
+        '<span class="fur-8"></span>' +
+        '<span class="fur-7"></span>' +
+        '<span class="fur-6"></span>' +
+        '<span class="fur-5"></span>' +
+        '<span class="fur-4"></span>' +
+        '<span class="fur-3"></span>' +
+        '<span class="fur-2"></span>' +
+        '<span class="fur-1"></span>' +
+      '</div>' +
+    '</div>' +
+    '<div class="helper-4">' +
+      '<div class="effect-brush">' +
+        '<span class="fur-31"></span>' +
+        '<span class="fur-30"></span>' +
+        '<span class="fur-29"></span>' +
+        '<span class="fur-28"></span>' +
+        '<span class="fur-27"></span>' +
+        '<span class="fur-26"></span>' +
+        '<span class="fur-25"></span>' +
+        '<span class="fur-24"></span>' +
+        '<span class="fur-23"></span>' +
+        '<span class="fur-22"></span>' +
+        '<span class="fur-21"></span>' +
+        '<span class="fur-20"></span>' +
+        '<span class="fur-19"></span>' +
+        '<span class="fur-18"></span>' +
+        '<span class="fur-17"></span>' +
+        '<span class="fur-16"></span>' +
+        '<span class="fur-15"></span>' +
+        '<span class="fur-14"></span>' +
+        '<span class="fur-13"></span>' +
+        '<span class="fur-12"></span>' +
+        '<span class="fur-11"></span>' +
+        '<span class="fur-10"></span>' +
+        '<span class="fur-9"></span>' +
+        '<span class="fur-8"></span>' +
+        '<span class="fur-7"></span>' +
+        '<span class="fur-6"></span>' +
+        '<span class="fur-5"></span>' +
+        '<span class="fur-4"></span>' +
+        '<span class="fur-3"></span>' +
+        '<span class="fur-2"></span>' +
+        '<span class="fur-1"></span>' +
+        '</div>' +
+        '</div>' +
+        '</netflixintro>' +
+        '</div>';
+      document.body.style.overflow = 'hidden';
+      setTimeout(function () {
+        document.body.removeChild(document.getElementById('container'));
+        document.body.style.overflow = 'auto';
         window.addEventListener('load', makeScript());
-        page=document.querySelectorAll('.pagination a');
-        for(let i=0;i<page.length;i++){
-            page[i].addEventListener('click',makeScript())
-        
+        page = document.querySelectorAll('.pagine .pagination a');
+        for (let i = 0; i < page.length; i++) {
+          page[i].addEventListener('click', makeScript())
+
         }
-function makeScript(){
-const series = document.getElementsByClassName('showChildSeries');
-const seriesPoster = document.getElementsByClassName('posters');
-for (let i = 0; i < series.length; i++) {
-seriesPoster[i].addEventListener('mouseover', function () {
-posterHover(i);
-});
-seriesPoster[i].addEventListener('mouseleave', function () {
-const overlay = series[i].querySelector('.overlay');
-if (overlay) {
-overlay.parentNode.removeChild(overlay);
-}
-});
-seriesPoster[i].addEventListener('click', function () {
-if (document.querySelector('.banner')) {
-document.body.removeChild(document.querySelector('.banner'));
-document.getElementById('show').style.width = '100%';
-document.getElementById('show').style.marginRight = '0';
-}
-makeBannerLeft(series[i], seriesPoster[i]);
-});
+        const bannerInfoFirstPage = document.createElement('div');
+        bannerInfoFirstPage.classList.add('bannerInfoFirstPage');
+        document.body.insertBefore(bannerInfoFirstPage, document.getElementById('show'));
+        const imgbannerInfoFirstPage = document.createElement('img');
+        imgbannerInfoFirstPage.src = '/cinéma.png';
+        imgbannerInfoFirstPage.classList.add('imgbannerInfoFirstPage');
+        bannerInfoFirstPage.appendChild(imgbannerInfoFirstPage);
+        const textbannerInfoFirstPageParent = document.createElement('div');
+        textbannerInfoFirstPageParent.classList.add('textbannerInfoFirstPageParent');
+        bannerInfoFirstPage.appendChild(textbannerInfoFirstPageParent);
+        const titrebannerInfoFirstPage = document.createElement('p');
+        titrebannerInfoFirstPage.classList.add('titrebannerInfoFirstPage');
+        titrebannerInfoFirstPage.innerHTML = 'XploreCinéma';
+        titrebannerInfoFirstPage.dataset.text = 'XPLORECINÉMA';
+        titrebannerInfoFirstPage.classList.add('glitch');
+        textbannerInfoFirstPageParent.appendChild(titrebannerInfoFirstPage);
+        const textbannerInfoFirstPage = document.createElement('p');
+        textbannerInfoFirstPage.classList.add('textbannerInfoFirstPage');
+        textbannerInfoFirstPage.innerHTML = "Explorez l'univers fascinant des séries avec XploreCinéma, votre compagnon exclusif pour organiser et découvrir de nouveaux titres. XploreCinéma vous offre une expérience immersive, vous guidant à travers une variété de séries. Que vous soyez un amateur de drames intenses, de comédies légères ou de mystères envoûtants, XploreCinéma vous accompagne dans votre aventure télévisuelle, vous invitant à explorer et à apprécier chaque instant. Laissez-vous emporter par la magie du storytelling et découvrez des pépites cachées, tout en organisant votre voyage à travers l'océan infini des séries. XploreCinéma, votre guide ultime pour une expérience cinématographique sans limites.";
+        textbannerInfoFirstPageParent.appendChild(textbannerInfoFirstPage);
+        bannerInfoFirstPage.innerHTML+=
+        '<div id="mouse-scroll">'+
+          '<div class="mouse">'+
+            '<div class="mouse-in"></div>'+
+          '</div>'+
+          '<div>'+
+              '<span class="down-arrow-1"></span>'+
+              '<span class="down-arrow-2"></span>'+
+              '<span class="down-arrow-3"></span>'+
+          '</div>'+
+        '</div>';
+        document.getElementById('mouse-scroll').style.top = bannerInfoFirstPage.getBoundingClientRect().bottom - document.getElementById('mouse-scroll').offsetHeight - 20 + 'px'; 
+        window.addEventListener('scroll', function () {
+          if(scrollY>0 && scrollY < bannerInfoFirstPage.getBoundingClientRect().top + bannerInfoFirstPage.offsetHeight){
+            document.getElementById('menu').style.position = 'fixed';
+            bannerInfoFirstPage.style.marginTop = document.getElementById('menu').offsetHeight + 40+ 'px';
+            document.getElementById('menu').style.width = '80%';
+            document.getElementById('menu').style.zIndex = '1000';
+            document.getElementById('menu').style.boxShadow = 'rgba(0, 0, 0, 0.5) 0px 5px 8px 3px';
+            document.getElementById('menu').style.borderLeft = '50vw solid #221F1F';
+            document.getElementById('menu').style.borderRight = '50vw solid #221F1F';
+          }else{
+            document.getElementById('menu').style.position = 'relative';
+            bannerInfoFirstPage.style.marginTop = '0';
+            document.getElementById('menu').style.width = '100%';
+            document.getElementById('menu').style.zIndex = '0';
+            document.getElementById('menu').style.boxShadow = 'none';
+            document.getElementById('menu').style.borderLeft = 'none';
+            document.getElementById('menu').style.borderRight = 'none';
+          }
+        });
+      }, 5000);
+    }else{
+      window.addEventListener('load', makeScript());
+      page = document.querySelectorAll('.pagine .pagination a');
+      for (let i = 0; i < page.length; i++) {
+        page[i].addEventListener('click', makeScript())
+      }
+    }
 
-}
+function makeScript() {
+  const menu = document.getElementById('parentItemMenuLeft');
+  const research = document.createElement('div');
+  research.classList.add('researchNavSpawn');
+  research.classList.add('itemMenu');
+  research.innerHTML = '<span class="material-symbols-outlined">search</span>';
+  menu.appendChild(research);
+  research.addEventListener('click', function () {
+    menu.removeChild(research);
+    const close = document.createElement('div');
+    close.classList.add('closeResearch');
+    close.innerHTML = '<span class="material-symbols-outlined">arrow_left</span>';
+    menu.appendChild(close);
+    close.addEventListener('click', function () {
+      researchButton.style.animation = 'searchUnSpawning 0.5s forwards';
+      setTimeout(function () {
+        menu.removeChild(close);
+        menu.removeChild(researchButton);
+        menu.appendChild(research);
+      }, 500);
+    });
+    const researchButton = document.createElement('button');
+    researchButton.classList.add('researchButton');
+    researchButton.innerHTML = '<form action="{{ path('app_default') }}" method="get"><input type="text" name="search" class="search" placeholder="Rechercher... for a series" /><select name="genre" id="genre"><option value="">All genres</option>{% for genre in genres %}<option value="{{ genre.id }}">{{ genre.name }}</option>{% endfor %}</select><input type="number" name="yearStart" id="yearStart" placeholder="Start Year" min="1900" max="{{ "now"|date("Y") }}" /><input type="number" name="yearEnd" id="yearEnd" placeholder="End Year" min="1900" max="{{ "now"|date("Y") }}" />{% if app.user %}<select name="follow" id="follow" placeholder="Followed"><option value="">All</option><option value="1">Followed</option><option value="0">Not followed</option></select>{% endif %}<button type="submit" class="material-symbols-outlined">search</button></form>';
+    menu.appendChild(researchButton);
+  });
+  const series = document.getElementsByClassName('showChildSeries');
+  const seriesPoster = document.getElementsByClassName('posters');
+  let hover = false;
+  for (let i = 0; i < series.length; i++) {
+    seriesPoster[i].addEventListener('mouseover', function () {
+      posterHover(i);
+      hover = true;
+    });
+    seriesPoster[i].addEventListener('mouseleave', function () {
+      const overlay = series[i].querySelector('.overlay');
+      if (overlay) {
+        overlay.parentNode.removeChild(overlay);
+      }
+      hover = false;
+    });
+    seriesPoster[i].addEventListener('click', function () {
+      if (document.querySelector('.banner')) {
+        document.body.removeChild(document.querySelector('.banner'));
+        document.getElementById('show').style.width = '100%';
+        document.getElementById('show').style.marginRight = '0';
+      }
+      makeBannerLeft(series[i], seriesPoster[i]);
+    });
+    let hoverTimer;
+    let hoverTimer2;
+    let before = [];
+    let after = [];
+    series[i].addEventListener('mouseover', function () {
+      if (!hover) {
+        return;
+      }
+      hoverTimer = setTimeout(function () {
+        before = [];
+        after = [];
+        for (let j = 0; j < series.length; j++) {
+          if (j < i) {
+            if (series[j].offsetTop === series[i].offsetTop) {
+              before.push(series[j]);
+            }
+          } else if (j > i) {
+            if (series[j].offsetTop === series[i].offsetTop) {
+              after.push(series[j]);
+            }
+          }
+        }
+        seriesPoster[i].style.rotate = '90deg';
+        document.querySelector('.overlay').remove();
+        seriesPoster[i].style.transform = 'scale(1)';
+        const length = (seriesPoster[i].offsetHeight - series[i].offsetWidth) / 2;
+        for (let j = 0; j < before.length; j++) {
+          before[j].style.transform = 'translateX(' + -length + 'px)';
+        }
+        for (let j = 0; j < after.length; j++) {
+          after[j].style.transform = 'translateX(' + length + 'px)';
+        }
+        hoverTimer2 = setTimeout(function () {
+          const iframe = document.createElement('iframe');
+          iframe.src = series[i].dataset.trailer + '?autoplay=1' + '&mute=1' + '&start=0';
+          iframe.width = series[i].offsetWidth + length * 2;
+          iframe.height = seriesPoster[i].offsetWidth;
+          iframe.style.border = 'none';
+          const paddings = (series[i].offsetHeight - seriesPoster[i].offsetWidth) / 2;
+          series[i].style.height = seriesPoster[i].offsetWidth + 'px';
+          series[i].style.paddingTop = paddings + 'px';
+          series[i].style.paddingBottom = paddings + 'px';
+          iframe.style.borderRadius = '6px';
+          series[i].appendChild(iframe);
+          seriesPoster[i].style.display = 'none';
+        }, 500);
+      }, 2500);
+    });
+
+    series[i].addEventListener('mouseleave', function () {
+      clearTimeout(hoverTimer);
+      clearTimeout(hoverTimer2);
+      this.querySelector('img').style.display = 'flex';
+      this.querySelector('img').style.rotate = '0deg';
+      this.querySelector('img').style.removeProperty('transform');
+      if (document.querySelector('iframe')) {
+        document.querySelector('iframe').remove();
+      }
+      this.style.height = '350px';
+      this.style.paddingTop = '0';
+      this.style.paddingBottom = '0';
+      this.style.position = 'relative';
+      for (let j = 0; j < before.length; j++) {
+        before[j].style.removeProperty('transform');
+      }
+      for (let j = 0; j < after.length; j++) {
+        after[j].style.removeProperty('transform');
+      }
+    });
+  }
+  const page = document.querySelectorAll('.number');
+  for (let j = 0; j < page.length; j++) {
+    page[j].addEventListener('click', function () {
+      window.location.href = '?page=' + (j + 1);
+    });
+  }
 
 
-function posterHover(i) {
-const overlay = document.createElement('div');
-overlay.classList.add('overlay');
-series[i].appendChild(overlay);
-const title = document.createElement('p');
-title.classList.add('titlePosterHover');
-title.innerHTML = series[i].dataset.title;
-overlay.appendChild(title);
-const duration = document.createElement('p');
-duration.classList.add('durationPosterHover');
-if (series[i].dataset.duration != null) {
-duration.innerHTML = series[i].dataset.duration;
-} else if (series[i].dataset.épisodes != null) {
-duration.innerHTML = series[i].dataset.épisodes;
-} else {
-duration.innerHTML = 'Pas de durée estimée';
-} overlay.appendChild(duration);
-const parentStars = document.createElement('div');
-parentStars.classList.add('parentStarsPosterHover');
-for (let j = 0; j < series[i].dataset.avis; j++) {
-parentStars.innerHTML += '<span class="material-symbols-outlined">grade</span>';
-}
-for (let j = 0; j < 5 - series[i].dataset.avis; j++) {
-parentStars.innerHTML += '<span class="material-symbols-outlined">grade</span>';
-parentStars.lastChild.style.color = '#e3f7f5';
-}
-overlay.appendChild(parentStars);
-overlay.style.width = seriesPoster[i].width + 'px';
-overlay.style.transform = 'translateY(' + (
-seriesPoster[i].offsetHeight - overlay.offsetHeight + Math.round(overlay.offsetHeight * 0.08)
-) + 'px) translateX(' + (
-seriesPoster[i].offsetLeft - overlay.offsetLeft + 1
-) + 'px) scale(1.08)';
-}
+  function posterHover(i) {
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+    series[i].appendChild(overlay);
+    const title = document.createElement('p');
+    title.classList.add('titlePosterHover');
+    title.innerHTML = series[i].dataset.title;
+    overlay.appendChild(title);
+    const duration = document.createElement('p');
+    duration.classList.add('durationPosterHover');
+    if (series[i].dataset.duration != null) {
+      duration.innerHTML = series[i].dataset.duration;
+    } else if (series[i].dataset.épisodes != null) {
+      duration.innerHTML = series[i].dataset.épisodes;
+    } else {
+      duration.innerHTML = 'Pas de durée estimée';
+    } overlay.appendChild(duration);
+    const parentStars = document.createElement('div');
+    parentStars.classList.add('parentStarsPosterHover');
+    for (let j = 0; j < series[i].dataset.avis; j++) {
+      parentStars.innerHTML += '<span class="material-symbols-outlined">grade</span>';
+    }
+    for (let j = 0; j < 5 - series[i].dataset.avis; j++) {
+      parentStars.innerHTML += '<span class="material-symbols-outlined">grade</span>';
+      parentStars.lastChild.style.color = '#e3f7f5';
+    }
+    overlay.appendChild(parentStars);
+    overlay.style.width = seriesPoster[i].width + 'px';
+    overlay.style.transform = 'translateY(' + (
+      seriesPoster[i].offsetHeight - overlay.offsetHeight + Math.round(overlay.offsetHeight * 0.08)
+    ) + 'px) translateX(' + (
+        seriesPoster[i].offsetLeft - overlay.offsetLeft + 1
+      ) + 'px) scale(1.08)';
+  }
 }
 function makeBannerLeft(poster, posterImg) {
 const banner = document.createElement('div');
@@ -253,11 +563,11 @@ document.getElementById('show').style.marginRight = '0';
     });
 {% endif %}
 
-if (banner.offsetHeight >= window.innerHeight) {
-banner.style.borderTopLeftRadius = '0';
-} else {
-banner.style.borderTopLeftRadius = '15px';
-}
+  if (banner.offsetHeight >= window.innerHeight) {
+    banner.style.borderTopLeftRadius = '0';
+  } else {
+    banner.style.borderTopLeftRadius = '15px';
+  }
 }
 	</script>
 
