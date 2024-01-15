@@ -156,13 +156,12 @@ class IndexController extends AbstractController
         // endregion
 
         if ($request->get('rating') && null != $this->getUser()) {
-            if ('Supprimer' == $request->get('action')) {
+            if ('Delete' == $request->get('action')) {
                 $entityManager->remove($infoRating['userRating']);
                 $entityManager->flush();
-
                 return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
             } else {
-                if ('Modifier' == $request->get('action')) {
+                if ('Edit' == $request->get('action')) {
                     if ($infoRating['userValue'] == $request->get('value') && $infoRating['userComment'] == $request->get('comment')) {
                         return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
                     }
