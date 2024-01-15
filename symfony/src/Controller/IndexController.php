@@ -160,7 +160,14 @@ class IndexController extends AbstractController
             }
             
         }
-
+        $val=0;
+        $nombreNotes=0;
+        if (!empty($comments)){    
+            foreach ($comments as $comment){
+                $val=$val+$comment->getValue();
+                $nombreNotes++;}
+            $val=substr($val/$nombreNotes, 0, 3);
+        }
         // Récupérez tous les commentaires pour la série
         $comments = $entityManager->getRepository(Rating::class)->findBy([
             'series' => $id,
@@ -176,6 +183,8 @@ class IndexController extends AbstractController
             'userRating' => $infoRating['userRating'] ? $infoRating['userValue'] : null,
             'userComment' => $infoRating['userRating'] ? $infoRating['userComment'] : null,
             'comments' => $infoRating['comments'],
+            'serieScore' => $val,
+            'nombreNotes' =>$nombreNotes,
         ]);
         
     }
