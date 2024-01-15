@@ -148,7 +148,7 @@
         <tbody>
             {% for comment in comments|reverse %}
                 <tr>
-                    <td><img src="https://ui-avatars.com/api/?name={{ comment.user.name }}&background=random&rounded=true" style="display: inline;">{{comment.user.name}}</td>
+                    <td><a href="{{path('user_profile_search',{username: comment.user.name})}}"><img src="https://ui-avatars.com/api/?name={{ comment.user.name }}&background=random&rounded=true" style="display: inline;"></a>{{comment.user.name}}</td>
                     <td>{{ comment.value }}</td>
                     <td> {{ comment.comment }}</td>
 
