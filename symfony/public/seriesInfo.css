@@ -13,7 +13,17 @@
     width: 75% !important;
     margin-left: 5px;
 }
-
+a.eye {
+    color: #221F1F;
+    background-color: #cba848;
+    border-radius: 24px;
+    transition: 0.3s;
+    width: 50px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    
+}
 #seriesTitle{
     font-family: 'Bebas Neue', cursive;
     font-size: 50px;
