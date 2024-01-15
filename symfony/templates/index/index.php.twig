@@ -30,7 +30,6 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
     </div>
     
     {{ block('paging') }}
-    <h1>{{ hasVisited }}</h1>
      <script>
       let first_time = '{{ hasVisited }}';
     if (document.location.href.includes('?page=1') && first_time === '') {
@@ -221,7 +220,7 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
 
         }
       }, 5000);
-    }else if(document.location.href.includes('?page=1')){
+    }if(document.location.href.includes('?page=1')){
       const bannerInfoFirstPage = document.createElement('div');
       bannerInfoFirstPage.classList.add('bannerInfoFirstPage');
       document.body.insertBefore(bannerInfoFirstPage, document.getElementById('show'));
@@ -274,13 +273,12 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
         }
       });
     }
-    else{
-      window.addEventListener('load', makeScript());
-      page = document.querySelectorAll('.pagine .pagination a');
-      for (let i = 0; i < page.length; i++) {
-        page[i].addEventListener('click', makeScript())
-      }
+    window.addEventListener('load', makeScript());
+    page = document.querySelectorAll('.pagine .pagination a');
+    for (let i = 0; i < page.length; i++) {
+      page[i].addEventListener('click', makeScript())
     }
+    
 
 function makeScript() {
   const menu = document.getElementById('parentItemMenuLeft');
