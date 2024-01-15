@@ -37,7 +37,7 @@
                         <td><div id="ratingOfRatings">{{ comment.value }}</div></td>
                         <td> {{ comment.comment }}</td>
                         <td> {{ comment.series.title }}</td>
-                        <td><img id="imagePoster" src="{{ path('app_series_poster',{id: comment.series.id}) }}" alt='Series Poster'></td>
+                        <td><a href="{{ path('app_index_series_info',{id: comment.series.id}) }}"><img id="imagePoster" src="{{ path('app_series_poster',{id: comment.series.id}) }}" alt='Series Poster'></a></td>
                         <td>
                             {% set diff = date().diff(comment.date) %}
                             {% if diff.y > 0 %}
