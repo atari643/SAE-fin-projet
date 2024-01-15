@@ -55,7 +55,7 @@
             <hr>
         </div>
     </div>
-    <div class="paging paginSeason">
+    <div class="paging">
         {{ knp_pagination_render(paginationSeason) }}
     </div>
     <nav>
@@ -65,26 +65,7 @@
             {% for s in paginationSeason %}
                 {% if s.number == seasonNumber %}
                     <li ><a onclick="window.location.reload()"
-                     href="{{ path('app_index_season_info', {id: series.id, num: s.number}) }}">Season {{ s.number }}</a>
-                     {% if app.request.attributes.get('_route') == 'app_index_season_info' %}
-                        
-                     {% if app.user != null %}
-                        {% set found = true %}
-                        {% for episode in s.getEpisodes() %}
-                            {% if not app.user.getEpisode.contains(episode) %}
-                                {% set found = false %}
-                            {% endif %}
-                        {% endfor %}
-                        {% if found %}
-                            <a href="{{ path('app_index_season_info_remove', {id: series.id, num: s.number}) }}"><span class="material-symbols-outlined">visibility_off</span></a>
-                        {% else %}
-                            <a href="{{ path('app_index_season_info_add', {id: series.id, num: s.number}) }}"><span class="material-symbols-outlined">visibility</span></a>
-                        {% endif %}
-                        {% else %}
-                        <a href="{{ path('app_login') }}"><span class="material-symbols-outlined">visibility</span></a>
-                    {% endif %}
-                    {% endif %}
-                    </li>
+                     href="{{ path('app_index_season_info', {id: series.id, num: s.number}) }}">Season {{ s.number }}</a></li>
                 {% else %}
                     <li ><a onclick="window.location.reload()" href="{{ path('app_index_season_info', {id: series.id, num: s.number}) }}">Season {{ s.number }}</a></li>
                 {% endif %}
@@ -100,21 +81,6 @@
                         {{ episode.number }} episode
                         <h2>{{ episode.title }}</h2>
                         <p>{{ episode.date|date('d/m/Y') }}</p>
-                        {% if app.user != null %}
-                            {% set found = false %}
-                            {% for e in app.user.getEpisode() %}
-                                {% if e.getId() == episode.id %}
-                                    {% set found = true %}
-                                {% endif %}
-                            {% endfor %}
-                            {% if found %}
-                                <a href="{{ path('app_index_episode_remove', {id: episode.season.series.id, num: episode.season.number, idE: episode.id}) }}"><span class="material-symbols-outlined">visibility_off</span></a>
-                            {% else %}
-                            <a href="{{ path('app_index_episode_add', {id: episode.season.series.id, num: episode.season.number, idE: episode.id}) }}"><span class="material-symbols-outlined">visibility</span></a>
-                            {% endif %}
-                        {% else %}
-                            <a href="{{ path('app_login') }}"><span class="material-symbols-outlined">visibility</span></a>
-                        {% endif %}
                     </li>
                 {% endfor %}
             </ul>
@@ -183,6 +149,7 @@
             const suivieButton = document.createElement("div");
             suivieButton.classList.add('suivieButtonadd');
             suivieButton.style.display = "inline-block";
+
             var found = false;
             {% if app.user != null %}
                 {% for s in app.user.getSeries() %}
