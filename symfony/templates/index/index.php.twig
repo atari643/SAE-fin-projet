@@ -30,9 +30,11 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
     </div>
     
     {{ block('paging') }}
-    
-    <script>
-    if (document.location.href.includes('?page=1')) {
+    <h1>{{ hasVisited }}</h1>
+     <script>
+      let first_time = '{{ hasVisited }}';
+    if (document.location.href.includes('?page=1') && first_time === '') {
+        document.cookie = "visited=yes;";
         document.body.innerHTML +=
         '<div id="container">' +
    '<netflixintro letter="X">' +
