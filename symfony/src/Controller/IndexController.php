@@ -116,8 +116,7 @@ class IndexController extends AbstractController
             'user' => $this->getUser(),
             'series' => $id
         ]);
-
-        // Récup tous les commentaires de la serie
+        
         $comments = $entityManager->getRepository(Rating::class)->findBy([
             'series' => $id
         ]);
@@ -183,11 +182,6 @@ class IndexController extends AbstractController
                 return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
             }// end if
         }// end if
-
-        // Récupérez tous les commentaires pour la série
-        $comments = $entityManager->getRepository(Rating::class)->findBy(
-            ['series' => $id]
-        );
 
         $series = $repository->seriesInfoById($id);
         $seasons = $series->getSeasons();

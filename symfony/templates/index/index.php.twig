@@ -549,19 +549,45 @@ document.getElementById('show').style.marginRight = '0';
                 url: "{{ path('app_default') }}",
                 data: {add : true, id : poster.dataset.id}
             });
+            
+            suivieButton.addEventListener('click', function () {
+                if (suivieButton.querySelector('span').innerHTML == 'heart_plus') {
+                    suivieButton.querySelector('span').innerHTML = 'heart_check';
+                    suivieButton.style.color = 'rgb(0, 105, 0)';
 
-        }else if(suivieButton.querySelector('span').innerHTML == 'heart_minus'){
-            suivieButton.querySelector('span').innerHTML = 'heart_check';
-            suivieButton.style.color = '#ac1536';
-            setTimeout(function () {
-                suivieButton.style.color = 'white';
-                suivieButton.querySelector('span').innerHTML = 'heart_plus';
-            }, 600);
+                    setTimeout(function () {
+                        suivieButton.style.color = 'white';
+                        suivieButton.querySelector('span').innerHTML = 'heart_minus';
+                    }, 600);
 
-            $.ajax({
-                type: "POST",
-                url: "{{ path('app_default') }}",
-                data: {add : false, id : poster.dataset.id}
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ path('app_default') }}",
+                        data: {
+                            add: true,
+                            id: poster.dataset.id
+                        }
+                    });
+
+                } else if (suivieButton.querySelector('span').innerHTML == 'heart_minus') {
+                    suivieButton.querySelector('span').innerHTML = 'heart_check';
+                    suivieButton.style.color = '#ac1536';
+
+                    setTimeout(function () {
+                        suivieButton.style.color = 'white';
+                        suivieButton.querySelector('span').innerHTML = 'heart_plus';
+                    }, 600);
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ path('app_default') }}",
+                        data: {
+                            add: false,
+                            id: poster.dataset.id
+                        }
+                    });
+                }
+
             });
         }
     });
