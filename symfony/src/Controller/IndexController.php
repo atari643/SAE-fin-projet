@@ -119,14 +119,12 @@ class IndexController extends AbstractController
         // Recupérer l'avis de l'utilisateur actif
         $userRating = $entityManager->getRepository(Rating::class)->findOneBy([
             'user' => $this->getUser(),
-            'series' => $id,
-            'hasVisited' => $_SESSION['hasVisited'],
+            'series' => $id
         ]);
 
         // Récup tous les commentaires de la serie
         $comments = $entityManager->getRepository(Rating::class)->findBy([
-            'series' => $id,
-            'hasVisited' => $_SESSION['hasVisited'],
+            'series' => $id
         ]);
 
         return [
