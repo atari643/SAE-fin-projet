@@ -131,7 +131,7 @@
             <label for="rating">Notez la série:</label>
             <select id="rating" name="rating">
                 <option value="" {% if userRating is null %}selected{% endif %}>Sélectionnez une note</option>
-                {% for i in 1..5 %}
+                {% for i in 0..5 %}
                     <option value="{{ i }}" {% if i == userRating %}selected{% endif %}>{{ i }}</option>
                 {% endfor %}
             </select>
