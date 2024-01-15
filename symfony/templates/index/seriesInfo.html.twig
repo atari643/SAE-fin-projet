@@ -1,6 +1,6 @@
 {% extends './utils/paging.html.twig' %}
 
-{% block title %}Series Info{% endblock %}
+{% block title %}Series Infos{% endblock %}
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('/seriesInfo.css') }}">
@@ -128,18 +128,18 @@
 
     <div id="rating">
         <form action="{{ path('app_index_series_info', {id: series.id}) }}" method="post">
-            <label for="rating">Notez la série:</label>
+            <label for="rating">Rate the series:</label>
             <select id="rating" name="rating">
-                <option value="" {% if userRating is null %}selected{% endif %}>Sélectionnez une note</option>
+                <option value="" {% if userRating is null %}selected{% endif %}>Select a rating</option>
                 {% for i in 0..5 %}
                     <option value="{{ i }}" {% if i == userRating %}selected{% endif %}>{{ i }}</option>
                 {% endfor %}
             </select>
-            <label for="comment">Laisser une critique:</label>
+            <label for="comment">Leave a review:</label>
             <textarea id="comment" name="comment">{{ userComment }}</textarea>
-            <input type="submit" name="action" value="{{ userRating ? 'Modifier' : 'Envoyer' }}">
+            <input type="submit" name="action" value="{{ userRating ? 'Edit' : 'Send' }}">
             {% if userRating %}
-                <input type="submit" name="action" value="Supprimer">
+                <input type="submit" name="action" value="Delete">
             {% endif %}
         </form>
     </div>  
@@ -155,15 +155,15 @@
                     <td>
                         {% set diff = date().diff(comment.date) %}
                         {% if diff.y > 0 %}
-                            Publié il y a {{ diff.y }} an(s)
+                            {{ diff.y }} year(s) ago
                         {% elseif diff.m > 0 %}
-                            Publié il y a {{ diff.m }} mois
+                            {{ diff.m }} month(s) ago
                         {% elseif diff.d > 0 %}
-                            Publié il y a {{ diff.d }} jour(s)
+                            {{ diff.d }} day(s) ago
                         {% elseif diff.h > 0 %}
-                            Publié il y a {{ diff.h }} heure(s)
+                            {{ diff.h }} hour(s) ago
                         {% else %}
-                            Publié il y a {{ diff.i }} minute(s)
+                            {{ diff.i }} minute(s) ago
                         {% endif %}
                     </td>
                 </tr>
