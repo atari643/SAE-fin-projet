@@ -167,7 +167,21 @@ class UserController extends AbstractController
         ]);
     }
 
-    private function getUserRatings(EntityManagerInterface $entityManager, string $id) {
+    private function getUserRatingsByName(EntityManagerInterface $entityManager, string $id) {
+
+       
+        
+        // Récup tous les commentaires de la serie
+        $comments = $entityManager->getRepository(Rating::class)->findBy([
+            'user' => $id,
+        ]);
+    
+        return [
+            'comments' => $comments,
+        ];
+    }
+
+    private function getUserRatingsById(EntityManagerInterface $entityManager, int $id) {
 
        
         
@@ -185,15 +199,18 @@ class UserController extends AbstractController
     public function seriesReviews(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
         $user = $this->getUser();
-        $name = $user->getName();
+        $id=$user->getId();
+        $infoRating = $this->getUserRatingsById($entityManager, $id);
         $pagination = $paginator->paginate(
-            $this->getUserRatings($entityManager, $name),
+            $infoRating,
             $request->query->getInt('page', 1),
             10
         );
         return $this->render(
             'user/ratings.html.twig', [
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'comments' => $infoRating['comments'],
+            'user' => $user,
             ]
         );
     }
@@ -204,15 +221,18 @@ class UserController extends AbstractController
         $users = $entityManager
         ->getRepository(User::class);
         $user = $users->findOneBy(array('name' => $username));
-        $name = $user->getName();
+        $id = $user->getId(); 
+        $infoRating = $this->getUserRatingsById($entityManager, $id /* $username */);
         $pagination = $paginator->paginate(
-            $this->getUserRatings($entityManager, $name),
+            $infoRating,
             $request->query->getInt('page', 1),
             10
         );
         return $this->render(
             'user/ratings.html.twig', [
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'comments' => $infoRating['comments'],
+            'user' => $username,
         ]);
     }
 
