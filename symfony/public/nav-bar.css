@@ -72,7 +72,7 @@ body {
     color: #e3f7f5;
 }
 
-.suivieButtonadd {
+.followButtonAdd {
     margin-top: 2px;
     color: #e3f7f5;
     cursor: pointer;
@@ -87,7 +87,7 @@ body {
     display: flex;
 }
 
-.déconnecter{
+.disconnect{
     display: flex;
     flex-direction: row;
     margin: 0;
@@ -104,11 +104,11 @@ body {
     font-size: 0.9rem;
 }
 
-.déconnecter>span{
+.disconnect>span{
     font-size: 1.5rem;
 }
 
-.déconnecter:active{
+.disconnect:active{
     scale: 0.95;
 }
 

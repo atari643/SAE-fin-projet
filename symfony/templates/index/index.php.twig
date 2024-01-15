@@ -4,261 +4,288 @@
 {% endblock %}
 
 {% block stylesheets %}
-<link rel="stylesheet"
-href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-<link rel="stylesheet" href="/style.css" />
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+	<link rel="stylesheet" href="/style.css"/>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
 {% endblock %}
 {% block header %}
-    <header>
-        <div class="caroussel">
-            <div class="carousselChild">
-                {% for s in pagination %}
-                <div class="carousselChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" >
-                    <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="affiche">
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        <h1>Vision Vibes</h1>
-        <div class="advanced-search">
-            <form action="{{ path('app_default') }}" method="get">
-                <input type="text" name="search" id="search" placeholder="Search for a series" />
+	<header>
+		<div class="caroussel">
+			<div class="carousselChild">
+				{% for s in pagination %}
+					<div class="carousselChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}">
+						<img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="poster">
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+		<h1>Vision Vibes</h1>
+		<div class="advanced-search">
+			<form action="{{ path('app_default') }}" method="get">
+				<input type="text" name="search" id="search" placeholder="Search for a series"/>
 
-                <select name="genre" id="genre">
-                    <option value="">All genres</option>
-                    {% for genre in genres %}
-                        <option value="{{ genre.id }}">{{ genre.name }}</option>
-                    {% endfor %}
-                </select>
-                <input type="number" name="yearStart" id="yearStart" placeholder="Start Year" min="1900" max="{{ "now"|date("Y") }}" />
-                <input type="number" name="yearEnd" id="yearEnd" placeholder="End Year" min="1900" max="{{ "now"|date("Y") }}" />
-                {% if app.user %}
-                    <select name="follow" id="follow" placeholder="Followed">
-                        <option value="">All</option>
-                        <option value="1">Followed</option>
-                        <option value="0">Not followed</option>
-                    </select>
-                {% endif %}
-                <button type="submit" class="material-symbols-outlined">search</button>
-            </form>
-        </div>
-    </header>
-    {% endblock %}
+				<select name="genre" id="genre">
+					<option value="">All genres</option>
+					{% for genre in genres %}
+						<option value="{{ genre.id }}">{{ genre.name }}</option>
+					{% endfor %}
+				</select>
+				<input type="number" name="yearStart" id="yearStart" placeholder="Start Year" min="1900" max="{{ "now"|date("Y") }}"/>
+				<input type="number" name="yearEnd" id="yearEnd" placeholder="End Year" min="1900" max="{{ "now"|date("Y") }}"/>
+				{% if app.user %}
+					<select name="follow" id="follow" placeholder="Followed">
+						<option value="">All</option>
+						<option value="1">Followed</option>
+						<option value="0">Not followed</option>
+					</select>
+				{% endif %}
+				<button type="submit" class="material-symbols-outlined">search</button>
+			</form>
+		</div>
+	</header>
+{% endblock %}
 {% block body %}
 
-{% if is_granted('IS_IMPERSONATOR') %}
-    <a href="{{ impersonation_exit_path(path('app_login') ) }}">Exit impersonation</a>
-{% endif %}
-    
-    <div id="show">
-        {% for s in pagination %}
-            <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="4" data-resum="{{s.plot}}">
-                <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="posters">
-            </div>
-        {% endfor %}
-    </div>
-    
-    {{ block('paging') }}
-    
-    <script>
-        window.addEventListener('load', makeScript());
-        page=document.querySelectorAll('.pagination a');
-        for(let i=0;i<page.length;i++){
-            page[i].addEventListener('click',makeScript())
+	{% if is_granted('IS_IMPERSONATOR') %}
+		<a href="{{ impersonation_exit_path(path('app_login') ) }}">Exit impersonation</a>
+	{% endif %}
+
+	<div id="show">
+		{% for s in pagination %}
+			<div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="4" data-resum="{{s.plot}}">
+				<img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="posters">
+			</div>
+		{% endfor %}
+	</div>
+
+	{{ block('paging') }}
+
+<script>
+	window.addEventListener('load', makeScript());
+    page = document.querySelectorAll('.pagination a');
+    for (let i = 0; i < page.length; i++) {
+        page[i].addEventListener('click', makeScript())
+    }
+
+    function makeScript() {
+        const series = document.getElementsByClassName('showChildSeries');
+        const seriesPoster = document.getElementsByClassName('posters');
+        for (let i = 0; i < series.length; i++) {
+            seriesPoster[i].addEventListener('mouseover', function () {
+                posterHover(i);
+            });
+            seriesPoster[i].addEventListener('mouseleave', function () {
+                const overlay = series[i].querySelector('.overlay');
+                if (overlay) {
+                    overlay.parentNode.removeChild(overlay);
+                }
+            });
+
+            seriesPoster[i].addEventListener('click', function () {
+                if (document.querySelector('.banner')) {
+                    document.body.removeChild(document.querySelector('.banner'));
+                    document.getElementById('show').style.width = '100%';
+                    document.getElementById('show').style.marginRight = '0';
+                }
+                makeBannerLeft(series[i], seriesPoster[i]);
+            });
+
+        }
+
+
+        function posterHover(i) {
+            const overlay = document.createElement('div');
+            overlay.classList.add('overlay');
+            series[i].appendChild(overlay);
+
+            const title = document.createElement('p');
+            title.classList.add('titlePosterHover');
+            title.innerHTML = series[i].dataset.title;
+            overlay.appendChild(title);
+
+            const duration = document.createElement('p');
+            duration.classList.add('durationPosterHover');
+            if (series[i].dataset.duration != null) {
+                duration.innerHTML = series[i].dataset.duration;
+            } else if (series[i].dataset.épisodes != null) {
+                duration.innerHTML = series[i].dataset.épisodes;
+            } else {
+                duration.innerHTML = 'Pas de durée estimée';
+            } overlay.appendChild(duration);
+
+            const parentStars = document.createElement('div');
+            parentStars.classList.add('parentStarsPosterHover');
+            for (let j = 0; j < series[i].dataset.avis; j++) {
+                parentStars.innerHTML += '<span class="material-symbols-outlined">grade</span>';
+            }
+            for (let j = 0; j < 5 - series[i].dataset.avis; j++) {
+                parentStars.innerHTML += '<span class="material-symbols-outlined">grade</span>';
+                parentStars.lastChild.style.color = '#e3f7f5';
+            }
+            overlay.appendChild(parentStars);
+            overlay.style.width = seriesPoster[i].width + 'px';
+            overlay.style.transform = 'translateY(' + (
+                seriesPoster[i].offsetHeight - overlay.offsetHeight + Math.round(overlay.offsetHeight * 0.08)
+                ) + 'px) translateX(' + (
+                seriesPoster[i].offsetLeft - overlay.offsetLeft + 1
+            ) + 'px) scale(1.08)';
+        }
+    }
+
+    function makeBannerLeft(poster, posterImg) {
+        const banner = document.createElement('div');
+        banner.classList.add('banner');
+        banner.style.height = window.innerHeight - document.getElementById('show').offsetTop + scrollY + 'px';
+
+        window.addEventListener('scroll', function () {
+            banner.style.height = window.innerHeight - document.getElementById('show').offsetTop + scrollY + 'px';
+            if (banner.offsetHeight >= window.innerHeight) {
+                banner.style.borderTopLeftRadius = '0';
+            } else {
+                banner.style.borderTopLeftRadius = '15px';
+            }
+        });
+
+        const bannerClose = document.createElement('div');
+        bannerClose.classList.add('bannerClose');
+        bannerClose.innerHTML = '<span class="material-symbols-outlined">cancel</span>';
+        banner.appendChild(bannerClose);
+
+        const headerBanner = document.createElement('div');
+        headerBanner.classList.add('headerBanner');
+
+        const bannerTitle = document.createElement('p');
+        bannerTitle.classList.add('bannerTitle');
+        bannerTitle.innerHTML = poster.dataset.title;
+        headerBanner.appendChild(bannerTitle);
+
+        const bannerButtonMore = document.createElement('button');
+        bannerButtonMore.classList.add('bannerButtonMore');
+        bannerButtonMore.onclick = () => {
+            window.location.href = "/series/" + poster.dataset.id;
+        };
+        bannerButtonMore.innerHTML = 'Learn more';
+        headerBanner.appendChild(bannerButtonMore);
+        banner.appendChild(headerBanner);
+
+        const bannerImg = document.createElement('img');
+        bannerImg.src = posterImg.src;
+        bannerImg.classList.add('bannerImg');
+        banner.appendChild(bannerImg);
+
+        const summary = document.createElement('p');
+        summary.classList.add('summary');
+        summary.innerHTML = poster.dataset.resum;
+        banner.appendChild(summary);
+
+        const parentBottomBanner = document.createElement('div');
+        parentBottomBanner.classList.add('parentBottomBanner');
+        banner.appendChild(parentBottomBanner);
+
+        const bannerDuration = document.createElement('p');
+        bannerDuration.classList.add('bannerDuration');
+
+        if (poster.dataset.duration != null) {
+            bannerDuration.innerHTML = poster.dataset.duration;
+        } else if (poster.dataset.épisodes != null) {
+            bannerDuration.innerHTML = poster.dataset.épisodes;
+        } else {
+            bannerDuration.innerHTML = 'No duration estimated';
+        } parentBottomBanner.appendChild(bannerDuration);
+
+        const bannerParentStars = document.createElement('div');
+        bannerParentStars.classList.add('bannerParentStars');
+        for (let j = 0; j < poster.dataset.avis; j++) {
+            bannerParentStars.innerHTML += '<span class="material-symbols-outlined">grade</span>';
+        }
+        for (let j = 0; j < 5 - poster.dataset.avis; j++) {
+            bannerParentStars.innerHTML += '<span class="material-symbols-outlined">grade</span>';
+            bannerParentStars.lastChild.style.color = '#e3f7f5';
+        }
+        parentBottomBanner.appendChild(bannerParentStars);
+
+        const suivieButton = document.createElement('div');
+        suivieButton.classList.add('followButtonAdd');
+
+        var found = false;
+        {% if app.user != null %}
+            {% for s in app.user.getSeries() %}
+                if (poster.dataset.id == {{ s.getId() }}) {
+                    suivieButton.innerHTML = '<span class="material-symbols-outlined">heart_minus</span>';
+                    found = true;
+                }
+            {% endfor %}
+        {% endif %}
+
+        if (! found) {
+            suivieButton.innerHTML = '<span class="material-symbols-outlined">heart_plus</span>';
+        }
+
+        parentBottomBanner.appendChild(suivieButton);
+        document.body.appendChild(banner);
+        document.getElementById('show').style.width = '85%';
+        document.getElementById('show').style.marginRight = '15%';
+
+        bannerClose.addEventListener('click', function () {
+            document.body.removeChild(banner);
+            document.getElementById('show').style.width = '100%';
+            document.getElementById('show').style.marginRight = '0';
+        });
         
-        }
-function makeScript(){
-const series = document.getElementsByClassName('showChildSeries');
-const seriesPoster = document.getElementsByClassName('posters');
-for (let i = 0; i < series.length; i++) {
-seriesPoster[i].addEventListener('mouseover', function () {
-posterHover(i);
-});
-seriesPoster[i].addEventListener('mouseleave', function () {
-const overlay = series[i].querySelector('.overlay');
-if (overlay) {
-overlay.parentNode.removeChild(overlay);
-}
-});
-seriesPoster[i].addEventListener('click', function () {
-if (document.querySelector('.banner')) {
-document.body.removeChild(document.querySelector('.banner'));
-document.getElementById('show').style.width = '100%';
-document.getElementById('show').style.marginRight = '0';
-}
-makeBannerLeft(series[i], seriesPoster[i]);
-});
-
-}
-
-
-function posterHover(i) {
-const overlay = document.createElement('div');
-overlay.classList.add('overlay');
-series[i].appendChild(overlay);
-const title = document.createElement('p');
-title.classList.add('titlePosterHover');
-title.innerHTML = series[i].dataset.title;
-overlay.appendChild(title);
-const duration = document.createElement('p');
-duration.classList.add('durationPosterHover');
-if (series[i].dataset.duration != null) {
-duration.innerHTML = series[i].dataset.duration;
-} else if (series[i].dataset.épisodes != null) {
-duration.innerHTML = series[i].dataset.épisodes;
-} else {
-duration.innerHTML = 'Pas de durée estimée';
-} overlay.appendChild(duration);
-const parentStars = document.createElement('div');
-parentStars.classList.add('parentStarsPosterHover');
-for (let j = 0; j < series[i].dataset.avis; j++) {
-parentStars.innerHTML += '<span class="material-symbols-outlined">grade</span>';
-}
-for (let j = 0; j < 5 - series[i].dataset.avis; j++) {
-parentStars.innerHTML += '<span class="material-symbols-outlined">grade</span>';
-parentStars.lastChild.style.color = '#e3f7f5';
-}
-overlay.appendChild(parentStars);
-overlay.style.width = seriesPoster[i].width + 'px';
-overlay.style.transform = 'translateY(' + (
-seriesPoster[i].offsetHeight - overlay.offsetHeight + Math.round(overlay.offsetHeight * 0.08)
-) + 'px) translateX(' + (
-seriesPoster[i].offsetLeft - overlay.offsetLeft + 1
-) + 'px) scale(1.08)';
-}
-}
-function makeBannerLeft(poster, posterImg) {
-const banner = document.createElement('div');
-banner.classList.add('banner');
-banner.style.height = window.innerHeight - document.getElementById('show').offsetTop + scrollY + 'px';
-window.addEventListener('scroll', function () {
-banner.style.height = window.innerHeight - document.getElementById('show').offsetTop + scrollY + 'px';
-if (banner.offsetHeight >= window.innerHeight) {
-banner.style.borderTopLeftRadius = '0';
-} else {
-banner.style.borderTopLeftRadius = '15px';
-}
-});
-const bannerClose = document.createElement('div');
-bannerClose.classList.add('bannerClose');
-bannerClose.innerHTML = '<span class="material-symbols-outlined">cancel</span>';
-banner.appendChild(bannerClose);
-const headerBanner = document.createElement('div');
-headerBanner.classList.add('headerBanner');
-const bannerTitle = document.createElement('p');
-bannerTitle.classList.add('bannerTitle');
-bannerTitle.innerHTML = poster.dataset.title;
-headerBanner.appendChild(bannerTitle);
-const bannerButtonMore = document.createElement('button');
-bannerButtonMore.classList.add('bannerButtonMore');
-bannerButtonMore.onclick = () => {
-window.location.href = "/series/" + poster.dataset.id;
-};
-bannerButtonMore.innerHTML = 'Learn more';
-headerBanner.appendChild(bannerButtonMore);
-banner.appendChild(headerBanner);
-const bannerImg = document.createElement('img');
-bannerImg.src = posterImg.src;
-bannerImg.classList.add('bannerImg');
-banner.appendChild(bannerImg);
-const resumé = document.createElement('p');
-resumé.classList.add('resumé');
-resumé.innerHTML = poster.dataset.resum;
-banner.appendChild(resumé);
-const parentBottomBanner = document.createElement('div');
-parentBottomBanner.classList.add('parentBottomBanner');
-banner.appendChild(parentBottomBanner);
-const bannerDuration = document.createElement('p');
-bannerDuration.classList.add('bannerDuration');
-if (poster.dataset.duration != null) {
-bannerDuration.innerHTML = poster.dataset.duration;
-} else if (poster.dataset.épisodes != null) {
-bannerDuration.innerHTML = poster.dataset.épisodes;
-} else {
-bannerDuration.innerHTML = 'No duration estimated';
-} parentBottomBanner.appendChild(bannerDuration);
-const bannerParentStars = document.createElement('div');
-bannerParentStars.classList.add('bannerParentStars');
-for (let j = 0; j < poster.dataset.avis; j++) {
-bannerParentStars.innerHTML += '<span class="material-symbols-outlined">grade</span>';
-}
-for (let j = 0; j < 5 - poster.dataset.avis; j++) {
-bannerParentStars.innerHTML += '<span class="material-symbols-outlined">grade</span>';
-bannerParentStars.lastChild.style.color = '#e3f7f5';
-}
-parentBottomBanner.appendChild(bannerParentStars);
-const suivieButton = document.createElement('div');
-suivieButton.classList.add('suivieButtonadd');
-
-var found = false;
-{% if app.user != null %}
-    {% for s in app.user.getSeries() %}
-        if(poster.dataset.id == {{ s.getId() }}){
-            suivieButton.innerHTML = '<span class="material-symbols-outlined">heart_minus</span>';
-            found = true;
-        }
-    {% endfor %}
-{% endif %}
-
-if(!found){
-    suivieButton.innerHTML = '<span class="material-symbols-outlined">heart_plus</span>';
-}
-
-parentBottomBanner.appendChild(suivieButton);
-document.body.appendChild(banner);
-document.getElementById('show').style.width = '85%';
-document.getElementById('show').style.marginRight = '15%';
-bannerClose.addEventListener('click', function () {
-document.body.removeChild(banner);
-document.getElementById('show').style.width = '100%';
-document.getElementById('show').style.marginRight = '0';
-});
-
-{% if app.user == null %}
-    suivieButton.addEventListener('click', function () {
-        window.location.replace("{{ path("app_login") }}");
-    });
-{% else %}
-    suivieButton.addEventListener('click', function () {
-        if (suivieButton.querySelector('span').innerHTML == 'heart_plus') {
-            suivieButton.querySelector('span').innerHTML = 'heart_check';
-            suivieButton.style.color = 'rgb(0, 105, 0)';
-            setTimeout(function () {
-                suivieButton.style.color = 'white';
-                suivieButton.querySelector('span').innerHTML = 'heart_minus';
-            }, 600);
-
-            $.ajax({
-                type: "POST",
-                url: "{{ path('app_default') }}",
-                data: {add : true, id : poster.dataset.id}
+        {% if app.user == null %}
+            suivieButton.addEventListener('click', function () {
+                window.location.replace("{{ path("app_login") }}");
             });
+        {% else %}
+            suivieButton.addEventListener('click', function () {
+                if (suivieButton.querySelector('span').innerHTML == 'heart_plus') {
+                    suivieButton.querySelector('span').innerHTML = 'heart_check';
+                    suivieButton.style.color = 'rgb(0, 105, 0)';
 
-        }else if(suivieButton.querySelector('span').innerHTML == 'heart_minus'){
-            suivieButton.querySelector('span').innerHTML = 'heart_check';
-            suivieButton.style.color = '#ac1536';
-            setTimeout(function () {
-                suivieButton.style.color = 'white';
-                suivieButton.querySelector('span').innerHTML = 'heart_plus';
-            }, 600);
+                    setTimeout(function () {
+                        suivieButton.style.color = 'white';
+                        suivieButton.querySelector('span').innerHTML = 'heart_minus';
+                    }, 600);
 
-            $.ajax({
-                type: "POST",
-                url: "{{ path('app_default') }}",
-                data: {add : false, id : poster.dataset.id}
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ path('app_default') }}",
+                        data: {
+                            add: true,
+                            id: poster.dataset.id
+                        }
+                    });
+
+                } else if (suivieButton.querySelector('span').innerHTML == 'heart_minus') {
+                    suivieButton.querySelector('span').innerHTML = 'heart_check';
+                    suivieButton.style.color = '#ac1536';
+
+                    setTimeout(function () {
+                        suivieButton.style.color = 'white';
+                        suivieButton.querySelector('span').innerHTML = 'heart_plus';
+                    }, 600);
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ path('app_default') }}",
+                        data: {
+                            add: false,
+                            id: poster.dataset.id
+                        }
+                    });
+                }
+
             });
-        }
-    });
-{% endif %}
-
-if (banner.offsetHeight >= window.innerHeight) {
-banner.style.borderTopLeftRadius = '0';
-} else {
-banner.style.borderTopLeftRadius = '15px';
+            
+            {% endif %}
+            
+            if (banner.offsetHeight >= window.innerHeight) {
+                banner.style.borderTopLeftRadius = '0';
+            } else {
+                banner.style.borderTopLeftRadius = '15px';
+            }
 }
-}
-	</script>
+</script>
 
 {% endblock %}

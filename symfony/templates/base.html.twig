@@ -67,53 +67,56 @@
 		{% block body %}{% endblock %}
 	</body>
 	<script>
-    const onThisPage = document.querySelector('body').dataset.onthispage;
-    const items = document.querySelectorAll('.itemMenu');
-    switch(onThisPage) {
-        case '/':
-            items[2].classList.add('onThisPage');
-            break;
-        case '/users':
-            items[1].classList.add('onThisPage');
-            break;
-        case '/user/series':
-            items[3].classList.add('onThisPage');
-            break;
-    }
+    	const onThisPage = document.querySelector('body').dataset.onthispage;
+    	const items = document.querySelectorAll('.itemMenu');
+    	switch(onThisPage) {
+        	case '/':
+            	items[2].classList.add('onThisPage');
+            	break;
+        	case '/users':
+            	items[1].classList.add('onThisPage');
+            	break;
+        	case '/user/series':
+            	items[3].classList.add('onThisPage');
+            	break;
+    	}
 
-const accountButton = document.querySelector('.itemMenu img');
-accountButton.addEventListener('click', function () {
-if (document.querySelector('.déconnecter')) {
-document.querySelector('.déconnecter').parentNode.removeChild(document.querySelector('.déconnecter'));
-} else {
-accountButton.parentNode.insertBefore(makeAccountNav(), accountButton);
-}
-});
+		const accountButton = document.querySelector('.itemMenu img');
+		accountButton.addEventListener('click', function () {
+			if (document.querySelector('.disconnect')) {
+				document.querySelector('.disconnect').parentNode.removeChild(document.querySelector('.disconnect'));
+			} else {
+				accountButton.parentNode.insertBefore(makeAccountNav(), accountButton);
+			}
+		});
 
-function makeAccountNav() {
-const accountNav = document.createElement('div');
-accountNav.classList.add('déconnecter');
-accountNav.innerHTML = '<span class="material-symbols-outlined">logout</span><a href=" {{ path('app_logout') }}">Logout</a>';
-return accountNav;
-}
-const suivieButton = document.querySelector('#suivieButton');
-suivieButton.addEventListener('click', function () {
-if (suivieButton.querySelector('span').innerHTML == 'heart_plus') {
-suivieButton.querySelector('span').innerHTML = 'heart_check';
-suivieButton.style.color = 'rgb(0, 105, 0)';
-setTimeout(function () {
-suivieButton.style.color = 'white';
-suivieButton.querySelector('span').innerHTML = 'heart_minus';
-}, 600);
-} else if (suivieButton.querySelector('span').innerHTML == 'heart_minus') {
-suivieButton.querySelector('span').innerHTML = 'heart_check';
-suivieButton.style.color = '#ac1536';
-setTimeout(function () {
-suivieButton.style.color = 'white';
-suivieButton.querySelector('span').innerHTML = 'heart_plus';
-}, 600);
-}
-});
-// app.user sur twig vérifier l'utlisateur connecté
+		function makeAccountNav() {
+			const accountNav = document.createElement('div');
+			accountNav.classList.add('disconnect');
+			accountNav.innerHTML = '<span class="material-symbols-outlined">logout</span><a href=" {{ path('app_logout') }}">Logout</a>';
+			return accountNav;
+		}
+
+		const suivieButton = document.querySelector('#suivieButton');
+		suivieButton.addEventListener('click', function () {
+			if (suivieButton.querySelector('span').innerHTML == 'heart_plus') {
+				suivieButton.querySelector('span').innerHTML = 'heart_check';
+				suivieButton.style.color = 'rgb(0, 105, 0)';
+
+				setTimeout(function () {
+					suivieButton.style.color = 'white';
+					suivieButton.querySelector('span').innerHTML = 'heart_minus';
+				}, 600);
+
+			} else if (suivieButton.querySelector('span').innerHTML == 'heart_minus') {
+				suivieButton.querySelector('span').innerHTML = 'heart_check';
+				suivieButton.style.color = '#ac1536';
+
+				setTimeout(function () {
+					suivieButton.style.color = 'white';
+					suivieButton.querySelector('span').innerHTML = 'heart_plus';
+				}, 600);
+			}
+		});
 	</script>
 </html>

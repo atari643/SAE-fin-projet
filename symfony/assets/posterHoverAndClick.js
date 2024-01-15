@@ -69,10 +69,10 @@ function makeBannerLeft(poster, posterImg)
     const bannerImg = document.createElement('img');
     bannerImg.src = posterImg.src;
     banner.appendChild(bannerImg);
-    const resumé = document.createElement('p');
-    resumé.classList.add('resumé');
-    resumé.innerHTML = poster.dataset.resum;
-    banner.appendChild(resumé);
+    const summary = document.createElement('p');
+    summary.classList.add('summary');
+    summary.innerHTML = poster.dataset.resum;
+    banner.appendChild(summary);
     const bannerDuration = document.createElement('p');
     bannerDuration.classList.add('bannerDuration');
     const parentBottomBanner = document.createElement('div');

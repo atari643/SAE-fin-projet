@@ -96,19 +96,16 @@ class IndexController extends AbstractController
             'index/index.php.twig', [
             'pagination' => $pagination,
             'genres' => $genres,
-
             ]);
     }
 
     private function getRatings(EntityManagerInterface $entityManager, int $id) {
 
-        // Recupérer l'avis de l'utilisateur actif
         $userRating = $entityManager->getRepository(Rating::class)->findOneBy([
             'user' => $this->getUser(),
             'series' => $id,
         ]);
         
-        // Récup tous les commentaires de la serie
         $comments = $entityManager->getRepository(Rating::class)->findBy([
             'series' => $id,
         ]);
@@ -154,7 +151,7 @@ class IndexController extends AbstractController
         #endregion
 
         if ($request->get("rating") && $this->getUser() != null){
-            if ($request->get("action") == "Supprimer"){
+            if ($request->get("action") == "Delete"){
 
                 $entityManager->remove($infoRating['userRating']);
                 $entityManager->flush();
@@ -162,7 +159,7 @@ class IndexController extends AbstractController
                 
             } else{
 
-                if ($request->get("action") == "Modifier"){
+                if ($request->get("action") == "Edit"){
                     if ($infoRating['userValue'] == $request->get("value") && $infoRating['userComment'] == $request->get("comment")){
                         return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
                     }
@@ -182,47 +179,6 @@ class IndexController extends AbstractController
             }
             
         }
-
-        // Récupérez tous les commentaires pour la série
-        $comments = $entityManager->getRepository(Rating::class)->findBy([
-            'series' => $id,
-        ]);
-
-        #region Follow/Unfollow Series
-        dump($request->get("idToAdd"));
-        dump($request->get("idToRemove"));
-        dump($request->get("remove"));
-
-        if($request->get("idToAdd") != null && $request->get("remove") == "1"){
-            $user = $this->getUser();
-
-            $series = $entityManager
-            ->getRepository(Series::class);
-            $seriesToAdd = $series->findBy(['id' => $request->get("idToAdd")]);
-
-            $user->addSeries($seriesToAdd[0]);
-            $entityManager->persist($seriesToAdd[0]);
-            $entityManager->flush();
-        }
-
-        if($request->get("idToRemove") != null && $request->get("remove") == "1"){
-            $user = $this->getUser();
-
-            $i = 0;
-            $end = false;
-            $seriesToRemove = null;
-            while(!$end && $i < $user->getSeries()->count()){
-                if($user->getSeries()[$i]->getId() == ((int) $request->get("idToRemove"))){
-                    $seriesToRemove = $user->getSeries()[$i];
-                    $end = true;
-                }
-                $i += 1;
-            }
-
-            $user->removeSeries($seriesToRemove);
-            $entityManager->flush();
-        }
-        #endregion
 
         $series = $repository->seriesInfoById($id);
         $seasons = $series->getSeasons();

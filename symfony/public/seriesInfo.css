@@ -57,11 +57,6 @@ nav ul li a:hover {
     background-color: #f4f4f4;
     color: blue;
 }
-#listeEpisode{
-    display: flex;
-    flex-direction: column;
-    width: 95%;
-}
 #contentEpisode{
     background-color: #e3f7f5;
     width: 100%;

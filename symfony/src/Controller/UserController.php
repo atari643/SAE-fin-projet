@@ -22,7 +22,7 @@ class UserController extends AbstractController
     {
         $page = $request->query->get('page');
         $get_args = $request->query->all();
-        //not here box
+        
         if($page == null){
             $get_string = "?";
             foreach (array_keys($get_args) as $key){
@@ -77,16 +77,12 @@ class UserController extends AbstractController
                     USERS_PER_PAGE
                 );
                 
-                
                 return $this->render('user/index.html.twig', [
-                    //'form'=>$form->createView(),
                     'pagination' => $pagination,
                     'count' => $count,
                     'username' => $search_query,
                 ]);
         }
-
-        dump($request->query->all());
         
         $pagination = $paginator->paginate(
             $users_limit,
@@ -94,7 +90,6 @@ class UserController extends AbstractController
             USERS_PER_PAGE
         );
         return $this->render('user/index.html.twig', [
-//            'form'=>$form->createView(),
             'pagination' => $pagination,
             'count' => $count,
             'username' => '',
@@ -165,8 +160,4 @@ class UserController extends AbstractController
             'user' => $username,
         ]);
     }
-
-
-    
-
 }

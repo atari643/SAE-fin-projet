@@ -167,7 +167,7 @@ body {
     margin: 0 0 0 14px;
 }
 
-.resumé {
+.summary {
     color: #e3f7f5;
     font-size: 1rem;
     font-family: 'Roboto', sans-serif;
@@ -299,7 +299,7 @@ header>h1{
     border: 1px solid transparent;
 
 }
-.affiche{
+.poster{
     height: 100%;
     width: 100%;
 }
