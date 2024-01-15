@@ -1,4 +1,4 @@
-# Installation et connexion au projet de site de film avec Symfony et MySQL
+# Installation et connexion au projet de site de séries avec Symfony et MySQL
 
 ## Installer et connecter un projet Symfony
 """
@@ -19,7 +19,7 @@ Pour installer et connecter un projet Symfony, suivez les étapes suivantes :
     ```
     Si vous utilisez Windows, vous pouvez télécharger l'installateur Symfony à partir du site officiel : https://symfony.com/download
 
-3. Ouvrez votre terminal et aller dans le .bashrc avec la commande suivante :
+3. Ouvrez votre terminal et allez dans le .bashrc avec la commande suivante :
     ```
     nano ~/.bashrc
     ```
@@ -31,7 +31,7 @@ Pour installer et connecter un projet Symfony, suivez les étapes suivantes :
     Cela permettra d'exécuter la commande Symfony depuis n'importe quel répertoire de votre machine.
 
 
-4. Maintenant aller dans notre projet symfony et exécuter la commande suivante :
+4. Maintenant, allez dans notre projet symfony et exécutez la commande suivante :
     ```
     symfony server:start
     ```
@@ -50,15 +50,15 @@ N'oubliez pas de consulter la documentation officielle de Symfony pour en savoir
 
 Notre projet Symfony utilise une base de données MySQL. Pour installer la base de données, suivez les étapes suivantes :
 
-1. Connecter vous sur la platforme myphpadmin de votre serveur avec ce lien : https://apps.iut.u-bordeaux.fr/phpmyadmin/
+1. Connectez vous sur la platforme PHPMyAdmin de votre serveur avec ce lien : https://apps.iut.u-bordeaux.fr/phpmyadmin/
 
-2. Rentrer vos identifiants de connexion
+2. Rentrez vos identifiants de connexion
 
 3. Dans la barre de navigation il faut aller dans l'onglet "importer"
 
-4. Dans fichier à importer, Dans  "Fichier à importer", cliquer sur "Parcourir" et sélectionner le fichier "shows.sql.zip" qui se trouve dans le dossier "Documents" du projet.
+4. Dans  "Fichier à importer", cliquez sur "Parcourir" et sélectionnez le fichier "shows.sql.zip" qui se trouve dans le dossier "Documents" du projet.
 
-5. Puis décendre en bas de la page et cliquer sur "Importer"
+5. Puis descendre en bas de la page et cliquez sur "Importer"
 
 6. La base de données est maintenant installée.
 
@@ -66,13 +66,13 @@ Notre projet Symfony utilise une base de données MySQL. Pour installer la base 
 
 Pour vous connecter à la base de données, suivez les étapes suivantes :
 
-1. Ouvrez le fichier ".env" qui se trouve à la racine du projet.
+1. Ouvrez le fichier ".env.local" qui se trouve à la racine du projet.
 
-2. Dans le fichier ".env", modifiez la ligne suivante :
+2. Dans le fichier ".env.local", modifiez la ligne suivante :
     ```
-    DATABASE_URL=mysql://USERNAME:PASSWORD@SERVER/HOST
+    DATABASE_URL=mysql://USER:PASSWORD@SERVER:PORT/HOST
     ```
-    Remplacez "USERNAME" par votre nom d'utilisateur et "PASSWORD" par votre mot de passe. Remplacez "SERVER" par le nom du serveur et "HOST" par le nom de la base de données.
+    Remplacez "USERNAME" par votre nom d'utilisateur et "PASSWORD" par votre mot de passe. Remplacez "SERVER" par le nom du serveur (Remplacez également PORT par le port de votre base de données si il est différent du port de base) et "HOST" par le nom de la base de données.
 
 3. Enregistrez le fichier et fermez-le.
 
@@ -82,12 +82,12 @@ Pour vous connecter à la base de données, suivez les étapes suivantes :
 
 Pour modifier les droits d'administration des utilisateurs du site, suivez les étapes suivantes :
 
-Pour mettre un utilisateur adminstrateur lancer le script:
+Pour mettre un utilisateur adminstrateur lancez le script:
     ```
     ./scriptBDAdminRights/grantAdminRights.sh
     ```
 
-Pour enlever un utilisateur adminstrateur lancer le script:
+Pour enlever un utilisateur adminstrateur lancez le script:
     ```
     ./scriptBDAdminRights/removeAdminRights.sh
     ```
