@@ -200,6 +200,7 @@ class UserController extends AbstractController
     {
         $user = $this->getUser();
         $id=$user->getId();
+        $name=$user->getName();
         $infoRating = $this->getUserRatingsById($entityManager, $id);
         $pagination = $paginator->paginate(
             $infoRating,
@@ -210,7 +211,7 @@ class UserController extends AbstractController
             'user/ratings.html.twig', [
             'pagination' => $pagination,
             'comments' => $infoRating['comments'],
-            'user' => $user,
+            'user' => $name,
             ]
         );
     }
