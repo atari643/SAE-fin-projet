@@ -30,11 +30,8 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
     </div>
     
     {{ block('paging') }}
+    <h1>{{ hasVisited }}</h1>
      <script>
-    let mediaqueries = {width: window.innerWidth, height: window.innerHeight};
-    window.addEventListener('resize', function () {
-      mediaqueries = {width: window.innerWidth, height: window.innerHeight};
-    });
       let first_time = '{{ hasVisited }}';
     if (document.location.href.includes('?page=1') && first_time === '') {
         document.cookie = "visited=yes;";
@@ -221,62 +218,61 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
         page = document.querySelectorAll('.pagine .pagination a');
         for (let i = 0; i < page.length; i++) {
           page[i].addEventListener('click', makeScript())
-
         }
-        if(mediaqueries.width>1100){
-        const bannerInfoFirstPage = document.createElement('div');
-        bannerInfoFirstPage.classList.add('bannerInfoFirstPage');
-        document.body.insertBefore(bannerInfoFirstPage, document.getElementById('show'));
-        const imgbannerInfoFirstPage = document.createElement('img');
-        imgbannerInfoFirstPage.src = '/cinéma.png';
-        imgbannerInfoFirstPage.classList.add('imgbannerInfoFirstPage');
-        bannerInfoFirstPage.appendChild(imgbannerInfoFirstPage);
-        const textbannerInfoFirstPageParent = document.createElement('div');
-        textbannerInfoFirstPageParent.classList.add('textbannerInfoFirstPageParent');
-        bannerInfoFirstPage.appendChild(textbannerInfoFirstPageParent);
-        const titrebannerInfoFirstPage = document.createElement('p');
-        titrebannerInfoFirstPage.classList.add('titrebannerInfoFirstPage');
-        titrebannerInfoFirstPage.innerHTML = 'XploreCinéma';
-        titrebannerInfoFirstPage.dataset.text = 'XPLORECINÉMA';
-        titrebannerInfoFirstPage.classList.add('glitch');
-        textbannerInfoFirstPageParent.appendChild(titrebannerInfoFirstPage);
-        const textbannerInfoFirstPage = document.createElement('p');
-        textbannerInfoFirstPage.classList.add('textbannerInfoFirstPage');
-        textbannerInfoFirstPage.innerHTML = "Explorez l'univers fascinant des séries avec XploreCinéma, votre compagnon exclusif pour organiser et découvrir de nouveaux titres. XploreCinéma vous offre une expérience immersive, vous guidant à travers une variété de séries. Que vous soyez un amateur de drames intenses, de comédies légères ou de mystères envoûtants, XploreCinéma vous accompagne dans votre aventure télévisuelle, vous invitant à explorer et à apprécier chaque instant. Laissez-vous emporter par la magie du storytelling et découvrez des pépites cachées, tout en organisant votre voyage à travers l'océan infini des séries. XploreCinéma, votre guide ultime pour une expérience cinématographique sans limites.";
-        textbannerInfoFirstPageParent.appendChild(textbannerInfoFirstPage);
-        bannerInfoFirstPage.innerHTML+=
-        '<div id="mouse-scroll">'+
-          '<div class="mouse">'+
-            '<div class="mouse-in"></div>'+
-          '</div>'+
-          '<div>'+
+
+      }, 5000);
+    }else if(document.location.href.includes('?page=1')){
+      const bannerInfoFirstPage = document.createElement('div');
+      bannerInfoFirstPage.classList.add('bannerInfoFirstPage');
+      document.body.insertBefore(bannerInfoFirstPage, document.getElementById('show'));
+      const imgbannerInfoFirstPage = document.createElement('img');
+      imgbannerInfoFirstPage.src = '/cinéma.png';
+      imgbannerInfoFirstPage.classList.add('imgbannerInfoFirstPage');
+      bannerInfoFirstPage.appendChild(imgbannerInfoFirstPage);
+      const textbannerInfoFirstPageParent = document.createElement('div');
+      textbannerInfoFirstPageParent.classList.add('textbannerInfoFirstPageParent');
+      bannerInfoFirstPage.appendChild(textbannerInfoFirstPageParent);
+      const titrebannerInfoFirstPage = document.createElement('p');
+      titrebannerInfoFirstPage.classList.add('titrebannerInfoFirstPage');
+      titrebannerInfoFirstPage.innerHTML = 'XploreCinéma';
+      titrebannerInfoFirstPage.dataset.text = 'XPLORECINÉMA';
+      titrebannerInfoFirstPage.classList.add('glitch');
+      textbannerInfoFirstPageParent.appendChild(titrebannerInfoFirstPage);
+      const textbannerInfoFirstPage = document.createElement('p');
+      textbannerInfoFirstPage.classList.add('textbannerInfoFirstPage');
+      textbannerInfoFirstPage.innerHTML = "Explorez l'univers fascinant des séries avec XploreCinéma, votre compagnon exclusif pour organiser et découvrir de nouveaux titres. XploreCinéma vous offre une expérience immersive, vous guidant à travers une variété de séries. Que vous soyez un amateur de drames intenses, de comédies légères ou de mystères envoûtants, XploreCinéma vous accompagne dans votre aventure télévisuelle, vous invitant à explorer et à apprécier chaque instant. Laissez-vous emporter par la magie du storytelling et découvrez des pépites cachées, tout en organisant votre voyage à travers l'océan infini des séries. XploreCinéma, votre guide ultime pour une expérience cinématographique sans limites.";
+      textbannerInfoFirstPageParent.appendChild(textbannerInfoFirstPage);
+      bannerInfoFirstPage.innerHTML+=
+              '<div id="mouse-scroll">'+
+              '<div class="mouse">'+
+              '<div class="mouse-in"></div>'+
+              '</div>'+
+              '<div>'+
               '<span class="down-arrow-1"></span>'+
               '<span class="down-arrow-2"></span>'+
               '<span class="down-arrow-3"></span>'+
-          '</div>'+
-        '</div>';
-        document.getElementById('mouse-scroll').style.top = bannerInfoFirstPage.getBoundingClientRect().bottom - document.getElementById('mouse-scroll').offsetHeight - 20 + 'px'; 
-        window.addEventListener('scroll', function () {
-          if(scrollY>0 && scrollY < bannerInfoFirstPage.getBoundingClientRect().top + bannerInfoFirstPage.offsetHeight){
-            document.getElementById('menu').style.position = 'fixed';
-            bannerInfoFirstPage.style.marginTop = document.getElementById('menu').offsetHeight + 40+ 'px';
-            document.getElementById('menu').style.width = '80%';
-            document.getElementById('menu').style.zIndex = '1000';
-            document.getElementById('menu').style.boxShadow = 'rgba(0, 0, 0, 0.5) 0px 5px 8px 3px';
-            document.getElementById('menu').style.borderLeft = '50vw solid #221F1F';
-            document.getElementById('menu').style.borderRight = '50vw solid #221F1F';
-          }else{
-            document.getElementById('menu').style.position = 'relative';
-            bannerInfoFirstPage.style.marginTop = '0';
-            document.getElementById('menu').style.width = '100%';
-            document.getElementById('menu').style.zIndex = '0';
-            document.getElementById('menu').style.boxShadow = 'none';
-            document.getElementById('menu').style.borderLeft = 'none';
-            document.getElementById('menu').style.borderRight = 'none';
-          }
-        });
+              '</div>'+
+              '</div>';
+      document.getElementById('mouse-scroll').style.top = bannerInfoFirstPage.getBoundingClientRect().bottom - document.getElementById('mouse-scroll').offsetHeight - 20 + 'px';
+      window.addEventListener('scroll', function () {
+        if(scrollY>0 && scrollY < bannerInfoFirstPage.getBoundingClientRect().top + bannerInfoFirstPage.offsetHeight){
+          document.getElementById('menu').style.position = 'fixed';
+          bannerInfoFirstPage.style.marginTop = document.getElementById('menu').offsetHeight + 40+ 'px';
+          document.getElementById('menu').style.width = '80%';
+          document.getElementById('menu').style.zIndex = '1000';
+          document.getElementById('menu').style.boxShadow = 'rgba(0, 0, 0, 0.5) 0px 5px 8px 3px';
+          document.getElementById('menu').style.borderLeft = '50vw solid #221F1F';
+          document.getElementById('menu').style.borderRight = '50vw solid #221F1F';
+        }else{
+          document.getElementById('menu').style.position = 'relative';
+          bannerInfoFirstPage.style.marginTop = '0';
+          document.getElementById('menu').style.width = '100%';
+          document.getElementById('menu').style.zIndex = '0';
+          document.getElementById('menu').style.boxShadow = 'none';
+          document.getElementById('menu').style.borderLeft = 'none';
+          document.getElementById('menu').style.borderRight = 'none';
         }
-    }, 5000);
+      });
     }else{
       window.addEventListener('load', makeScript());
       page = document.querySelectorAll('.pagine .pagination a');
@@ -315,7 +311,6 @@ function makeScript() {
   const seriesPoster = document.getElementsByClassName('posters');
   let hover = false;
   for (let i = 0; i < series.length; i++) {
-    if(mediaqueries.width > 650){
     seriesPoster[i].addEventListener('mouseover', function () {
       posterHover(i);
       hover = true;
@@ -327,14 +322,11 @@ function makeScript() {
       }
       hover = false;
     });
-  }
     seriesPoster[i].addEventListener('click', function () {
       if (document.querySelector('.banner')) {
         document.body.removeChild(document.querySelector('.banner'));
-        if(mediaqueries.width > 650){
-          document.getElementById('show').style.width = '100%';
-          document.getElementById('show').style.marginRight = '0';
-        }
+        document.getElementById('show').style.width = '100%';
+        document.getElementById('show').style.marginRight = '0';
       }
       makeBannerLeft(series[i], seriesPoster[i]);
     });
@@ -342,7 +334,6 @@ function makeScript() {
     let hoverTimer2;
     let before = [];
     let after = [];
-    if(mediaqueries.width > 650){
     series[i].addEventListener('mouseover', function () {
       if (!hover) {
         return;
@@ -409,7 +400,6 @@ function makeScript() {
       }
     });
   }
-  }
   const page = document.querySelectorAll('.number');
   for (let j = 0; j < page.length; j++) {
     page[j].addEventListener('click', function () {
@@ -453,29 +443,9 @@ function makeScript() {
       ) + 'px) scale(1.08)';
   }
 }
-if(mediaqueries.width <= 850){
-    const show = document.getElementById('show');
-    const slideLeft = document.createElement('div');
-    const slideRight = document.createElement('div');
-    slideLeft.classList.add('slideLeft');
-    slideRight.classList.add('slideRight');
-    slideLeft.innerHTML = '<span class="material-symbols-outlined">arrow_left</span>';
-    slideRight.innerHTML = '<span class="material-symbols-outlined">arrow_right</span>';
-    document.body.appendChild(slideLeft);
-    document.body.appendChild(slideRight);
-    slideLeft.addEventListener('click', function () {
-      show.scrollLeft -= 250;
-    });
-    slideRight.addEventListener('click', function () {
-      show.scrollLeft += 250;
-    });
-    slideLeft.style.top = show.offsetTop + ((show.offsetHeight - slideLeft.offsetTop)/2) + 'px';
-    slideRight.style.top = show.offsetTop + ((show.offsetHeight - slideRight.offsetTop)/2) + 'px';
-  }
 function makeBannerLeft(poster, posterImg) {
 const banner = document.createElement('div');
 banner.classList.add('banner');
-if(mediaqueries.width > 1700){
 banner.style.height = window.innerHeight - document.getElementById('show').offsetTop + scrollY + 'px';
 window.addEventListener('scroll', function () {
 banner.style.height = window.innerHeight - document.getElementById('show').offsetTop + scrollY + 'px';
@@ -485,7 +455,6 @@ banner.style.borderTopLeftRadius = '0';
 banner.style.borderTopLeftRadius = '15px';
 }
 });
-}
 const bannerClose = document.createElement('div');
 bannerClose.classList.add('bannerClose');
 bannerClose.innerHTML = '<span class="material-symbols-outlined">cancel</span>';
@@ -502,29 +471,19 @@ bannerButtonMore.onclick = () => {
 window.location.href = "/series/" + poster.dataset.id;
 };
 bannerButtonMore.innerHTML = '<span class="material-symbols-outlined">info</span>';
-bannerTitle.appendChild(bannerButtonMore);
+headerBanner.appendChild(bannerButtonMore);
 banner.appendChild(headerBanner);
 const bannerImg = document.createElement('img');
 bannerImg.src = posterImg.src;
 bannerImg.classList.add('bannerImg');
-if(mediaqueries.width > 800){
 banner.appendChild(bannerImg);
-}
 const resumé = document.createElement('p');
 resumé.classList.add('resumé');
 resumé.innerHTML = poster.dataset.resum;
-if(mediaqueries.width > 1700){
 banner.appendChild(resumé);
-}else{
-headerBanner.appendChild(resumé);
-}
 const parentBottomBanner = document.createElement('div');
 parentBottomBanner.classList.add('parentBottomBanner');
-if(mediaqueries.width > 1700){
 banner.appendChild(parentBottomBanner);
-}else{
-headerBanner.appendChild(parentBottomBanner);
-}
 const bannerDuration = document.createElement('p');
 bannerDuration.classList.add('bannerDuration');
 if (poster.dataset.duration != null) {
@@ -562,15 +521,9 @@ if(!found){
 }
 
 parentBottomBanner.appendChild(suivieButton);
-if(mediaqueries.width <= 650){
-document.body.insertBefore(banner, document.getElementsByClassName('paging')[0]);
-}else{
 document.body.appendChild(banner);
-}
-if(mediaqueries.width > 1700){
 document.getElementById('show').style.width = '85%';
 document.getElementById('show').style.marginRight = '15%';
-}
 bannerClose.addEventListener('click', function () {
 document.body.removeChild(banner);
 document.getElementById('show').style.width = '100%';
@@ -616,14 +569,8 @@ document.getElementById('show').style.marginRight = '0';
 
   if (banner.offsetHeight >= window.innerHeight) {
     banner.style.borderTopLeftRadius = '0';
-  } else if (mediaqueries.width > 650){
+  } else {
     banner.style.borderTopLeftRadius = '15px';
-  }
-  if(mediaqueries.width <= 1700 && mediaqueries.width > 1240){
-    bannerImg.style.height = banner.offsetHeight - 20 + 'px';
-  }
-  if(mediaqueries.width <= 1240 && mediaqueries.width > 650){
-    banner.style.top = (mediaqueries.height - banner.offsetHeight)/2 + 'px';
   }
 }
 	</script>
