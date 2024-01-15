@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Rating;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -166,10 +167,82 @@ class UserController extends AbstractController
 
             return $this->redirect($login);
         }
+        return $this->render('user/profile.html.twig', [
+            'user' => $username,
+        ]);
+    }
 
-        return $this->render(
-            'user/profile.html.twig',
-            ['user' => $username]
+    private function getUserRatingsByName(EntityManagerInterface $entityManager, string $id) {
+
+       
+        
+        // Récup tous les commentaires de la serie
+        $comments = $entityManager->getRepository(Rating::class)->findBy([
+            'user' => $id,
+        ]);
+    
+        return [
+            'comments' => $comments,
+        ];
+    }
+
+    private function getUserRatingsById(EntityManagerInterface $entityManager, int $id) {
+
+       
+        
+        // Récup tous les commentaires de la serie
+        $comments = $entityManager->getRepository(Rating::class)->findBy([
+            'user' => $id,
+        ]);
+    
+        return [
+            'comments' => $comments,
+        ];
+    }
+
+    #[Route('/user/ratings', name: 'series_reviews', methods: ['GET', 'POST'])]
+    public function seriesReviews(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
+    {
+        $user = $this->getUser();
+        $id=$user->getId();
+        $name=$user->getName();
+        $infoRating = $this->getUserRatingsById($entityManager, $id);
+        $pagination = $paginator->paginate(
+            $infoRating,
+            $request->query->getInt('page', 1),
+            10
         );
-    }//end userProfileSearch()
-}//end class
+        return $this->render(
+            'user/ratings.html.twig', [
+            'pagination' => $pagination,
+            'comments' => $infoRating['comments'],
+            'user' => $name,
+            ]
+        );
+    }
+
+    #[Route('/user/ratings/{username}', name: 'series_reviews_by_user', methods: ['GET', 'POST'])]
+    public function seriesReviewsByUser(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, string $username): Response
+    {
+        $users = $entityManager
+        ->getRepository(User::class);
+        $user = $users->findOneBy(array('name' => $username));
+        $id = $user->getId(); 
+        $infoRating = $this->getUserRatingsById($entityManager, $id /* $username */);
+        $pagination = $paginator->paginate(
+            $infoRating,
+            $request->query->getInt('page', 1),
+            10
+        );
+        return $this->render(
+            'user/ratings.html.twig', [
+            'pagination' => $pagination,
+            'comments' => $infoRating['comments'],
+            'user' => $username,
+        ]);
+    }
+
+
+    
+
+}
