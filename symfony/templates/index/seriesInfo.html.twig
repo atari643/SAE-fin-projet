@@ -29,6 +29,12 @@
             {% endfor %}
             <hr>
             <div id="seriesDirector">Director : {{ series.director }}</div>
+            <hr>
+            {% if serieScore == 0 and nombreNotes == 0 %}
+                <div id="seriesScore">Aucune note n'a été entrée pour cette série</div>
+            {% else %}
+                <div id="seriesScore">Score : {{serieScore}}/5 parmi {{nombreNotes}} notations</div>
+            {% endif %}
         </div>
     </div>
     
