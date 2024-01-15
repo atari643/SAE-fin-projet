@@ -18,6 +18,8 @@ framework:
     #fragments: true
     php_errors:
         log: true
+    assets:
+        version: 'auto'
     form:
         legacy_error_messages: false
 

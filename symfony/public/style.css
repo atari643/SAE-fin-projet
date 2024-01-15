@@ -186,7 +186,7 @@ body {
     margin-bottom: 3px;
 }
 
-.paging{
+.paging {
     display: flex;
     flex-direction: row;
     width: fit-content;
@@ -205,7 +205,7 @@ body {
     transition: 0.2s;
     background-color: transparent;
     border: none;
-    
+
 }
 
 .bannerButtonMore:hover {
@@ -231,7 +231,7 @@ body {
 
 .paging a:active {
     color: #004085;
-    
+
 }
 
 .paging input[type="number"] {
@@ -245,12 +245,13 @@ body {
 .paging input[type="submit"] {
     display: none;
 }
-.affiche{
+
+.affiche {
     height: 100%;
     width: 100%;
 }
 
-.bannerInfoFirstPage{
+.bannerInfoFirstPage {
     display: flex;
     flex-direction: row;
     width: 75vw;
@@ -260,21 +261,21 @@ body {
     justify-content: center;
 }
 
-.textbannerInfoFirstPageParent{
+.textbannerInfoFirstPageParent {
     display: flex;
     flex-direction: column;
     width: 50%;
     margin: 0 0 0 8vw;
 }
 
-.titrebannerInfoFirstPage{
+.titrebannerInfoFirstPage {
     color: #cba848;
     font-size: 7rem;
     font-family: 'Bebas Neue', cursive;
     text-shadow: 1px 1px 5px #000000;
 }
 
-.textbannerInfoFirstPage{
+.textbannerInfoFirstPage {
     color: #e3f7f5;
     font-size: 1.15rem;
     font-family: 'Roboto', sans-serif;
@@ -283,6 +284,154 @@ body {
     text-align: justify;
 }
 
-.imgbannerInfoFirstPage{
+.imgbannerInfoFirstPage {
     height: 30%;
+}
+
+.slideLeft,
+.slideRight {
+    position: absolute;
+    background-color: #444;
+    color: #cba848;
+    border: none;
+    padding: 2px 4px;
+    cursor: pointer;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    height: fit-content;
+}
+
+.slideLeft>span,
+.slideRight>span{
+    font-size: 2rem;
+}
+
+.slideLeft {
+    left: 10px;
+}
+
+.slideRight {
+    right: 10px;
+}
+
+@media screen and (max-width: 1700px) {
+    .banner {
+        width: 70%;
+        right: 15%;
+        height: fit-content;
+        position: fixed;
+        background-color: hsl(347, 79%, 30%, 100%);
+        border-top-right-radius: 15px;
+        border-right: 1px solid #cba848;
+        flex-direction: row;
+    }
+
+    .bannerImg {
+        width: auto;
+        height: 1px;
+        margin-top: 10px;
+        border-top-right-radius: 10px;
+        position: absolute;
+        right: 10px;
+    }
+
+    .headerBanner {
+        width: 70%;
+    }
+}
+
+@media screen and (max-width: 1240px) {
+    .banner {
+        width: 75%;
+        height: fit-content;
+        right: 12.5%;
+        position: fixed;
+        border-bottom: 1px solid #cba848;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+        background-color: #88ddd560;
+        backdrop-filter: blur(10px);
+    }
+
+    .resumé {
+        text-shadow: 1px 1px 5px #000000;
+    }
+
+    .bannerDuration {
+        text-shadow: 1px 1px 5px #000000;
+    }
+
+    .headerBanner {
+        width: 60%;
+    }
+
+    .bannerImg {
+        width: 35%;
+        height: max-content;
+        position: relative;
+        margin-bottom: 10px;
+        border-bottom-right-radius: 10px;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .headerBanner {
+        width: 92%;
+    }
+}
+
+@media screen and (max-width: 650px) {
+    #show {
+        display: flex;
+        flex-direction: row;
+        overflow: hidden;
+        width: 100%;
+        column-gap: unset;
+        row-gap: unset;
+        justify-content: unset;
+        transition: 0.5s;
+    }
+
+    .posters {
+        width: max-content;
+        height: 300px;
+        transition: 0.5s;
+        border: 1px solid transparent;
+        transition: 0.5s;
+    }
+
+    .posters:hover {
+        border: 1px solid transparent;
+        transform: unset;
+    }
+
+    .showChildSeries {
+        max-width: 250px;
+        width: fit-content;
+        height: 300px;
+        transition: 0.5s;
+    }
+
+    .banner{
+        position: relative;
+        left:unset;
+        right:unset;
+        bottom: unset;
+        width: 100vw;
+        border-radius: unset;
+        transition: unset;
+        background-color: hsl(347, 79%, 30%, 30%);
+        border-left: none;
+        border-right: none;
+    }
+
+    .resumé {
+        text-shadow: unset;
+    }
+
+    .bannerDuration {
+        text-shadow: unset;
+    }
 }
