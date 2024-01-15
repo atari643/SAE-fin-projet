@@ -13,3 +13,26 @@ th, td {padding-bottom: 40px;}
 #imageTheadOfRatings{
     margin-left: 45%;
 }
+
+.spanUsernameOfRatingsC{
+    color:goldenrod;
+}
+
+#headerOfRatings {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+#headerOfRatings img{
+    margin-left: 15px;
+}
+
+#headerTextOfRatings{
+    display: flex;
+    align-items: center;
+}
+/*
+#avatarOfRatings{
+    margin-bottom: 10px;
+    flex-direction: column;
+} */
