@@ -34,11 +34,6 @@ class IndexController extends AbstractController
         if (null == $request->query->get('page') and !$request->isMethod('POST')) {
             return $this->redirectToRoute('app_default', [
                 'page' => 1,
-                'search' => $searchQuery,
-                'genre' => $searchGenre,
-                'yearStart' => $searchYearStart,
-                'yearEnd' => $searchYearEnd,
-                'follow' => $searchFollow,
             ]);
         }
         $series_infos = $repository->seriesInfo($_SESSION['seed']);
