@@ -15,25 +15,25 @@
         <div id="information">
             <div id="seriesTitle">Title : {{ series.title }}</div>
             <hr>
-            <div id="seriesPlot">Description : {{ series.plot }}</div>
+            <div id="seriesPlot"><span id="seriesBoldTitle">Description :</span> {{ series.plot }}</div>
             <hr>
 
             {% if series.genre|length > 1 %}
-                <div id="seriesGenre">Genres : </div>
+                <div id="seriesGenre"><span id="seriesBoldTitle">Genres :</span> </div>
             {% else %}
-                <div id="seriesGenre">Genre : </div>
+                <div id="seriesGenre"<span id="seriesBoldTitle">Genre :</span> </div>
             {% endif %}
 
             {% for genre in series.genre %}
                 <p class="genre">{{ genre.name }}</p>
             {% endfor %}
             <hr>
-            <div id="seriesDirector">Director : {{ series.director }}</div>
+            <div id="seriesDirector"><span id="seriesBoldTitle">Director :</span> {{ series.director }}</div>
             <hr>
             {% if serieScore == 0 and nombreNotes == 0 %}
-                <div id="seriesScore">Aucune note n'a été entrée pour cette série</div>
+                <div id="seriesScore">Score :</span> Aucune note n'a été entrée pour cette série</div>
             {% else %}
-                <div id="seriesScore">Score : {{serieScore}}/5 parmi {{nombreNotes}} notations</div>
+                <div id="seriesScore"><span id="seriesBoldTitle">Score :</span> {{serieScore}}/5 parmi {{nombreNotes}} notations</div>
             {% endif %}
         </div>
     </div>
