@@ -174,8 +174,8 @@ Voici le schéma MCD de la base :
 
     _**Contraintes :**_
 
-    - **genre_id** : clé étrangère référencant **genre.id**.
-    - **series_id** : clé étrangère référencant **series.id**
+    - **genre_id** : clé étrangère référençant **genre.id**.
+    - **series_id** : clé étrangère référençant **series.id**
     - Unicité du couple (**genre_id**,**series_id**)
     - Tous les attributs sont obligatoires.
   
@@ -243,7 +243,7 @@ Voici le schéma MCD de la base :
     - **id** : clé primaire.
     - L'attribut **year_start** < **year_end**
     - Unicité des attributs **title**, **imdb**, **poster**, **youtube_trailer**.
-    - Les attributs sont obligatoires sont **id**, **title**, **imdb**.
+    - Les attributs obligatoires sont **id**, **title**, **imdb**.
 
     ---
 
@@ -265,7 +265,7 @@ Voici le schéma MCD de la base :
 
     - **id** : clé primaire.
     - Unicité de l'attribut **email**.
-    - **country_id** : clé étrangère référencant **country.id**
+    - **country_id** : clé étrangère référençant **country.id**
     - Tous les attributs sont obligatoires sauf **register_date** et **country_id**.
   
     ---
@@ -281,8 +281,8 @@ Voici le schéma MCD de la base :
 
     _**Contraintes :**_
 
-    - **user_id** : clé étrangère référencant **user.id**.
-    - **episode_id** : clé étrangère référencant **episode.id**
+    - **user_id** : clé étrangère référençant **user.id**.
+    - **episode_id** : clé étrangère référençant **episode.id**
     - Unicité du couple (**user_id**,**episode_id**)
     - Tous les attributs sont obligatoires.
 
@@ -299,8 +299,8 @@ Voici le schéma MCD de la base :
 
     _**Contraintes :**_
 
-    - **user_id** : clé étrangère référencant **user.id**.
-    - **series_id** : clé étrangère référencant **series.id**
+    - **user_id** : clé étrangère référençant **user.id**.
+    - **series_id** : clé étrangère référençant **series.id**
     - Unicité du couple (**user_id**,**series_id**)
     - Tous les attributs sont obligatoires.
 

@@ -20,12 +20,12 @@ class UserController extends AbstractController
     {
         $page     = $request->query->get('page');
         $get_args = $request->query->all();
-        // not here box
-        if (null == $page) {
-            $get_string = '?';
-            foreach (array_keys($get_args) as $key) {
-                $arg         = $get_args[$key];
-                $get_string .= $key . '=' . $arg . '&';
+        
+        if($page == null){
+            $get_string = "?";
+            foreach (array_keys($get_args) as $key){
+                $arg = $get_args[$key]; 
+                $get_string .= $key."=".$arg."&";
             }
 
             $get_string .= 'page=1';
@@ -74,16 +74,12 @@ class UserController extends AbstractController
                     USERS_PER_PAGE
                 );
                 
-                
                 return $this->render('user/index.html.twig', [
-                    //'form'=>$form->createView(),
                     'pagination' => $pagination,
                     'count' => $count,
                     'username' => $search_query,
                 ]);
         }
-
-        dump($request->query->all());
         
         $pagination = $paginator->paginate(
             $users_limit,
@@ -94,7 +90,6 @@ class UserController extends AbstractController
         return $this->render(
             'user/index.html.twig',
             [
-            // 'form'=>$form->createView(),
                 'pagination' => $pagination,
                 'count'      => $count,
                 'username'   => '',
@@ -174,9 +169,6 @@ class UserController extends AbstractController
 
     private function getUserRatingsByName(EntityManagerInterface $entityManager, string $id) {
 
-       
-        
-        // Récup tous les commentaires de la serie
         $comments = $entityManager->getRepository(Rating::class)->findBy([
             'user' => $id,
         ]);
@@ -188,9 +180,6 @@ class UserController extends AbstractController
 
     private function getUserRatingsById(EntityManagerInterface $entityManager, int $id) {
 
-       
-        
-        // Récup tous les commentaires de la serie
         $comments = $entityManager->getRepository(Rating::class)->findBy([
             'user' => $id,
         ]);
@@ -241,8 +230,4 @@ class UserController extends AbstractController
             'user' => $username,
         ]);
     }
-
-
-    
-
 }
