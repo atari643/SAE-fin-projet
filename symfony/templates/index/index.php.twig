@@ -30,13 +30,14 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
     </div>
     
     {{ block('paging') }}
-    
-    <script>
+     <script>
     let mediaqueries = {width: window.innerWidth, height: window.innerHeight};
     window.addEventListener('resize', function () {
       mediaqueries = {width: window.innerWidth, height: window.innerHeight};
     });
-    if (document.location.href.includes('?page=1')) {
+      let first_time = '{{ hasVisited }}';
+    if (document.location.href.includes('?page=1') && first_time === '') {
+        document.cookie = "visited=yes;";
         document.body.innerHTML +=
         '<div id="container">' +
    '<netflixintro letter="X">' +
