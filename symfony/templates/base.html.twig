@@ -37,7 +37,7 @@
 				</div>
 			</div>
 			<div id="parentItemMenuCenter">
-				<div class="itemMenu" onclick="window.location.href = '/'">
+				<div class="itemMenu" onclick="window.location.href = '/?page=1'">
 					<span class="material-symbols-outlined">
 						home
 					</span>
@@ -96,7 +96,7 @@ accountNav.classList.add('déconnecter');
 accountNav.innerHTML = '<span class="material-symbols-outlined">logout</span><a href=" {{ path('app_logout') }}">Logout</a>';
 return accountNav;
 }
-const suivieButton = document.querySelector('#suivieButton');
+const suivieButton = document.querySelector('.suivieButtonadd');
 suivieButton.addEventListener('click', function () {
 if (suivieButton.querySelector('span').innerHTML == 'heart_plus') {
 suivieButton.querySelector('span').innerHTML = 'heart_check';

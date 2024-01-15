@@ -44,20 +44,21 @@ class RegistrationFormType extends AbstractType
             ->add('plainPassword', PasswordType::class, [
                                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
-                'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password', 'placeholder' => '6 characters min'],
+                'mapped'      => false,
+                'attr'        => [
+                    'autocomplete' => 'new-password',
+                    'placeholder'  => '6 characters min',
+                ],
                 'constraints' => [
                     new NotBlank(
-                        [
-                        'message' => 'Please enter a password',
-                        ]
+                        ['message' => 'Please enter a password']
                     ),
                     new Length(
                         [
-                        'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
-                        'max' => 4096,
+                            'min'        => 6,
+                            'minMessage' => 'Your password should be at least {{ limit }} characters',
+                            // max length allowed by Symfony for security reasons
+                            'max'        => 4096,
                         ]
                     ),
                 ],
@@ -71,8 +72,8 @@ class RegistrationFormType extends AbstractType
     {
         $resolver->setDefaults(
             [
-            'data_class' => User::class,
+                'data_class' => User::class,
             ]
         );
-    }
-}
+    }//end configureOptions()
+}//end class
