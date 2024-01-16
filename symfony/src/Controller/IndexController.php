@@ -197,10 +197,10 @@ class IndexController extends AbstractController
         $seasons = $series->getSeasons();
         $paginationSeason = $paginator->paginate(
             $seasons,
-            $request->query->getInt('page', 1),
+            $request->query->getInt('pageS', 1),
             SERIES_PER_PAGE
         );
-
+        $paginationSeason->setParam('pageS',1);
         return $this->render(
             'index/seriesInfo.html.twig', [
             'series' => $series,
@@ -223,15 +223,17 @@ class IndexController extends AbstractController
         $episodes = $repository->seriesInfoByIdAndSeason($id, $num)->getSeasons()->get($num - 1)->getEpisodes();
         $pagination = $paginator->paginate(
             $episodes,
-            $request->query->getInt('page', 1),
+            $request->query->get('pageList') === 'episodes' ? $request->query->getInt('page', 1) : 1,
             SERIES_PER_PAGE
         );
+        $pagination->setParam('pageList', 'episodes');
+
         $paginationSeason = $paginator->paginate(
             $seasons,
-            $request->query->getInt('pageS', 1),
+            $request->query->get('pageList') === 'seasons' ? $request->query->getInt('page', 1) : 1,
             SERIES_PER_PAGE
         );
-
+        $paginationSeason->setParam('pageList', 'seasons');
         $val = 0;
         $nombreNotes = 0;
         $comments = $infoRating['comments'];
@@ -242,7 +244,12 @@ class IndexController extends AbstractController
             }
             $val = substr($val / $nombreNotes, 0, 3);
         }
-
+        $paginationComments = $paginator->paginate(
+            $comments,
+            $request->query->get('pageList') === 'comments' ? $request->query->getInt('page', 1) : 1,
+            SERIES_PER_PAGE
+        );
+        $paginationComments->setParam('pageList', 'comments');
         return $this->render(
             'index/seriesInfo.html.twig', [
                 'series' => $series,
@@ -250,7 +257,7 @@ class IndexController extends AbstractController
                 'pagination' => $pagination,
                 'userRating' => $infoRating['userRating'] ? $infoRating['userValue'] : null,
                 'userComment' => $infoRating['userRating'] ? $infoRating['userComment'] : null,
-                'comments' => $infoRating['comments'],
+                'paginationComments' => $paginationComments,
                 'serieScore' => $val,
                 'nombreNotes' => $nombreNotes,
             ]
@@ -265,7 +272,6 @@ class IndexController extends AbstractController
         ->getRepository(Series::class);
         $seriesToAdd = $series->findBy(['id' => $id]);
         $seasons = $seriesToAdd[0]->getSeasons();
-        $infoRating = $this->getRatings($entityManager, $id);
         $user = $this->getUser();
         $user->addSeries($seriesToAdd[0]);
         $entityManager->flush();
@@ -294,7 +300,6 @@ class IndexController extends AbstractController
         ->getRepository(Series::class);
         $seriesToAdd = $series->findBy(['id' => $id]);
         $seasons = $seriesToAdd[0]->getSeasons();
-        $infoRating = $this->getRatings($entityManager, $id);
         $user = $this->getUser();
         $user->addSeries($seriesToAdd[0]);
         $entityManager->flush();
@@ -337,7 +342,6 @@ class IndexController extends AbstractController
         ->getRepository(Series::class);
         $seriesToAdd = $series->findBy(['id' => $id]);
         $seasons = $seriesToAdd[0]->getSeasons();
-        $infoRating = $this->getRatings($entityManager, $id);
         $user = $this->getUser();
         $user->addSeries($seriesToAdd[0]);
         $entityManager->flush();
@@ -361,7 +365,6 @@ class IndexController extends AbstractController
         ->getRepository(Series::class);
         $seriesToRemove = $series->findBy(['id' => $id]);
         $seasons = $seriesToRemove[0]->getSeasons();
-        $infoRating = $this->getRatings($entityManager, $id);
         $user = $this->getUser();
         $count = 0;
         foreach ($seasons as $season) {
@@ -395,7 +398,6 @@ class IndexController extends AbstractController
         ->getRepository(Series::class);
         $seriesToRemove = $series->findBy(['id' => $id]);
         $seasons = $seriesToRemove[0]->getSeasons();
-        $infoRating = $this->getRatings($entityManager, $id);
         $user = $this->getUser();
         $count = 0;
         foreach ($seasons as $season) {

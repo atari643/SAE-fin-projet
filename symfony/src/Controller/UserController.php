@@ -160,13 +160,13 @@ class UserController extends AbstractController
         $pagination = $paginator->paginate(
             $user->getSeries(),
             $request->query->getInt('page', 1),
-            5 // 100 series poster per user
+            10 // 100 series poster per user
         );
         $infoRating = $this->getUserRatingsById($entityManager, $user->getId());
         $pagination2 = $paginator->paginate(
             $infoRating,
             $request->query->getInt('page', 1),
-            5 // 5 by page
+            10 // 5 by page
         );
         return $this->render('user/profile.html.twig',[
             'user' => $name,

@@ -115,7 +115,8 @@
     </nav> 
     <div id="contentEpisode">
         {% if pagination != null %}
-            <h2 style="color:white">Episodes</h2>
+            {% set saisonActuel = app.request.attributes.get('_route_params') %}
+            <h2 style="color:white">Episodes de la Saison {{ saisonActuel.num }}</h2>
             <ul id="episodeList">
                 {% for episode in pagination %}
                     <li>
@@ -168,7 +169,7 @@
 
     <table style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
         <tbody>
-            {% for comment in comments|reverse %}
+            {% for comment in paginationComments|reverse %}
                 <tr>
                     <td><a href="{{path('user_profile_search',{username: comment.user.name})}}"><img src="https://ui-avatars.com/api/?name={{ comment.user.name }}&background=random&rounded=true" style="display: inline;"></a>{{comment.user.name}}</td>
                     <td>{{ comment.value }}</td>
@@ -192,7 +193,9 @@
             {% endfor %}
         </tbody>
     </table>
-    
+    {% if paginationComments != null %}
+        {{ block('paging') }}
+    {% endif %}
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       
