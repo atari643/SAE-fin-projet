@@ -122,7 +122,8 @@ class UserController extends AbstractController
 
         return $this->render(
             'user/series_followed.html.twig',
-            ['pagination' => $pagination]
+            ['pagination' => $pagination,
+            'user' => $user->getName(),]
         );
     }//end seriesFollowed()
 
@@ -140,7 +141,8 @@ class UserController extends AbstractController
 
         return $this->render(
             'user/series_followed.html.twig',
-            ['pagination' => $pagination]
+            ['pagination' => $pagination,
+            'user' => $user->getName(),]
         );
     }//end seriesFollowedByUser()
 

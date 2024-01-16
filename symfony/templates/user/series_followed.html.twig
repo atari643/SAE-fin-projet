@@ -4,9 +4,13 @@
 
 {% block body %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/ratings-and-seriesFollowed.css" />
 
     <h1>Followed series</h1>
 
+    {% if pagination is empty %}
+        <div>L'utilisateur <span class="spanUsernameOfRatingsC">{{user}}</span> ne suis aucune série !</div>
+    {% else %}
     <table style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
         <thead>
             <tr>
@@ -38,5 +42,6 @@
             form.submit();
         }
     </script>
+    {% endif %}
 
 {% endblock %}
