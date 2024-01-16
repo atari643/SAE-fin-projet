@@ -273,6 +273,47 @@ class IndexController extends AbstractController
         
         return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
     }//end seasonInfo()
+    #[Route('/series/{id}/add', name: 'app_index_series_add')]
+    public function serieAdd(SeriesRepository $repository, int $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
+    {   
+        $series = $entityManager
+        ->getRepository(Series::class);
+        $seriesToAdd = $series->findBy(['id' => $id]);
+        $seasons = $seriesToAdd[0]->getSeasons();
+        $infoRating = $this->getRatings($entityManager, $id);
+        $user = $this->getUser();
+        $user->addSeries($seriesToAdd[0]);
+        $entityManager->flush();
+        foreach ($seasons as $season) {
+            foreach ($season->getEpisodes() as $episode) {
+                $this->getUser()->addEpisode($episode);
+                    $entityManager->flush();
+            }
+        }
+        
+        
+        return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
+    }//end seasonInfo()
+    #[Route('/series/{id}/remove', name: 'app_index_series_remove')]
+    public function serieRemove(SeriesRepository $repository, int $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
+    {   
+        $series = $entityManager
+        ->getRepository(Series::class);
+        $seriesToRemove = $series->findBy(['id' => $id]);
+        $seasons = $seriesToRemove[0]->getSeasons();
+        $user = $this->getUser();
+        $user->removeSeries($seriesToRemove[0]);
+        $entityManager->flush();
+        foreach ($seasons as $season) {
+            foreach ($season->getEpisodes() as $episode) {
+                $this->getUser()->removeEpisode($episode);
+                    $entityManager->flush();
+            }
+        }
+        
+        
+        return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
+    }//end seasonInfo()
     #[Route('/series/{id}/season/{num}/add', name: 'app_index_season_info_add')]
     public function seasonAdd(SeriesRepository $repository, int $id, int $num, EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
     {   

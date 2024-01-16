@@ -10,7 +10,24 @@
     <div id="pageInfo">
 
     <div id="header">
-        <div id="seriesTitle">{{ series.title }}</div>
+        <div id="seriesTitle">{{ series.title }} 
+            {% if app.user != null %}
+                {% set found = true %}
+                    {% for season in series.getSeasons() %}
+                        {% for episode in season.getEpisodes() %}
+                            {% if not app.user.getEpisode.contains(episode) %}
+                                {% set found = false %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                {% if found %}
+                    <a class="eye" href="{{ path('app_index_series_remove', {id: series.id}) }}"><span class="material-symbols-outlined">visibility_off</span></a>
+                {% else %}
+                    <a class="eye" href="{{ path('app_index_series_add', {id: series.id}) }}"><span class="material-symbols-outlined">visibility</span></a>
+                {% endif %}
+            {% else %}
+                <a  class="eye" href="{{ path('app_login') }}"><span class="material-symbols-outlined">visibility</span></a>
+            {% endif %}
         <div id="seriesDate">Date : {{ series.yearStart|date('d/m/Y') }} - {{ series.yearEnd|date('d/m/Y') }}</div>
         <div id="seriesCountry">Country : 
         {% for country in series.country %}
@@ -81,12 +98,12 @@
                             {% endif %}
                         {% endfor %}
                         {% if found %}
-                            <a href="{{ path('app_index_season_info_remove', {id: series.id, num: s.number}) }}"><span class="material-symbols-outlined">visibility_off</span></a>
+                            <a  class="eye" href="{{ path('app_index_season_info_remove', {id: series.id, num: s.number}) }}"><span class="material-symbols-outlined">visibility_off</span></a>
                         {% else %}
-                            <a href="{{ path('app_index_season_info_add', {id: series.id, num: s.number}) }}"><span class="material-symbols-outlined">visibility</span></a>
+                            <a  class="eye" href="{{ path('app_index_season_info_add', {id: series.id, num: s.number}) }}"><span class="material-symbols-outlined">visibility</span></a>
                         {% endif %}
                         {% else %}
-                        <a href="{{ path('app_login') }}"><span class="material-symbols-outlined">visibility</span></a>
+                        <a class="eye" href="{{ path('app_login') }}"><span class="material-symbols-outlined">visibility</span></a>
                     {% endif %}
                     {% endif %}
                     </li>
@@ -113,12 +130,12 @@
                                 {% endif %}
                             {% endfor %}
                             {% if found %}
-                                <a href="{{ path('app_index_episode_remove', {id: episode.season.series.id, num: episode.season.number, idE: episode.id}) }}"><span class="material-symbols-outlined">visibility_off</span></a>
+                                <a class="eye" href="{{ path('app_index_episode_remove', {id: episode.season.series.id, num: episode.season.number, idE: episode.id}) }}"><span class="material-symbols-outlined">visibility_off</span></a>
                             {% else %}
-                            <a href="{{ path('app_index_episode_add', {id: episode.season.series.id, num: episode.season.number, idE: episode.id}) }}"><span class="material-symbols-outlined">visibility</span></a>
+                            <a class="eye" href="{{ path('app_index_episode_add', {id: episode.season.series.id, num: episode.season.number, idE: episode.id}) }}"><span class="material-symbols-outlined">visibility</span></a>
                             {% endif %}
                         {% else %}
-                            <a href="{{ path('app_login') }}"><span class="material-symbols-outlined">visibility</span></a>
+                            <a class="eye" href="{{ path('app_login') }}"><span class="material-symbols-outlined">visibility</span></a>
                         {% endif %}
                     </li>
                 {% endfor %}
