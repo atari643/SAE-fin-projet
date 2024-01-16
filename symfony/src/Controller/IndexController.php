@@ -19,7 +19,7 @@ const SERIES_PER_PAGE = 10;
 class IndexController extends AbstractController
 {
     #[Route('/', name: 'app_default', methods: ['GET', 'POST'])]
-    public function index(SeriesRepository $repository, Request $request, PaginatorInterface $paginator, EntityManagerInterface $entityManager,RatingRepository $ratingRepository): Response    
+    public function index(SeriesRepository $repository, Request $request, PaginatorInterface $paginator, EntityManagerInterface $entityManager): Response
     {
         if (PHP_SESSION_NONE === session_status()) {
             session_start();

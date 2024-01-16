@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
         new ORM\Index(name: 'IDX_D8892622A76ED395', columns: ['user_id']),
     ]
 )]
-#[ORM\Entity(repositoryClass: 'App\Repository\RatingRepository')]
+#[ORM\Entity]
 
 class Rating
 {
