@@ -3,11 +3,10 @@
 }
 
 #mouse-scroll {
-  position: absolute;
+  position: relative;
   margin: auto;
-  left: 50%;
-  -webkit-transform: translateX(-50%);
   z-index: 9999;
+  margin-top: 50px;
 }
 
 #mouse-scroll span {

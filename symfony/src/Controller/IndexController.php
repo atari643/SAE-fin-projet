@@ -153,16 +153,18 @@ class IndexController extends AbstractController
                 $entityManager->flush();
             }
         }
+        
+
         // endregion
 
         if ($request->get('rating') && null != $this->getUser()) {
-            if ('Supprimer' == $request->get('action')) {
+            if ('Delete' == $request->get('action')) {
                 $entityManager->remove($infoRating['userRating']);
                 $entityManager->flush();
 
                 return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
             } else {
-                if ('Modifier' == $request->get('action')) {
+                if ('Edit' == $request->get('action')) {
                     if ($infoRating['userValue'] == $request->get('value') && $infoRating['userComment'] == $request->get('comment')) {
                         return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
                     }
@@ -183,6 +185,15 @@ class IndexController extends AbstractController
             }// end if
         }// end if
 
+        $val=0;
+        $nombreNotes=0;
+        if (!empty($comments)){    
+            foreach ($comments as $comment){
+                $val=$val+$comment->getValue();
+                $nombreNotes++;}
+            $val=substr($val/$nombreNotes, 0, 3);
+        }
+
         $series = $repository->seriesInfoById($id);
         $seasons = $series->getSeasons();
         $paginationSeason = $paginator->paginate(
@@ -199,6 +210,9 @@ class IndexController extends AbstractController
             'userRating' => $infoRating['userRating'] ? $infoRating['userValue'] : null,
             'userComment' => $infoRating['userRating'] ? $infoRating['userComment'] : null,
             'comments' => $infoRating['comments'],
+            'serieScore' => $val,
+            'nombreNotes' =>$nombreNotes,
+
         ]);
     }
 
