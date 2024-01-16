@@ -4,6 +4,8 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('/seriesInfo.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
 {% endblock %}
 
 {% block body %}
@@ -70,9 +72,15 @@
         {% endfor %}
         </ul>
         {% if serieScore == 0 and nombreNotes == 0 %}
-            <div id="seriesScore">Score :</span> Aucune note n'a été entrée pour cette série</div>
-        {% else %}
-            <div id="seriesScore"><span id="seriesBoldTitle">Score :</span> {{serieScore}}/5 parmi {{nombreNotes}} notations</div>
+            <div id="seriesScore">Score :</span> Aucune critique n'a été entrée pour cette série</div>
+        {% else %} 
+            {%for i in 0..4%}
+                {% if i < serieScore %}
+                    <span class="material-symbols-outlined"> &#9733 </span>
+                {% else %}
+                    <span class="material-symbols-outlined"> &#9734 </span>
+                {% endif %}
+            {% endfor %} {{nombreNotes}} notations
         {% endif %}
         </div>
         
@@ -176,7 +184,15 @@
             <select id="rating" name="rating">
                 <option {% if userRating is null %}selected{% endif %}>Select a rating</option>
                 {% for i in 0..5 %}
-                    <option value="{{ i }}" {% if i == userRating and userRating is not null %}selected{% endif %}>{{ i }}</option>
+                    <option value="{{ i }}" {% if i == userRating and userRating is not null %}selected{% endif %}>
+                    {% for j in 0..4 %}
+                        {% if j < i %}
+                            <span class="material-symbols-outlined"> &#9733 </span>
+                        {% else %}
+                            <span class="material-symbols-outlined"> &#9734 </span>
+                        {% endif %}
+                    {% endfor %}
+                     </option>
                 {% endfor %}
             </select>
             <label for="comment">Leave a review:</label>
@@ -193,7 +209,15 @@
             {% for comment in paginationComments|reverse %}
                 <tr>
                     <td><a href="{{path('user_profile_search',{username: comment.user.name})}}"><img src="https://ui-avatars.com/api/?name={{ comment.user.name }}&background=random&rounded=true" style="display: inline;"></a>{{comment.user.name}}</td>
-                    <td>{{ comment.value }}</td>
+                    <td>
+                        {% for i in 0..4 %}
+                            {% if i < comment.value %}
+                                <span class="material-symbols-outlined" id = "filledStar">star</span>
+                            {% else %}
+                                <span class="material-symbols-outlined">star</span>
+                            {% endif %}
+                        {% endfor %}
+                    </td>
                     <td> {{ comment.comment|nl2br }}</td>
 
                     <td>
