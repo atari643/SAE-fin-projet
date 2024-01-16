@@ -7,22 +7,37 @@
 
     <h1>Followed series</h1>
 
-    <table style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
-        <thead>
-            <tr>
-                <td>Poster</td>
-                <td>Title</td>
-                <td>Link</td>
-            </tr>
-        </thead>
-        {% for s in pagination %}
-        <tbody>
-            <tr class="series">
-            <td><img src="{{ path('app_series_poster',{id: s.id}) }}" style="width: 8%;"></td>
-            <td><p style="display: inline;">{{ s.title }}</p></td>
-            <td><a href="{{ path('app_index_series_info',{id: s.id}) }}"><p>Go to page</p></a></td>
-            </tr>
-        </tbody>
-    {% endfor %}
-    </table>
+    {% if pagination|length == 0 %}
+        <p>You don't follow series.</p>
+    {% else %}
+        <table style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
+            <thead>
+                <tr>
+                    <td>Poster</td>
+                    <td>Title</td>
+                    <td></td>
+                    <td>Views</td>
+                    <td>Link</td>
+                </tr>
+            </thead>
+
+            {% set i = 0 %}
+            {% for s in pagination %}
+                <tbody>
+                    <tr class="series">
+                        <td><img src="{{ path('app_series_poster',{id: s.id}) }}" style="width: 8%;"></td>
+                        <td><p style="display: inline;">{{ s.title }}</p></td>
+
+                        {% set percentage = (seriesView[i].episode_count_view / s.episode_count) * 100 %}
+
+                        <td>{{ seriesView[i].episode_count_view }}/{{ s.episode_count }}</td>
+                        <td><progress id="percentageViews" max="100" value="{{ percentage }}"></progress></td>
+                        <td><a href="{{ path('app_index_series_info',{id: s.id}) }}"><p>Go to page</p></a></td>
+
+                        {% set i = i + 1 %}
+                    </tr>
+                </tbody>
+            {% endfor %}
+        </table>
+    {% endif %}
 {% endblock %}
