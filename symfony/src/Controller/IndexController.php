@@ -17,6 +17,36 @@ const SERIES_PER_PAGE = 10;
 
 class IndexController extends AbstractController
 {
+    #[Route('/series/search', name: 'series_search', methods: ['GET'])]
+    public function search(Request $request): Response
+    {
+        $searchQuery = $request->query->get('search');
+        $searchGenre = $request->query->get('genre');
+        $searchYearStart = $request->query->get('yearStart');
+        $searchYearEnd = $request->query->get('yearEnd');
+        $searchFollow = $request->query->get('follow');
+
+        $args = ['page' => 1];
+
+        if (null != $searchQuery) {
+            $args['search'] = $searchQuery;
+        }
+        if (null != $searchGenre) {
+            $args['genre'] = $searchGenre;
+        }
+        if (null != $searchYearStart) {
+            $args['yearStart'] = $searchYearStart;
+        }
+        if (null != $searchYearEnd) {
+            $args['yearEnd'] = $searchYearEnd;
+        }
+        if (null != $searchFollow) {
+            $args['follow'] = $searchFollow;
+        }
+
+        return $this->redirectToRoute('app_default', $args);
+    }
+
     #[Route('/', name: 'app_default', methods: ['GET', 'POST'])]
     public function index(SeriesRepository $repository, Request $request, PaginatorInterface $paginator, EntityManagerInterface $entityManager): Response
     {
@@ -31,11 +61,7 @@ class IndexController extends AbstractController
         $searchYearStart = $request->query->get('yearStart', '');
         $searchYearEnd = $request->query->get('yearEnd', '');
         $searchFollow = $request->query->get('follow', '');
-        if (null == $request->query->get('page') and !$request->isMethod('POST')) {
-            return $this->redirectToRoute('app_default', [
-                'page' => 1,
-            ]);
-        }
+
         $series_infos = $repository->seriesInfo($_SESSION['seed']);
         if (null != $searchQuery) {
             $series_infos = $series_infos->where('s.title LIKE :query OR s.plot LIKE :query')->setParameter('query', '%'.$searchQuery.'%')->orderBy('CASE WHEN s.title LIKE :query THEN 1 ELSE 2 END')->setParameter('query', '%'.$searchQuery.'%');
@@ -206,14 +232,14 @@ class IndexController extends AbstractController
         $seasons = $series->getSeasons();
         $paginationSeason = $paginator->paginate(
             $seasons,
-            $request->query->get('pageList') === 'seasons' ? $request->query->getInt('page', 1) : 1,
+            'seasons' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
             SERIES_PER_PAGE
         );
         $paginationSeason->setParam('pageList', 'seasons');
-    
+
         $paginationComments = $paginator->paginate(
             $comments,
-            $request->query->get('pageList') === 'comments' ? $request->query->getInt('page', 1) : 1,
+            'comments' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
             SERIES_PER_PAGE
         );
         $paginationComments->setParam('pageList', 'comments');
@@ -244,14 +270,14 @@ class IndexController extends AbstractController
         $episodes = $repository->seriesInfoByIdAndSeason($id, $num)->getSeasons()->get($num - 1)->getEpisodes();
         $pagination = $paginator->paginate(
             $episodes,
-            $request->query->get('pageList') === 'episodes' ? $request->query->getInt('page', 1) : 1,
+            'episodes' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
             SERIES_PER_PAGE
         );
         $pagination->setParam('pageList', 'episodes');
 
         $paginationSeason = $paginator->paginate(
             $seasons,
-            $request->query->get('pageList') === 'seasons' ? $request->query->getInt('page', 1) : 1,
+            'seasons' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
             SERIES_PER_PAGE
         );
         $paginationSeason->setParam('pageList', 'seasons');
@@ -267,7 +293,7 @@ class IndexController extends AbstractController
         }
         $paginationComments = $paginator->paginate(
             $comments,
-            $request->query->get('pageList') === 'comments' ? $request->query->getInt('page', 1) : 1,
+            'comments' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
             SERIES_PER_PAGE
         );
 
@@ -275,6 +301,7 @@ class IndexController extends AbstractController
         $seriesView = $repository->seriesEpisodeCountView($user);
 
         $paginationComments->setParam('pageList', 'comments');
+
         return $this->render(
             'index/seriesInfo.html.twig', [
                 'series' => $series,
