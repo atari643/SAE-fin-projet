@@ -48,6 +48,11 @@
             <li> {{ actor.name }}</li>
         {% endfor %}
         </ul>
+        {% if serieScore == 0 and nombreNotes == 0 %}
+            <div id="seriesScore">Score :</span> Aucune note n'a été entrée pour cette série</div>
+        {% else %}
+            <div id="seriesScore"><span id="seriesBoldTitle">Score :</span> {{serieScore}}/5 parmi {{nombreNotes}} notations</div>
+        {% endif %}
         </div>
         
     </div>
@@ -110,7 +115,8 @@
     </nav> 
     <div id="contentEpisode">
         {% if pagination != null %}
-            <h2 style="color:white">Episodes</h2>
+            {% set saisonActuel = app.request.attributes.get('_route_params') %}
+            <h2 style="color:white">Episodes de la Saison {{ saisonActuel.num }}</h2>
             <ul id="episodeList">
                 {% for episode in pagination %}
                     <li>
@@ -147,15 +153,15 @@
         <form action="{{ path('app_index_series_info', {id: series.id}) }}" method="post">
             <label for="rating">Rate the series:</label>
             <select id="rating" name="rating">
-                <option value="" {% if userRating is null %}selected{% endif %}>Select a rating</option>
+                <option {% if userRating is null %}selected{% endif %}>Select a rating</option>
                 {% for i in 0..5 %}
-                    <option value="{{ i }}" {% if i == userRating %}selected{% endif %}>{{ i }}</option>
+                    <option value="{{ i }}" {% if i == userRating and userRating is not null %}selected{% endif %}>{{ i }}</option>
                 {% endfor %}
             </select>
             <label for="comment">Leave a review:</label>
             <textarea id="comment" name="comment">{{ userComment }}</textarea>
-            <input type="submit" name="action" value="{{ userRating ? 'Edit' : 'Send' }}">
-            {% if userRating %}
+            <input type="submit" name="action" value="{{ userRating != null ? 'Edit' : 'Send' }}">
+            {% if userRating != null %}
                 <input type="submit" name="action" value="Delete">
             {% endif %}
         </form>
@@ -163,7 +169,7 @@
 
     <table style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
         <tbody>
-            {% for comment in comments|reverse %}
+            {% for comment in paginationComments|reverse %}
                 <tr>
                     <td><a href="{{path('user_profile_search',{username: comment.user.name})}}"><img src="https://ui-avatars.com/api/?name={{ comment.user.name }}&background=random&rounded=true" style="display: inline;"></a>{{comment.user.name}}</td>
                     <td>{{ comment.value }}</td>
@@ -187,7 +193,9 @@
             {% endfor %}
         </tbody>
     </table>
-    
+    {% if paginationComments != null %}
+        {{ block('paging') }}
+    {% endif %}
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       

@@ -14,6 +14,7 @@ use DoctrineExtensions\Query\Mysql\Rand;
  * @method Series[]    findAll()
  * @method Series[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
+
 class SeriesRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -26,8 +27,13 @@ class SeriesRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('s')->select(
             's.id as id, s.title as title, s.poster, s.plot as plot, 
-            COUNT(DISTINCT se.number) as season_count, COUNT(e.number) as episode_count, s.youtubeTrailer'
-        )->leftJoin('App:Season', 'se', 'WITH', 's = se.series')->leftJoin('App:Episode', 'e', 'WITH', 'se = e.season')->leftJoin('s.genre', 'genre', 'WITH')->leftJoin('s.user', 'user', 'WITH')->groupBy('s.id')->orderBy('RAND('.$seed.')');
+            COUNT(DISTINCT se.number) as season_count, COUNT(e.number) as episode_count, s.youtubeTrailer, AVG(rating.value) as note'
+        )->leftJoin('App:Season', 'se', 'WITH', 's = se.series')
+        ->leftJoin('App:Episode', 'e', 'WITH', 'se = e.season')
+        ->leftJoin('s.genre', 'genre', 'WITH')
+        ->leftJoin('s.user', 'user', 'WITH')
+        ->leftJoin('App:Rating', 'rating', 'WITH', 's = rating.series')
+        ->groupBy('s.id')->orderBy('RAND('.$seed.')');
     }//end seriesInfo()
 
     public function seriesEpisodesCount($user)

@@ -54,6 +54,9 @@ class UserController extends AbstractController
             $entityManager->flush();
         }
 
+        if ($this->getUser()!=null)
+        $userAdminOrNot = $this->getUser()->isAdmin();
+        else return $this->redirect($this->generateUrl('app_login')); // si accessible alors : $userAdminOrNot=false;
         $users       = $entityManager->getRepository(User::class);
         $users_limit = $users->findBy([], null, USERS_PER_PAGE, (USERS_PER_PAGE * ($page - 1)));
 
@@ -74,29 +77,37 @@ class UserController extends AbstractController
                     $request->query->getInt('page', 1),
                     USERS_PER_PAGE
                 );
-                
-                return $this->render('user/index.html.twig', [
-                    'pagination' => $pagination,
-                    'count' => $count,
-                    'username' => $search_query,
-                ]);
-        }
-        
+                if ($userAdminOrNot){
+                    return $this->render('user/index.html.twig', [
+                        'pagination' => $pagination,
+                        'count' => $count,
+                        'username' => $search_query,
+                    ]);
+                } else {
+                    return $this->render('user/index_user.html.twig', [
+                        'pagination' => $pagination,
+                        'count' => $count,
+                        'username' => $search_query,
+                    ]);
+                }
+        }     
         $pagination = $paginator->paginate(
             $users_limit,
             $request->query->getInt('page', 1),
             USERS_PER_PAGE
         );
-
-        return $this->render(
-            'user/index.html.twig',
-            [
+        if ($userAdminOrNot){
+            return $this->render('user/index.html.twig', [
                 'pagination' => $pagination,
-                'count'      => $count,
-                'username'   => '',
-            ]
-        );
-    }//end index()
+                'count' => $count,
+                'username' => '',
+            ]);}
+            else{return $this->render('user/index_user.html.twig', [
+                'pagination' => $pagination,
+                'count' => $count,
+                'username' => '',
+            ]);}    
+    }
 
 
     #[Route('/user/series', name: 'series_followed', methods: ['GET', 'POST'])]
@@ -141,6 +152,7 @@ class UserController extends AbstractController
     #[Route('/user/profile', name: 'user_profile', methods: ['GET', 'POST'])]
     public function userProfile(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
+        //check if connected
         $user = $this->getUser();
         if (null == $user) {
             $login = $this->generateUrl('app_login');
@@ -149,37 +161,61 @@ class UserController extends AbstractController
         }
 
         $name = $user->getName();
-
-        return $this->render(
-            'user/profile.html.twig',
-            ['user' => $name]
+        $pagination = $paginator->paginate(
+            $user->getSeries(),
+            $request->query->getInt('page', 1),
+            10 // 100 series poster per user
         );
+        $infoRating = $this->getUserRatingsById($entityManager, $user->getId());
+        $pagination2 = $paginator->paginate(
+            $infoRating,
+            $request->query->getInt('page', 1),
+            10 // 5 by page
+        );
+        return $this->render('user/profile.html.twig',[
+            'user' => $name,
+            'pagination' => $pagination,
+            'pagination2' => $pagination2,
+            'comments' => $infoRating['comments'],
+            ]);
     }//end userProfile()
 
 
     #[Route('/user/profile/{username}', name: 'user_profile_search', methods: ['GET', 'POST'])]
     public function userProfileSearch(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, string $username): Response
     {
+        //check if connected
         $user = $this->getUser();
         if (null == $user) {
             $login = $this->generateUrl('app_login');
 
             return $this->redirect($login);
         }
+        //paginating series followed
+        $userOfUsername=$entityManager->getRepository(User::class)->findOneBy(array('name' => $username));
+        $pagination = $paginator->paginate(
+            $userOfUsername->getSeries(),
+            $request->query->getInt('category') === 'series_followed' ? $request->query->getInt('page', 1) : 1,
+            10 // 40 series poster per user
+        );
+        $pagination->setParam('category', 'series_followed');
+        //paginating critics
+        $id=$userOfUsername->getId();
+        $infoRating = $this->getUserRatingsById($entityManager, $id);
+        $pagination2 = $paginator->paginate(
+            $infoRating,
+            $request->query->get('category') === 'series_critics' ? $request->query->getInt('page', 1) : 1,
+            10 // 5 by page
+        );
+        $pagination2->setParam('category', 'series_critics');
+
         return $this->render('user/profile.html.twig', [
             'user' => $username,
+            'pagination' => $pagination,
+            'pagination2' => $pagination2,
+            'comments' => $infoRating['comments'],
         ]);
-    }
 
-    private function getUserRatingsByName(EntityManagerInterface $entityManager, string $id) {
-
-        $comments = $entityManager->getRepository(Rating::class)->findBy([
-            'user' => $id,
-        ]);
-    
-        return [
-            'comments' => $comments,
-        ];
     }
 
     private function getUserRatingsById(EntityManagerInterface $entityManager, int $id) {
