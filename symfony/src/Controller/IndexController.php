@@ -244,6 +244,9 @@ class IndexController extends AbstractController
         );
         $paginationComments->setParam('pageList', 'comments');
 
+        $user = $this->getUser()->getId();
+        $seriesView = $repository->seriesEpisodeCountView($user);
+
         return $this->render(
             'index/seriesInfo.html.twig', [
             'series' => $series,
@@ -254,6 +257,7 @@ class IndexController extends AbstractController
             'paginationComments' => $paginationComments,
             'serieScore' => $val,
             'nombreNotes' => $nombreNotes,
+            'seriesView' => $seriesView
         ]);
     }
 
@@ -292,6 +296,10 @@ class IndexController extends AbstractController
             'comments' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
             SERIES_PER_PAGE
         );
+
+        $user = $this->getUser()->getId();
+        $seriesView = $repository->seriesEpisodeCountView($user);
+
         $paginationComments->setParam('pageList', 'comments');
 
         return $this->render(
@@ -304,6 +312,7 @@ class IndexController extends AbstractController
                 'paginationComments' => $paginationComments,
                 'serieScore' => $val,
                 'nombreNotes' => $nombreNotes,
+                'seriesView' => $seriesView
             ]
         );
     }

@@ -10,6 +10,11 @@
     <div id="pageInfo">
 
     <div id="header">
+        {% set episodes = 0 %}
+        {% for season in series.seasons %}
+            {% set episodes = episodes + season.episodes|length %}
+        {% endfor %}
+
         <div id="seriesTitle">{{ series.title }} 
             {% if app.user != null %}
                 {% set found = true %}
@@ -28,6 +33,26 @@
             {% else %}
                 <a  class="eye" href="{{ path('app_login') }}"><span class="material-symbols-outlined">visibility</span></a>
             {% endif %}
+
+            {% if app.user != null %}
+
+                {% set found = false %}
+                {% for s in seriesView %}
+                    {% if s.id == series.id %}
+                        {% set percentage = (s.episode_count_view / episodes) * 100 %}
+                        <td>{{ s.episode_count_view }}/{{ episodes }}</td>
+                        <td><progress id="percentageViews" max="100" value="{{ percentage }}"></progress></td>
+                        {% set found = true %}
+                    {% endif %}
+                {% endfor %}
+
+                {% if found == false %}
+                    {% set percentage = (0 / episodes) * 100 %}
+                    <td>{{ 0 }}/{{ episodes }}</td>
+                    <td><progress id="percentageViews" max="100" value="{{ percentage }}"></progress></td>
+                {% endif %}
+            {% endif %}
+        </div>
         <div id="seriesDate">Date : {{ series.yearStart|date('d/m/Y') }} - {{ series.yearEnd|date('d/m/Y') }}</div>
         <div id="seriesCountry">Country : 
         {% for country in series.country %}
@@ -36,10 +61,6 @@
         </div>
         <div id="seriesSeasons">Seasons : {{ series.seasons|length }}</div>
         <div id="seriesEpisodes">Episodes : 
-        {% set episodes = 0 %}
-        {% for season in series.seasons %}
-            {% set episodes = episodes + season.episodes|length %}
-        {% endfor %}
         {{ episodes }}
         </div>
         <div id="seriesActors">

@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\SeriesRepository;
 
 const USERS_PER_PAGE = 10;
 
@@ -110,19 +111,22 @@ class UserController extends AbstractController
 
 
     #[Route('/user/series', name: 'series_followed', methods: ['GET', 'POST'])]
-    public function seriesFollowed(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
+    public function seriesFollowed(SeriesRepository $repository, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
-        $user = $this->getUser();
-
+        $user = $this->getUser()->getId();
+        $series = $repository->seriesEpisodesCount($user);
         $pagination = $paginator->paginate(
-            $user->getSeries(),
+            $series,
             $request->query->getInt('page', 1),
             10
         );
 
+        $seriesView = $repository->seriesEpisodeCountView($user);
+
         return $this->render(
             'user/series_followed.html.twig',
-            ['pagination' => $pagination]
+            ['pagination' => $pagination,
+             'seriesView' => $seriesView]
         );
     }//end seriesFollowed()
 
