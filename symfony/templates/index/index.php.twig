@@ -30,7 +30,6 @@
   </div>
 
   {{ block('paging') }}
-  <h1>{{ hasVisited }}</h1>
   <script>
     let mediaqueries = {width: window.innerWidth, height: window.innerHeight};
     window.addEventListener('resize', function () {
@@ -222,7 +221,7 @@
         page = document.querySelectorAll('.pagine .pagination a');
         for (let i = 0; i < page.length; i++) {
           page[i].addEventListener('click', makeScript())
-        }}, 5000);
+        }
       if(mediaqueries.width>1100){
         const bannerInfoFirstPage = document.createElement('div');
         bannerInfoFirstPage.classList.add('bannerInfoFirstPage');
@@ -276,6 +275,7 @@
           }
         });
       }
+      }, 5000);
     }else{
       window.addEventListener('load', makeScript());
       page = document.querySelectorAll('.pagine .pagination a');
@@ -314,7 +314,7 @@
         const seriesPoster = document.getElementsByClassName('posters');
         let hover = false;
         for (let i = 0; i < series.length; i++) {
-          if(mediaqueries.width > 650){
+          if (mediaqueries.width > 650) {
             seriesPoster[i].addEventListener('mouseover', function () {
               posterHover(i);
               hover = true;
@@ -330,7 +330,7 @@
           seriesPoster[i].addEventListener('click', function () {
             if (document.querySelector('.banner')) {
               document.body.removeChild(document.querySelector('.banner'));
-              if(mediaqueries.width > 650){
+              if (mediaqueries.width > 650) {
                 document.getElementById('show').style.width = '100%';
                 document.getElementById('show').style.marginRight = '0';
               }
@@ -341,71 +341,73 @@
           let hoverTimer2;
           let before = [];
           let after = [];
-          series[i].addEventListener('mouseover', function () {
-            if (!hover) {
-              return;
-            }
-            hoverTimer = setTimeout(function () {
-              before = [];
-              after = [];
-              for (let j = 0; j < series.length; j++) {
-                if (j < i) {
-                  if (series[j].offsetTop === series[i].offsetTop) {
-                    before.push(series[j]);
-                  }
-                } else if (j > i) {
-                  if (series[j].offsetTop === series[i].offsetTop) {
-                    after.push(series[j]);
+          if (mediaqueries.width > 650) {
+            series[i].addEventListener('mouseover', function () {
+              if (!hover) {
+                return;
+              }
+              hoverTimer = setTimeout(function () {
+                before = [];
+                after = [];
+                for (let j = 0; j < series.length; j++) {
+                  if (j < i) {
+                    if (series[j].offsetTop === series[i].offsetTop) {
+                      before.push(series[j]);
+                    }
+                  } else if (j > i) {
+                    if (series[j].offsetTop === series[i].offsetTop) {
+                      after.push(series[j]);
+                    }
                   }
                 }
+                seriesPoster[i].style.rotate = '90deg';
+                document.querySelector('.overlay').remove();
+                seriesPoster[i].style.transform = 'scale(1)';
+                const length = (seriesPoster[i].offsetHeight - series[i].offsetWidth) / 2;
+                for (let j = 0; j < before.length; j++) {
+                  before[j].style.transform = 'translateX(' + -length + 'px)';
+                }
+                for (let j = 0; j < after.length; j++) {
+                  after[j].style.transform = 'translateX(' + length + 'px)';
+                }
+                hoverTimer2 = setTimeout(function () {
+                  const iframe = document.createElement('iframe');
+                  iframe.src = series[i].dataset.trailer + '?autoplay=1' + '&mute=1' + '&start=0';
+                  iframe.width = series[i].offsetWidth + length * 2;
+                  iframe.height = seriesPoster[i].offsetWidth;
+                  iframe.style.border = 'none';
+                  const paddings = (series[i].offsetHeight - seriesPoster[i].offsetWidth) / 2;
+                  series[i].style.height = seriesPoster[i].offsetWidth + 'px';
+                  series[i].style.paddingTop = paddings + 'px';
+                  series[i].style.paddingBottom = paddings + 'px';
+                  iframe.style.borderRadius = '6px';
+                  series[i].appendChild(iframe);
+                  seriesPoster[i].style.display = 'none';
+                }, 500);
+              }, 2500);
+            });
+
+            series[i].addEventListener('mouseleave', function () {
+              clearTimeout(hoverTimer);
+              clearTimeout(hoverTimer2);
+              this.querySelector('img').style.display = 'flex';
+              this.querySelector('img').style.rotate = '0deg';
+              this.querySelector('img').style.removeProperty('transform');
+              if (document.querySelector('iframe')) {
+                document.querySelector('iframe').remove();
               }
-              seriesPoster[i].style.rotate = '90deg';
-              document.querySelector('.overlay').remove();
-              seriesPoster[i].style.transform = 'scale(1)';
-              const length = (seriesPoster[i].offsetHeight - series[i].offsetWidth) / 2;
+              this.style.height = '350px';
+              this.style.paddingTop = '0';
+              this.style.paddingBottom = '0';
+              this.style.position = 'relative';
               for (let j = 0; j < before.length; j++) {
-                before[j].style.transform = 'translateX(' + -length + 'px)';
+                before[j].style.removeProperty('transform');
               }
               for (let j = 0; j < after.length; j++) {
-                after[j].style.transform = 'translateX(' + length + 'px)';
+                after[j].style.removeProperty('transform');
               }
-              hoverTimer2 = setTimeout(function () {
-                const iframe = document.createElement('iframe');
-                iframe.src = series[i].dataset.trailer + '?autoplay=1' + '&mute=1' + '&start=0';
-                iframe.width = series[i].offsetWidth + length * 2;
-                iframe.height = seriesPoster[i].offsetWidth;
-                iframe.style.border = 'none';
-                const paddings = (series[i].offsetHeight - seriesPoster[i].offsetWidth) / 2;
-                series[i].style.height = seriesPoster[i].offsetWidth + 'px';
-                series[i].style.paddingTop = paddings + 'px';
-                series[i].style.paddingBottom = paddings + 'px';
-                iframe.style.borderRadius = '6px';
-                series[i].appendChild(iframe);
-                seriesPoster[i].style.display = 'none';
-              }, 500);
-            }, 2500);
-          });
-
-          series[i].addEventListener('mouseleave', function () {
-            clearTimeout(hoverTimer);
-            clearTimeout(hoverTimer2);
-            this.querySelector('img').style.display = 'flex';
-            this.querySelector('img').style.rotate = '0deg';
-            this.querySelector('img').style.removeProperty('transform');
-            if (document.querySelector('iframe')) {
-              document.querySelector('iframe').remove();
-            }
-            this.style.height = '350px';
-            this.style.paddingTop = '0';
-            this.style.paddingBottom = '0';
-            this.style.position = 'relative';
-            for (let j = 0; j < before.length; j++) {
-              before[j].style.removeProperty('transform');
-            }
-            for (let j = 0; j < after.length; j++) {
-              after[j].style.removeProperty('transform');
-            }
-          });
+            });
+          }
         }
         const page = document.querySelectorAll('.number');
         for (let j = 0; j < page.length; j++) {
@@ -450,18 +452,39 @@
           ) + 'px) scale(1.08)';
         }
       }
+    if(mediaqueries.width <= 850){
+      const show = document.getElementById('show');
+      const slideLeft = document.createElement('div');
+      const slideRight = document.createElement('div');
+      slideLeft.classList.add('slideLeft');
+      slideRight.classList.add('slideRight');
+      slideLeft.innerHTML = '<span class="material-symbols-outlined">arrow_left</span>';
+      slideRight.innerHTML = '<span class="material-symbols-outlined">arrow_right</span>';
+      document.body.appendChild(slideLeft);
+      document.body.appendChild(slideRight);
+      slideLeft.addEventListener('click', function () {
+        show.scrollLeft -= 250;
+      });
+      slideRight.addEventListener('click', function () {
+        show.scrollLeft += 250;
+      });
+      slideLeft.style.top = show.offsetTop + ((show.offsetHeight - slideLeft.offsetTop)/2) + 'px';
+      slideRight.style.top = show.offsetTop + ((show.offsetHeight - slideRight.offsetTop)/2) + 'px';
+    }
       function makeBannerLeft(poster, posterImg) {
         const banner = document.createElement('div');
         banner.classList.add('banner');
-        banner.style.height = window.innerHeight - document.getElementById('show').offsetTop + scrollY + 'px';
-        window.addEventListener('scroll', function () {
+        if(mediaqueries.width > 1700) {
           banner.style.height = window.innerHeight - document.getElementById('show').offsetTop + scrollY + 'px';
-          if (banner.offsetHeight >= window.innerHeight) {
-            banner.style.borderTopLeftRadius = '0';
-          } else {
-            banner.style.borderTopLeftRadius = '15px';
-          }
-        });
+          window.addEventListener('scroll', function () {
+            banner.style.height = window.innerHeight - document.getElementById('show').offsetTop + scrollY + 'px';
+            if (banner.offsetHeight >= window.innerHeight) {
+              banner.style.borderTopLeftRadius = '0';
+            } else {
+              banner.style.borderTopLeftRadius = '15px';
+            }
+          });
+        }
         const bannerClose = document.createElement('div');
         bannerClose.classList.add('bannerClose');
         bannerClose.innerHTML = '<span class="material-symbols-outlined">cancel</span>';
@@ -478,19 +501,29 @@
           window.location.href = "/series/" + poster.dataset.id;
         };
         bannerButtonMore.innerHTML = '<span class="material-symbols-outlined">info</span>';
-        headerBanner.appendChild(bannerButtonMore);
+        bannerTitle.appendChild(bannerButtonMore);
         banner.appendChild(headerBanner);
         const bannerImg = document.createElement('img');
         bannerImg.src = posterImg.src;
         bannerImg.classList.add('bannerImg');
-        banner.appendChild(bannerImg);
-        const summary = document.createElement('p');
-        summary.classList.add('summary');
-        summary.innerHTML = poster.dataset.resum;
-        banner.appendChild(summary);
+        if(mediaqueries.width > 800) {
+          banner.appendChild(bannerImg);
+        }
+        const resumé = document.createElement('p');
+        resumé.classList.add('resumé');
+        resumé.innerHTML = poster.dataset.resum;
+        if(mediaqueries.width > 1700) {
+          banner.appendChild(resumé);
+        }else{
+          headerBanner.appendChild(resumé);
+        }
         const parentBottomBanner = document.createElement('div');
         parentBottomBanner.classList.add('parentBottomBanner');
-        banner.appendChild(parentBottomBanner);
+        if( mediaqueries.width >1700) {
+          banner.appendChild(parentBottomBanner);
+        }else{
+          headerBanner.appendChild(parentBottomBanner);
+        }
         const bannerDuration = document.createElement('p');
         bannerDuration.classList.add('bannerDuration');
         if (poster.dataset.duration != null) {
@@ -528,9 +561,15 @@
         }
 
         parentBottomBanner.appendChild(suivieButton);
-        document.body.appendChild(banner);
-        document.getElementById('show').style.width = '85%';
-        document.getElementById('show').style.marginRight = '15%';
+        if(mediaqueries.width<=650){
+          document.body.insertBefore(banner, document.getElementsByClassName('paging')[0]);
+        }else {
+          document.body.appendChild(banner);
+        }
+        if(mediaqueries.width > 1700) {
+          document.getElementById('show').style.width = '85%';
+          document.getElementById('show').style.marginRight = '15%';
+        }
         bannerClose.addEventListener('click', function () {
           document.body.removeChild(banner);
           document.getElementById('show').style.width = '100%';
