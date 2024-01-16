@@ -12,7 +12,7 @@ a:visited {color:orange;}
     background-color: #1a242f;
 }
 
-#tabRating tabRatingtd div:first-child {
+#tabRating div:first-child {
     display: flex;
     align-items: center;
 }
