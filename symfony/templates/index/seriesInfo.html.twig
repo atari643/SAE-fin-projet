@@ -159,8 +159,8 @@
             </select>
             <label for="comment">Leave a review:</label>
             <textarea id="comment" name="comment">{{ userComment }}</textarea>
-            <input type="submit" name="action" value="{{ userRating ? 'Edit' : 'Send' }}">
-            {% if userRating %}
+            <input type="submit" name="action" value="{{ userRating != null ? 'Edit' : 'Send' }}">
+            {% if userRating != null %}
                 <input type="submit" name="action" value="Delete">
             {% endif %}
         </form>

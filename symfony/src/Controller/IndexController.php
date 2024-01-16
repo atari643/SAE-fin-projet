@@ -127,6 +127,18 @@ class IndexController extends AbstractController
         ];
     }
 
+    private function addRatingIntoBase(EntityManagerInterface $entityManager, int $id, Request $request) {
+        $series = $entityManager->find(Series::class, $id);
+        $rating = new Rating();
+        $rating->setValue($request->request->get('rating'));
+        $rating->setComment($request->get('comment'));
+        $rating->setDate(new \DateTime());
+        $rating->setSeries($series);
+        $rating->setUser($this->getUser());
+        $entityManager->persist($rating);
+        $entityManager->flush();
+    }
+
     #[Route('/series/{id}', name: 'app_index_series_info')]
     public function seriesInfo(SeriesRepository $repository, EntityManagerInterface $entityManager, int $id, Request $request, PaginatorInterface $paginator): Response
     {
@@ -158,7 +170,6 @@ class IndexController extends AbstractController
             if ('Delete' == $request->get('action')) {
                 $entityManager->remove($infoRating['userRating']);
                 $entityManager->flush();
-
                 return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
             } else {
                 if ('Edit' == $request->get('action')) {
@@ -168,18 +179,14 @@ class IndexController extends AbstractController
                     $entityManager->remove($infoRating['userRating']);
                     $entityManager->flush();
                 }
-                $series = $entityManager->find(Series::class, $id);
-                $rating = new Rating();
-                $rating->setValue($request->request->get('rating'));
-                $rating->setComment($request->get('comment'));
-                $rating->setDate(new \DateTime());
-                $rating->setSeries($series);
-                $rating->setUser($this->getUser());
-                $entityManager->persist($rating);
+                $entityManager->remove($infoRating['userRating']);
                 $entityManager->flush();
-
-                return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
-            }// end if
+                $this->addRatingIntoBase($entityManager, $id, $request);
+            } else if ('Send' == $request->get('action') && null == $infoRating['userRating']){
+                $this->addRatingIntoBase($entityManager, $id, $request);
+            }
+            return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
+            // end if
         }// end if
 
         $val = 0;
