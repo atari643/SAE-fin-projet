@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Genre;
 use App\Entity\Rating;
 use App\Entity\Series;
+use App\Repository\RatingRepository;
 use App\Repository\SeriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -18,7 +19,7 @@ const SERIES_PER_PAGE = 10;
 class IndexController extends AbstractController
 {
     #[Route('/', name: 'app_default', methods: ['GET', 'POST'])]
-    public function index(SeriesRepository $repository, Request $request, PaginatorInterface $paginator, EntityManagerInterface $entityManager): Response
+    public function index(SeriesRepository $repository, Request $request, PaginatorInterface $paginator, EntityManagerInterface $entityManager,RatingRepository $ratingRepository): Response    
     {
         if (PHP_SESSION_NONE === session_status()) {
             session_start();
@@ -60,10 +61,8 @@ class IndexController extends AbstractController
         if (null != $searchFollow && 0 == $searchFollow) {
             $series_infos = $series_infos->andWhere('user.id IS NULL');
         }
-
         $genres = $entityManager->getRepository(Genre::class)->findAll();
         $series_infos = $series_infos->getQuery();
-
         // region Follow/Unfollow Series
         $user = $this->getUser();
         if (null != $request->request->get('add')) {
@@ -89,8 +88,9 @@ class IndexController extends AbstractController
             $series_infos,
             $request->query->getInt('page', 1),
             SERIES_PER_PAGE
-        );
 
+        );
+        
         if (!isset($_SESSION['hasVisited'])) {
             if (isset($_COOKIE['visited'])) {
                 $_SESSION['hasVisited'] = 'yes';

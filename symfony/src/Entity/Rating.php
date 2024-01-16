@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(
@@ -14,7 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
         new ORM\Index(name: 'IDX_D8892622A76ED395', columns: ['user_id']),
     ]
 )]
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: 'App\Repository\RatingRepository')]
+
 class Rating
 {
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]

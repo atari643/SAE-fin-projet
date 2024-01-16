@@ -23,7 +23,7 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
     <div id="show">
         {% for s in pagination %}
             {% set youtubeTrailer = s.youtubeTrailer|replace({'watch?v=': 'embed/'}) %}
-            <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="4" data-resum="{{s.plot}}" data-trailer="{{ youtubeTrailer }}">
+            <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="{{s.note}}" data-resum="{{s.plot}}" data-trailer="{{ youtubeTrailer }}">
                 <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="posters">
             </div>
         {% endfor %}
