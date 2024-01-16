@@ -528,6 +528,14 @@
         const banner = document.createElement('div');
         banner.classList.add('banner');
         if(mediaqueries.width > 1700) {
+          banner.addEventListener('mouseover', function () {
+            banner.style.overflowY = 'scroll';
+            document.body.style.overflowY = 'hidden';
+          });
+          banner.addEventListener('mouseleave', function () {
+            banner.style.overflowY = 'hidden';
+            document.body.style.overflowY = 'scroll';
+          });
           banner.style.height = window.innerHeight - document.getElementById('show').offsetTop + scrollY + 'px';
           window.addEventListener('scroll', function () {
             banner.style.height = window.innerHeight - document.getElementById('show').offsetTop + scrollY + 'px';
@@ -627,6 +635,7 @@
           document.body.removeChild(banner);
           document.getElementById('show').style.width = '100%';
           document.getElementById('show').style.marginRight = '0';
+          document.body.style.overflowY = 'scroll';
         });
 
         {% if app.user == null %}

@@ -159,9 +159,10 @@ body {
 .bannerImg {
     width: calc(100% - 38px);
     margin: 0 0 0 14px;
+    pointer-events: none;
 }
 
-.summary {
+.resumé {
     color: #e3f7f5;
     font-size: 1rem;
     font-family: 'Roboto', sans-serif;
