@@ -179,10 +179,13 @@ class IndexController extends AbstractController
                     $entityManager->remove($infoRating['userRating']);
                     $entityManager->flush();
                 }
+
                 $entityManager->remove($infoRating['userRating']);
                 $entityManager->flush();
                 $this->addRatingIntoBase($entityManager, $id, $request);
-            } else if ('Send' == $request->get('action') && null == $infoRating['userRating']){
+            }
+
+            if ('Send' == $request->get('action') && null == $infoRating['userRating']){
                 $this->addRatingIntoBase($entityManager, $id, $request);
             }
             return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
