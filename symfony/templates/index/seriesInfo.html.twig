@@ -154,7 +154,15 @@
             <select id="rating" name="rating">
                 <option {% if userRating is null %}selected{% endif %}>Select a rating</option>
                 {% for i in 0..5 %}
-                    <option value="{{ i }}" {% if i == userRating and userRating is not null %}selected{% endif %}>{{ i }}</option>
+                    <option value="{{ i }}" {% if i == userRating and userRating is not null %}selected{% endif %}>
+                    {% for j in 0..4 %}
+                        {% if j < i %}
+                            <span class="material-symbols-outlined"> &#9733 </span>
+                        {% else %}
+                            <span class="material-symbols-outlined"> &#9734 </span>
+                        {% endif %}
+                    {% endfor %}
+                     </option>
                 {% endfor %}
             </select>
             <label for="comment">Leave a review:</label>

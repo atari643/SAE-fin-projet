@@ -168,7 +168,7 @@ class IndexController extends AbstractController
         // endregion
 
         if ($request->get('rating') && null != $this->getUser()) {
-            if ('Delete' == $request->get('action')) {
+            if ('Delete' == $request->get('action') ) {
                 $entityManager->remove($infoRating['userRating']);
                 $entityManager->flush();
 
