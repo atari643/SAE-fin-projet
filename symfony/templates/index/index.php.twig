@@ -221,58 +221,6 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
         }
 
       }, 5000);
-    }else if(document.location.href.includes('?page=1')){
-      const bannerInfoFirstPage = document.createElement('div');
-      bannerInfoFirstPage.classList.add('bannerInfoFirstPage');
-      document.body.insertBefore(bannerInfoFirstPage, document.getElementById('show'));
-      const imgbannerInfoFirstPage = document.createElement('img');
-      imgbannerInfoFirstPage.src = '/cinéma.png';
-      imgbannerInfoFirstPage.classList.add('imgbannerInfoFirstPage');
-      bannerInfoFirstPage.appendChild(imgbannerInfoFirstPage);
-      const textbannerInfoFirstPageParent = document.createElement('div');
-      textbannerInfoFirstPageParent.classList.add('textbannerInfoFirstPageParent');
-      bannerInfoFirstPage.appendChild(textbannerInfoFirstPageParent);
-      const titrebannerInfoFirstPage = document.createElement('p');
-      titrebannerInfoFirstPage.classList.add('titrebannerInfoFirstPage');
-      titrebannerInfoFirstPage.innerHTML = 'XploreCinéma';
-      titrebannerInfoFirstPage.dataset.text = 'XPLORECINÉMA';
-      titrebannerInfoFirstPage.classList.add('glitch');
-      textbannerInfoFirstPageParent.appendChild(titrebannerInfoFirstPage);
-      const textbannerInfoFirstPage = document.createElement('p');
-      textbannerInfoFirstPage.classList.add('textbannerInfoFirstPage');
-      textbannerInfoFirstPage.innerHTML = "Explorez l'univers fascinant des séries avec XploreCinéma, votre compagnon exclusif pour organiser et découvrir de nouveaux titres. XploreCinéma vous offre une expérience immersive, vous guidant à travers une variété de séries. Que vous soyez un amateur de drames intenses, de comédies légères ou de mystères envoûtants, XploreCinéma vous accompagne dans votre aventure télévisuelle, vous invitant à explorer et à apprécier chaque instant. Laissez-vous emporter par la magie du storytelling et découvrez des pépites cachées, tout en organisant votre voyage à travers l'océan infini des séries. XploreCinéma, votre guide ultime pour une expérience cinématographique sans limites.";
-      textbannerInfoFirstPageParent.appendChild(textbannerInfoFirstPage);
-      bannerInfoFirstPage.innerHTML+=
-              '<div id="mouse-scroll">'+
-              '<div class="mouse">'+
-              '<div class="mouse-in"></div>'+
-              '</div>'+
-              '<div>'+
-              '<span class="down-arrow-1"></span>'+
-              '<span class="down-arrow-2"></span>'+
-              '<span class="down-arrow-3"></span>'+
-              '</div>'+
-              '</div>';
-      document.getElementById('mouse-scroll').style.top = bannerInfoFirstPage.getBoundingClientRect().bottom - document.getElementById('mouse-scroll').offsetHeight - 20 + 'px';
-      window.addEventListener('scroll', function () {
-        if(scrollY>0 && scrollY < bannerInfoFirstPage.getBoundingClientRect().top + bannerInfoFirstPage.offsetHeight){
-          document.getElementById('menu').style.position = 'fixed';
-          bannerInfoFirstPage.style.marginTop = document.getElementById('menu').offsetHeight + 40+ 'px';
-          document.getElementById('menu').style.width = '80%';
-          document.getElementById('menu').style.zIndex = '1000';
-          document.getElementById('menu').style.boxShadow = 'rgba(0, 0, 0, 0.5) 0px 5px 8px 3px';
-          document.getElementById('menu').style.borderLeft = '50vw solid #221F1F';
-          document.getElementById('menu').style.borderRight = '50vw solid #221F1F';
-        }else{
-          document.getElementById('menu').style.position = 'relative';
-          bannerInfoFirstPage.style.marginTop = '0';
-          document.getElementById('menu').style.width = '100%';
-          document.getElementById('menu').style.zIndex = '0';
-          document.getElementById('menu').style.boxShadow = 'none';
-          document.getElementById('menu').style.borderLeft = 'none';
-          document.getElementById('menu').style.borderRight = 'none';
-        }
-      });
     }else{
       window.addEventListener('load', makeScript());
       page = document.querySelectorAll('.pagine .pagination a');
@@ -280,6 +228,59 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
         page[i].addEventListener('click', makeScript())
       }
     }
+      if(document.location.href.includes('?page=1')){
+        const bannerInfoFirstPage = document.createElement('div');
+        bannerInfoFirstPage.classList.add('bannerInfoFirstPage');
+        document.body.insertBefore(bannerInfoFirstPage, document.getElementById('show'));
+        const imgbannerInfoFirstPage = document.createElement('img');
+        imgbannerInfoFirstPage.src = '/cinéma.png';
+        imgbannerInfoFirstPage.classList.add('imgbannerInfoFirstPage');
+        bannerInfoFirstPage.appendChild(imgbannerInfoFirstPage);
+        const textbannerInfoFirstPageParent = document.createElement('div');
+        textbannerInfoFirstPageParent.classList.add('textbannerInfoFirstPageParent');
+        bannerInfoFirstPage.appendChild(textbannerInfoFirstPageParent);
+        const titrebannerInfoFirstPage = document.createElement('p');
+        titrebannerInfoFirstPage.classList.add('titrebannerInfoFirstPage');
+        titrebannerInfoFirstPage.innerHTML = 'XploreCinéma';
+        titrebannerInfoFirstPage.dataset.text = 'XPLORECINÉMA';
+        titrebannerInfoFirstPage.classList.add('glitch');
+        textbannerInfoFirstPageParent.appendChild(titrebannerInfoFirstPage);
+        const textbannerInfoFirstPage = document.createElement('p');
+        textbannerInfoFirstPage.classList.add('textbannerInfoFirstPage');
+        textbannerInfoFirstPage.innerHTML = "Explorez l'univers fascinant des séries avec XploreCinéma, votre compagnon exclusif pour organiser et découvrir de nouveaux titres. XploreCinéma vous offre une expérience immersive, vous guidant à travers une variété de séries. Que vous soyez un amateur de drames intenses, de comédies légères ou de mystères envoûtants, XploreCinéma vous accompagne dans votre aventure télévisuelle, vous invitant à explorer et à apprécier chaque instant. Laissez-vous emporter par la magie du storytelling et découvrez des pépites cachées, tout en organisant votre voyage à travers l'océan infini des séries. XploreCinéma, votre guide ultime pour une expérience cinématographique sans limites.";
+        textbannerInfoFirstPageParent.appendChild(textbannerInfoFirstPage);
+        bannerInfoFirstPage.innerHTML+=
+                '<div id="mouse-scroll">'+
+                '<div class="mouse">'+
+                '<div class="mouse-in"></div>'+
+                '</div>'+
+                '<div>'+
+                '<span class="down-arrow-1"></span>'+
+                '<span class="down-arrow-2"></span>'+
+                '<span class="down-arrow-3"></span>'+
+                '</div>'+
+                '</div>';
+        document.getElementById('mouse-scroll').style.top = bannerInfoFirstPage.getBoundingClientRect().bottom - document.getElementById('mouse-scroll').offsetHeight - 20 + 'px';
+        window.addEventListener('scroll', function () {
+          if(scrollY>0 && scrollY < bannerInfoFirstPage.getBoundingClientRect().top + bannerInfoFirstPage.offsetHeight){
+            document.getElementById('menu').style.position = 'fixed';
+            bannerInfoFirstPage.style.marginTop = document.getElementById('menu').offsetHeight + 40+ 'px';
+            document.getElementById('menu').style.width = '80%';
+            document.getElementById('menu').style.zIndex = '1000';
+            document.getElementById('menu').style.boxShadow = 'rgba(0, 0, 0, 0.5) 0px 5px 8px 3px';
+            document.getElementById('menu').style.borderLeft = '50vw solid #221F1F';
+            document.getElementById('menu').style.borderRight = '50vw solid #221F1F';
+          }else{
+            document.getElementById('menu').style.position = 'relative';
+            bannerInfoFirstPage.style.marginTop = '0';
+            document.getElementById('menu').style.width = '100%';
+            document.getElementById('menu').style.zIndex = '0';
+            document.getElementById('menu').style.boxShadow = 'none';
+            document.getElementById('menu').style.borderLeft = 'none';
+            document.getElementById('menu').style.borderRight = 'none';
+          }
+        });
+      }
 
 function makeScript() {
   const menu = document.getElementById('parentItemMenuLeft');
