@@ -10,6 +10,11 @@
     <div id="pageInfo">
 
     <div id="header">
+        {% set episodes = 0 %}
+        {% for season in series.seasons %}
+            {% set episodes = episodes + season.episodes|length %}
+        {% endfor %}
+
         <div id="seriesTitle">{{ series.title }} 
             {% if app.user != null %}
                 {% set found = true %}
@@ -29,9 +34,24 @@
                 <a  class="eye" href="{{ path('app_login') }}"><span class="material-symbols-outlined">visibility</span></a>
             {% endif %}
 
-            {% set percentage = (seriesView[0].episode_count_view / seriesCount[0].episode_count) * 100 %}
-            <td>{{ seriesView[0].episode_count_view }}/{{ seriesCount[0].episode_count }}</td>
-            <td><progress id="percentageViews" max="100" value="{{ percentage }}"></progress></td>
+            {% if app.user != null %}
+
+                {% set found = false %}
+                {% for s in seriesView %}
+                    {% if s.id == series.id %}
+                        {% set percentage = (s.episode_count_view / episodes) * 100 %}
+                        <td>{{ s.episode_count_view }}/{{ episodes }}</td>
+                        <td><progress id="percentageViews" max="100" value="{{ percentage }}"></progress></td>
+                        {% set found = true %}
+                    {% endif %}
+                {% endfor %}
+
+                {% if found == false %}
+                    {% set percentage = (0 / episodes) * 100 %}
+                    <td>{{ 0 }}/{{ episodes }}</td>
+                    <td><progress id="percentageViews" max="100" value="{{ percentage }}"></progress></td>
+                {% endif %}
+            {% endif %}
         </div>
         <div id="seriesDate">Date : {{ series.yearStart|date('d/m/Y') }} - {{ series.yearEnd|date('d/m/Y') }}</div>
         <div id="seriesCountry">Country : 
@@ -41,10 +61,6 @@
         </div>
         <div id="seriesSeasons">Seasons : {{ series.seasons|length }}</div>
         <div id="seriesEpisodes">Episodes : 
-        {% set episodes = 0 %}
-        {% for season in series.seasons %}
-            {% set episodes = episodes + season.episodes|length %}
-        {% endfor %}
         {{ episodes }}
         </div>
         <div id="seriesActors">
@@ -199,7 +215,7 @@
         </tbody>
     </table>
     {% if paginationComments != null %}
-        {{ block('paging') }}
+        {{ knp_pagination_render(paginationComments) }}
     {% endif %}
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>

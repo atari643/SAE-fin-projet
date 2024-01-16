@@ -206,15 +206,21 @@ class IndexController extends AbstractController
         $seasons = $series->getSeasons();
         $paginationSeason = $paginator->paginate(
             $seasons,
-            $request->query->getInt('pageS', 1),
+            $request->query->get('pageList') === 'seasons' ? $request->query->getInt('page', 1) : 1,
             SERIES_PER_PAGE
         );
+        $paginationSeason->setParam('pageList', 'seasons');
+    
+        $paginationComments = $paginator->paginate(
+            $comments,
+            $request->query->get('pageList') === 'comments' ? $request->query->getInt('page', 1) : 1,
+            SERIES_PER_PAGE
+        );
+        $paginationComments->setParam('pageList', 'comments');
 
-        $seriesView = $repository->seriesEpisodeCountView($user);
         $user = $this->getUser()->getId();
-        $seriesCount = $repository->seriesEpisodesCount($user);
+        $seriesView = $repository->seriesEpisodeCountView($user);
 
-        $paginationSeason->setParam('pageS',1);
         return $this->render(
             'index/seriesInfo.html.twig', [
             'series' => $series,
@@ -222,10 +228,9 @@ class IndexController extends AbstractController
             'pagination' => null,
             'userRating' => $infoRating['userRating'] ? $infoRating['userValue'] : null,
             'userComment' => $infoRating['userRating'] ? $infoRating['userComment'] : null,
-            'comments' => $comments,
+            'paginationComments' => $paginationComments,
             'serieScore' => $val,
             'nombreNotes' => $nombreNotes,
-            'seriesCount' => $seriesCount,
             'seriesView' => $seriesView
         ]);
     }
@@ -265,6 +270,10 @@ class IndexController extends AbstractController
             $request->query->get('pageList') === 'comments' ? $request->query->getInt('page', 1) : 1,
             SERIES_PER_PAGE
         );
+
+        $user = $this->getUser()->getId();
+        $seriesView = $repository->seriesEpisodeCountView($user);
+
         $paginationComments->setParam('pageList', 'comments');
         return $this->render(
             'index/seriesInfo.html.twig', [
@@ -276,6 +285,7 @@ class IndexController extends AbstractController
                 'paginationComments' => $paginationComments,
                 'serieScore' => $val,
                 'nombreNotes' => $nombreNotes,
+                'seriesView' => $seriesView
             ]
         );
     }
