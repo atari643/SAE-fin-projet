@@ -208,18 +208,24 @@
         <tbody>
             {% for comment in paginationComments|reverse %}
                 <tr>
-                    <td><a href="{{path('user_profile_search',{username: comment.user.name})}}"><img src="https://ui-avatars.com/api/?name={{ comment.user.name }}&background=random&rounded=true" style="display: inline;"></a>{{comment.user.name}}</td>
                     <td>
-                        {% for i in 0..4 %}
-                            {% if i < comment.value %}
-                                <span class="material-symbols-outlined" id = "filledStar">star</span>
-                            {% else %}
-                                <span class="material-symbols-outlined">star</span>
-                            {% endif %}
-                        {% endfor %}
+                        <div>
+                            <div><a href="{{path('user_profile_search',{username: comment.user.name})}}"><img src="https://ui-avatars.com/api/?name={{ comment.user.name }}&background=random&rounded=true" style="display: inline;"></a></div>
+                            <div>{{comment.user.name}}</div>
+                        </div>
+                        <div>
+                            {% for i in 0..4 %}
+                                {% if i < comment.value %}
+                                    <span class="material-symbols-outlined" id = "filledStar">star</span>
+                                {% else %}
+                                    <span class="material-symbols-outlined">star</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
                     </td>
-                    <td> {{ comment.comment|nl2br }}</td>
-
+                    <td> 
+                        {{ comment.comment|nl2br }}
+                    </td>
                     <td>
                         {% set diff = date().diff(comment.date) %}
                         {% if diff.y > 0 %}
