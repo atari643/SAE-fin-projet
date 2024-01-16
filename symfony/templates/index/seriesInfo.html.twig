@@ -28,6 +28,11 @@
             {% else %}
                 <a  class="eye" href="{{ path('app_login') }}"><span class="material-symbols-outlined">visibility</span></a>
             {% endif %}
+
+            {% set percentage = (seriesView[0].episode_count_view / seriesCount[0].episode_count) * 100 %}
+            <td>{{ seriesView[0].episode_count_view }}/{{ seriesCount[0].episode_count }}</td>
+            <td><progress id="percentageViews" max="100" value="{{ percentage }}"></progress></td>
+        </div>
         <div id="seriesDate">Date : {{ series.yearStart|date('d/m/Y') }} - {{ series.yearEnd|date('d/m/Y') }}</div>
         <div id="seriesCountry">Country : 
         {% for country in series.country %}

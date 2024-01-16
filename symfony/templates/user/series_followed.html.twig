@@ -27,9 +27,7 @@
                     <tr class="series">
                         <td><img src="{{ path('app_series_poster',{id: s.id}) }}" style="width: 8%;"></td>
                         <td><p style="display: inline;">{{ s.title }}</p></td>
-
                         {% set percentage = (seriesView[i].episode_count_view / s.episode_count) * 100 %}
-
                         <td>{{ seriesView[i].episode_count_view }}/{{ s.episode_count }}</td>
                         <td><progress id="percentageViews" max="100" value="{{ percentage }}"></progress></td>
                         <td><a href="{{ path('app_index_series_info',{id: s.id}) }}"><p>Go to page</p></a></td>

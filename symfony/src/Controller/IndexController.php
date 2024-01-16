@@ -209,6 +209,11 @@ class IndexController extends AbstractController
             $request->query->getInt('pageS', 1),
             SERIES_PER_PAGE
         );
+
+        $seriesView = $repository->seriesEpisodeCountView($user);
+        $user = $this->getUser()->getId();
+        $seriesCount = $repository->seriesEpisodesCount($user);
+
         $paginationSeason->setParam('pageS',1);
         return $this->render(
             'index/seriesInfo.html.twig', [
@@ -220,6 +225,8 @@ class IndexController extends AbstractController
             'comments' => $comments,
             'serieScore' => $val,
             'nombreNotes' => $nombreNotes,
+            'seriesCount' => $seriesCount,
+            'seriesView' => $seriesView
         ]);
     }
 
