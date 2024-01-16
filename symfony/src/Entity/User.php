@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\Validator\ContainsAlphanumeric;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -114,6 +115,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'fields' => 'name',
             'message' => 'This name already exists.',
         ]));
+        $metadata->addPropertyConstraint('name', new ContainsAlphanumeric(['mode' => 'loose']));
 
         $metadata->addPropertyConstraint('email', new Assert\Email(['message' => 'The email address is invalid']));
     }//end loadValidatorMetadata()

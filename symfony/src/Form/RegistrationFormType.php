@@ -33,7 +33,7 @@ class RegistrationFormType extends AbstractType
                         ->orderBy('c.name', 'ASC');
                 },
                 ])
-            ->add('name', TextType::class, ['attr' => ['placeholder' => 'username'],'constraints' => [
+            ->add('name', TextType::class, ['label' => 'Name (letters, numbers, hyphens and underscores allowed)','attr' => ['placeholder' => 'username'],'constraints' => [
                 new NotBlank(['message' => 'Please enter a username',]),],])
             ->add('email', EmailType::class, ['attr' => ['placeholder' => 'example@mail.com'],'constraints' => [
                 new NotBlank(['message' => 'Please enter a valid email',]),
