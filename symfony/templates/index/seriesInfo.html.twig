@@ -47,8 +47,8 @@
                 {% endfor %}
 
                 {% if found == false %}
-                    {% set percentage = (0 / episodes) * 100 %}
-                    <td>{{ 0 }}/{{ episodes }}</td>
+                    {% set percentage = 0 %}
+                    <td>{{ percentage }}/{{ episodes }}</td>
                     <td><progress id="percentageViews" max="100" value="{{ percentage }}"></progress></td>
                 {% endif %}
             {% endif %}
@@ -64,9 +64,9 @@
         {{ episodes }}
         </div>
         <div id="seriesActors">
-        <ul>Actors :  
+            <ul><span>Actors :</span>
         {% for actor in series.actor %}
-            <li> {{ actor.name }}</li>
+            <li>{{ actor.name }} </li>
         {% endfor %}
         </ul>
         {% if serieScore == 0 and nombreNotes == 0 %}
