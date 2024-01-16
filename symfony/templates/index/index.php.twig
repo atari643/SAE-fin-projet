@@ -32,8 +32,19 @@
   {{ block('paging') }}
   <script>
     let mediaqueries = {width: window.innerWidth, height: window.innerHeight};
+    let oldsize = mediaqueries.width;
     window.addEventListener('resize', function () {
       mediaqueries = {width: window.innerWidth, height: window.innerHeight};
+      const allsize = [1700,1240,1100,800,650];
+      for(let i = 0; i < allsize.length; i++){
+        if(mediaqueries.width <= allsize[i] && oldsize > allsize[i]){
+          window.location.reload();
+        }
+        if(mediaqueries.width > allsize[i] && oldsize <= allsize[i]){
+          window.location.reload();
+        }
+      }
+      oldsize = mediaqueries.width;
     });
     let first_time = '{{ hasVisited }}';
     if (document.location.href.includes('?page=1') && first_time === '') {
@@ -226,13 +237,16 @@
         const bannerInfoFirstPage = document.createElement('div');
         bannerInfoFirstPage.classList.add('bannerInfoFirstPage');
         document.body.insertBefore(bannerInfoFirstPage, document.getElementById('show'));
+        const headerbannerInfoFirstPage = document.createElement('div');
+        headerbannerInfoFirstPage.classList.add('headerbannerInfoFirstPage');
+        bannerInfoFirstPage.appendChild(headerbannerInfoFirstPage);
         const imgbannerInfoFirstPage = document.createElement('img');
         imgbannerInfoFirstPage.src = '/cinéma.png';
         imgbannerInfoFirstPage.classList.add('imgbannerInfoFirstPage');
-        bannerInfoFirstPage.appendChild(imgbannerInfoFirstPage);
+        headerbannerInfoFirstPage.appendChild(imgbannerInfoFirstPage);
         const textbannerInfoFirstPageParent = document.createElement('div');
         textbannerInfoFirstPageParent.classList.add('textbannerInfoFirstPageParent');
-        bannerInfoFirstPage.appendChild(textbannerInfoFirstPageParent);
+        headerbannerInfoFirstPage.appendChild(textbannerInfoFirstPageParent);
         const titrebannerInfoFirstPage = document.createElement('p');
         titrebannerInfoFirstPage.classList.add('titrebannerInfoFirstPage');
         titrebannerInfoFirstPage.innerHTML = 'XploreCinéma';
@@ -254,7 +268,6 @@
                 '<span class="down-arrow-3"></span>'+
                 '</div>'+
                 '</div>';
-        document.getElementById('mouse-scroll').style.top = bannerInfoFirstPage.getBoundingClientRect().bottom - document.getElementById('mouse-scroll').offsetHeight - 20 + 'px';
         window.addEventListener('scroll', function () {
           if(scrollY>0 && scrollY < bannerInfoFirstPage.getBoundingClientRect().top + bannerInfoFirstPage.offsetHeight){
             document.getElementById('menu').style.position = 'fixed';
@@ -283,17 +296,20 @@
         page[i].addEventListener('click', makeScript())
       }
     }
-      if(document.location.href.includes('?page=1')){
+      if(document.location.href.includes('?page=1') && mediaqueries.width>1100){
         const bannerInfoFirstPage = document.createElement('div');
         bannerInfoFirstPage.classList.add('bannerInfoFirstPage');
         document.body.insertBefore(bannerInfoFirstPage, document.getElementById('show'));
+        const headerbannerInfoFirstPage = document.createElement('div');
+        headerbannerInfoFirstPage.classList.add('headerbannerInfoFirstPage');
+        bannerInfoFirstPage.appendChild(headerbannerInfoFirstPage);
         const imgbannerInfoFirstPage = document.createElement('img');
         imgbannerInfoFirstPage.src = '/cinéma.png';
         imgbannerInfoFirstPage.classList.add('imgbannerInfoFirstPage');
-        bannerInfoFirstPage.appendChild(imgbannerInfoFirstPage);
+        headerbannerInfoFirstPage.appendChild(imgbannerInfoFirstPage);
         const textbannerInfoFirstPageParent = document.createElement('div');
         textbannerInfoFirstPageParent.classList.add('textbannerInfoFirstPageParent');
-        bannerInfoFirstPage.appendChild(textbannerInfoFirstPageParent);
+        headerbannerInfoFirstPage.appendChild(textbannerInfoFirstPageParent);
         const titrebannerInfoFirstPage = document.createElement('p');
         titrebannerInfoFirstPage.classList.add('titrebannerInfoFirstPage');
         titrebannerInfoFirstPage.innerHTML = 'XploreCinéma';
@@ -315,7 +331,6 @@
                 '<span class="down-arrow-3"></span>'+
                 '</div>'+
                 '</div>';
-        document.getElementById('mouse-scroll').style.top = bannerInfoFirstPage.getBoundingClientRect().bottom - document.getElementById('mouse-scroll').offsetHeight - 20 + 'px';
         window.addEventListener('scroll', function () {
           if(scrollY>0 && scrollY < bannerInfoFirstPage.getBoundingClientRect().top + bannerInfoFirstPage.offsetHeight){
             document.getElementById('menu').style.position = 'fixed';
@@ -505,7 +520,7 @@
           ) + 'px) scale(1.08)';
         }
       }
-    if(mediaqueries.width <= 850){
+    if(mediaqueries.width <= 650){
       const show = document.getElementById('show');
       const slideLeft = document.createElement('div');
       const slideRight = document.createElement('div');

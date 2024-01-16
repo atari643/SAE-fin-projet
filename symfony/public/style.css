@@ -254,12 +254,21 @@ body {
 
 .bannerInfoFirstPage {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 75vw;
     background-color: #1a242f;
-    padding: 100px 12.5vw 120px 12.5vw;
+    padding: 100px 12.5vw 50px 12.5vw;
     align-items: center;
     justify-content: center;
+}
+
+.headerbannerInfoFirstPage{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+
 }
 
 .textbannerInfoFirstPageParent {
