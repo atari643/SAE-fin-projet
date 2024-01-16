@@ -206,9 +206,32 @@ nav ul li a:hover{
     border-radius: 5px;
 }
 
+<<<<<<< HEAD
 #episodeList li h2 {
     font-size: 1.2em;
     margin: 0;
+=======
+nav ul li a:hover {
+    background-color: #f4f4f4;
+    color: blue;
+}
+#contentEpisode{
+    background-color: #e3f7f5;
+    width: 100%;
+}
+#contentEpisode li{
+    background-color: antiquewhite;
+    border-color: #000000 2px solid;
+    margin-bottom: 10px;
+    list-style: none;
+    width: 95%;
+}
+#episodeList li{
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
+    color: #000000;
+>>>>>>> origin/US7.1
 }
 
 #episodeList li p {
