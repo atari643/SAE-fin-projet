@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="/style.css" />
     <link rel="stylesheet" href="/profile.css" />
     <link rel="stylesheet" href="/css/users.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
 
 {{ user }}
 <img src="https://ui-avatars.com/api/?name={{ user }}&background=random&rounded=true" style="display: inline;">
@@ -43,61 +45,45 @@
 </table>
 <h2>This user's (most recent ?) reviews</h2> {# most recent ? = bien order MAIS 
 choix à faire : paginer les reviews (comment) ? ou afficher les ~5 plus récentes #}
-<table style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
-    <thead>
-        <tr>
-            <td>Note</td>
-            <td>Commentaire</td>
-            <td>Série</td>
-            <td>
-                <div id="imageTheadOfRatings">Poster</div>
-            </td>
-            <td>Date</td>
-        </tr>
-    </thead> 
-    <tbody>
-        {% for comment in comments|reverse %}
-            <tr>
-                {# <td><a href="{{path('series_reviews_by_user',{username: comment.user.name})}}"><img src="https://ui-avatars.com/api/?name={{ comment.user.name }}&background=random&rounded=true" style="display: inline;"></a>{{comment.user.name}}</td> #}
-                <td>
-                    <div id="ratingOfRatings">{{ comment.value }}</div>
-                </td>
-                <td>
-                    {{ comment.comment }}</td>
-                <td>
-                    {{ comment.series.title }}</td>
-                <td>
-                    <a href="{{ path('app_index_series_info',{id: comment.series.id}) }}">
-                    <img id="imagePoster" src="{{ path('app_series_poster',{id: comment.series.id}) }}" alt='Series Poster' style="max-width: 20%;"></a>
-                </td>
-                <td>
-                    {% set diff = date().diff(comment.date) %}
-                    {% if diff.y > 0 %}
-                        Publié il y a
-                        {{ diff.y }}
-                        an(s)
-                    {% elseif diff.m > 0 %}
-                        Publié il y a
-                        {{ diff.m }}
-                        mois
-                    {% elseif diff.d > 0 %}
-                        Publié il y a
-                        {{ diff.d }}
-                        jour(s)
-                    {% elseif diff.h > 0 %}
-                        Publié il y a
-                        {{ diff.h }}
-                        heure(s)
-                    {% else %}
-                        Publié il y a
-                        {{ diff.i }}
-                        minute(s)
-                    {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
 
-
+<table style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;" id = "tabRating">
+        <tbody>
+            {% for comment in comments|reverse %}
+                <tr>
+                    <td>
+                        <div>
+                            <div><a href="{{path('user_profile_search',{username: comment.user.name})}}"><img src="https://ui-avatars.com/api/?name={{ comment.user.name }}&background=random&rounded=true" style="display: inline;"></a></div>
+                            <div>{{comment.series.title}}</div>
+                        </div>
+                        <div>
+                            {% for i in 0..4 %}
+                                {% if i < comment.value %}
+                                    <span class="material-symbols-outlined" id = "filledStar">star</span>
+                                {% else %}
+                                    <span class="material-symbols-outlined">star</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </td>
+                    <td> 
+                        {{ comment.comment|nl2br }}
+                    </td>
+                    <td>
+                        {% set diff = date().diff(comment.date) %}
+                        {% if diff.y > 0 %}
+                            {{ diff.y }} year(s) ago
+                        {% elseif diff.m > 0 %}
+                            {{ diff.m }} month(s) ago
+                        {% elseif diff.d > 0 %}
+                            {{ diff.d }} day(s) ago
+                        {% elseif diff.h > 0 %}
+                            {{ diff.h }} hour(s) ago
+                        {% else %}
+                            {{ diff.i }} minute(s) ago
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
