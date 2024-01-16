@@ -160,13 +160,13 @@ class UserController extends AbstractController
         $pagination = $paginator->paginate(
             $user->getSeries(),
             $request->query->getInt('page', 1),
-            5 // 100 series poster per user
+            10 // 100 series poster per user
         );
         $infoRating = $this->getUserRatingsById($entityManager, $user->getId());
         $pagination2 = $paginator->paginate(
             $infoRating,
             $request->query->getInt('page', 1),
-            5 // 5 by page
+            10 // 5 by page
         );
         return $this->render('user/profile.html.twig',[
             'user' => $name,
@@ -191,18 +191,19 @@ class UserController extends AbstractController
         $userOfUsername=$entityManager->getRepository(User::class)->findOneBy(array('name' => $username));
         $pagination = $paginator->paginate(
             $userOfUsername->getSeries(),
-            $request->query->getInt('page', 1),
-            40 // 40 series poster per user
+            $request->query->getInt('category') === 'series_followed' ? $request->query->getInt('page', 1) : 1,
+            10 // 40 series poster per user
         );
-
+        $pagination->setParam('category', 'series_followed');
         //paginating critics
         $id=$userOfUsername->getId();
         $infoRating = $this->getUserRatingsById($entityManager, $id);
         $pagination2 = $paginator->paginate(
             $infoRating,
-            $request->query->getInt('page', 1),
-            5 // 5 by page
+            $request->query->get('category') === 'series_critics' ? $request->query->getInt('page', 1) : 1,
+            10 // 5 by page
         );
+        $pagination2->setParam('category', 'series_critics');
 
         return $this->render('user/profile.html.twig', [
             'user' => $username,
