@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(
@@ -15,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
     ]
 )]
 #[ORM\Entity]
+
 class Rating
 {
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
