@@ -153,9 +153,9 @@
         <form action="{{ path('app_index_series_info', {id: series.id}) }}" method="post">
             <label for="rating">Rate the series:</label>
             <select id="rating" name="rating">
-                <option value="" {% if userRating is null %}selected{% endif %}>Select a rating</option>
+                <option {% if userRating is null %}selected{% endif %}>Select a rating</option>
                 {% for i in 0..5 %}
-                    <option value="{{ i }}" {% if i == userRating %}selected{% endif %}>{{ i }}</option>
+                    <option value="{{ i }}" {% if i == userRating and userRating is not null %}selected{% endif %}>{{ i }}</option>
                 {% endfor %}
             </select>
             <label for="comment">Leave a review:</label>
