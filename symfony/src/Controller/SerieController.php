@@ -45,11 +45,20 @@ class SerieController extends MotherController
         return $this->redirectToRoute('app_default', $args);
     }
 
+    #[Route('/series/{id}/sort/{stars}', name: 'series_review_filter')]
+    public function reviewFilter(Request $request, int $id, int $stars): Response
+    {
+        $args = ['id' => $id, 'filter' => $stars];
+
+        return $this->redirectToRoute('app_index_series_info', $args);
+    }
+
     #[Route('/series/{id}', name: 'app_index_series_info')]
     public function seriesInfo(SeriesRepository $seriesRepository,RatingRepository $ratingRepository, EntityManagerInterface $entityManager, int $id, Request $request, PaginatorInterface $paginator): Response
     {
+        $filter = $request->query->get('filter'); 
+        $infoRating = $this->getRatings($entityManager, $id);
         
-
         // region Follow/Unfollow Series
         $user = $this->getUser();
         $infoRating = $ratingRepository->getRatingUserConnectAndAllRatingComments($this->getUser(), $id);
@@ -100,7 +109,18 @@ class SerieController extends MotherController
             // end if
         }// end if
 
-        $val = 0;
+        // Different score (5 stars, 4...)
+        $scoreSerie = array(
+            0 => 0,
+            1 => 0,
+            2 => 0,
+            3 => 0,
+            4 => 0,
+            5 => 0,
+            "moy" => 0,
+        );
+
+        $moy = 0;
         $nombreNotes = 0;
         $userRating="";
         if (!empty($infoRating)) {
@@ -111,7 +131,24 @@ class SerieController extends MotherController
                 $val = $val + $comment->getValue();
                 ++$nombreNotes;
             }
-            $val = substr($val / $nombreNotes, 0, 3);
+            $scoreSerie['moy'] = substr($moy / $nombreNotes, 0, 3);;
+        }
+
+        if ($filter != null){
+
+            $commentsChoisis = array_filter($comments, function($comment) use ($filter) {
+                return $comment->getValue() == $filter;
+            });
+            
+            $autresComments = array_filter($comments, function($comment) use ($filter) {
+                return $comment->getValue() != $filter;
+            });
+            
+            $comments = array_merge($commentsChoisis, $autresComments);
+        } else{
+            usort($comments, function($a, $b) {
+                return $b->getDate() <=> $a->getDate();
+            });
         }
 
         $series = $seriesRepository->seriesInfoById($id);
@@ -145,7 +182,7 @@ class SerieController extends MotherController
             'userRating' => $userRating ? $userRating->getValue() : null,
             'userComment' => $userRating ? $userRating->getComment() : null,
             'paginationComments' => $paginationComments,
-            'serieScore' => $val,
+            'serieScore' => $scoreSerie,
             'nombreNotes' => $nombreNotes,
             'seriesView' => $seriesView,
         ]);

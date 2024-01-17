@@ -74,7 +74,7 @@
             <div id="seriesScore">Score :</span> Aucune critique n'a été entrée pour cette série</div>
         {% else %} 
             {%for i in 0..4%}
-                {% if i < serieScore %}
+                {% if i < serieScore["moy"] %}
                     <span class="material-symbols-outlined"> &#9733 </span>
                 {% else %}
                     <span class="material-symbols-outlined"> &#9734 </span>
@@ -177,39 +177,66 @@
     
     </div>
 
-    <div id="rating">
+    <div id = "ratingAndHisto">
+        <div id="ratingDiv">
         {% if app.user !=null %}
-        <form action="{{ path('app_index_series_info', {id: series.id}) }}" method="post">
+            <form action="{{ path('app_index_series_info', {id: series.id}) }}" method="post">
         {% else %}
-        <form action="{{ path('app_login') }}" method="post">
+            <form action="{{ path('app_login') }}" method="post">
         {% endif %}
-            <label for="rating">Rate the series:</label>
-            <select id="rating" name="rating">
-                <option {% if userRating is null %}selected{% endif %}>Select a rating</option>
-                {% for i in 0..5 %}
-                    <option value="{{ i }}" {% if i == userRating and userRating is not null %}selected{% endif %}>
-                    {% for j in 0..4 %}
-                        {% if j < i %}
-                            <span class="material-symbols-outlined"> &#9733 </span>
-                        {% else %}
-                            <span class="material-symbols-outlined"> &#9734 </span>
-                        {% endif %}
+
+                <label for="rating">Rate the series:</label>
+                <select id="rating" name="rating">
+                    <option {% if userRating is null %}selected{% endif %}>Select a rating</option>
+                    {% for i in 0..5 %}
+                        <option value="{{ i }}" {% if i == userRating and userRating is not null %}selected{% endif %>
+                        {% for j in 0..4 %}
+                            {% if j < i %}
+                                <span class="material-symbols-outlined"> &#9733 </span>
+                            {% else %}
+                                <span class="material-symbols-outlined"> &#9734 </span>
+                            {% endif %}
+                        {% endfor %}
+                        </option>
                     {% endfor %}
-                     </option>
-                {% endfor %}
-            </select>
-            <label for="comment">Leave a review:</label>
-            <textarea id="comment" name="comment">{{ userComment }}</textarea>
-            <input type="submit" name="action" value="{{ userRating != null ? 'Edit' : 'Send' }}">
-            {% if userRating != null %}
-                <input type="submit" name="action" value="Delete">
-            {% endif %}
-        </form>
-    </div>  
+                </select>
+                <label for="comment">Leave a review:</label>
+                <textarea id="comment" name="comment">{{ userComment }}</textarea>
+                <input type="submit" name="action" value="{{ userRating != null ? 'Edit' : 'Send' }}">
+                {% if userRating != null %}
+                    <input type="submit" name="action" value="Delete">
+                {% endif %}
+            </form>
+        </div>
+        <div id="rating-histogram">
+            <div>
+                <div>Rating histogram</div>
+                <div><a href = "{{ path('app_index_series_info', {id: series.id}) }}">by date</a></div>
+            </div>
+            {% for i in range(5,0,-1) %}
+            <div class="bar-container">
+                <div>
+                    <div>
+                        {% for j in 0..4 %}
+                            {% if j < i%}
+                                <div class="material-symbols-outlined" id = "filledStar">star</div>
+                            {% else %}
+                                <div class="material-symbols-outlined" id = "emptyStar">star</div>
+                            {% endif %}
+                            
+                        {% endfor %}
+                    </div> 
+                    <div><a href = "{{ path('series_review_filter', {id: series.id,stars: i}) }}">{{serieScore[i]}} rating(s)</a></div>
+                </div>
+                <div><progress value="{{serieScore[i]}}" max="{{nombreNotes}}" class = "progress-Bar"></progress></div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 
     <table style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
         <tbody>
-            {% for comment in paginationComments|reverse %}
+            {% for comment in paginationComments %}
                 <tr>
                     <td>
                         <div>
@@ -221,7 +248,7 @@
                                 {% if i < comment.value %}
                                     <span class="material-symbols-outlined" id = "filledStar">star</span>
                                 {% else %}
-                                    <span class="material-symbols-outlined">star</span>
+                                    <span class="material-symbols-outlined" id = "emptyStar">star</span>
                                 {% endif %}
                             {% endfor %}
                         </div>
