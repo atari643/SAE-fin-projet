@@ -6,7 +6,6 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\AppAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -30,9 +29,10 @@ class RegistrationController extends MotherController
                     $form->get('plainPassword')->getData()
                 )
             );
-            //$user->setName($form->get('email')->getData()); replaced by 'name' in form
+            // $user->setName($form->get('email')->getData()); replaced by 'name' in form
             $entityManager->persist($user);
             $entityManager->flush();
+
             // do anything else you need here, like send an email
             return $userAuthenticator->authenticateUser(
                 $user,
