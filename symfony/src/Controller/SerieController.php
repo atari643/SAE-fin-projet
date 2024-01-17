@@ -122,15 +122,13 @@ class SerieController extends MotherController
 
         $moy = 0;
         $nombreNotes = 0;
-        $userRating="";
-        if (!empty($infoRating)) {
-            foreach ($infoRating as $comment) {
-                if($comment->getUser()==$this->getUser()){
-                    $userRating=$comment;
-                }
-                $val = $val + $comment->getValue();
-                ++$nombreNotes;
-            }
+        $comments = $infoRating['comments'];
+        if (!empty($comments)) {
+            foreach ($comments as $comment) {
+                $val = $comment->getValue();
+                $scoreSerie[$val] = $scoreSerie[$val] + 1;
+                $moy = $moy + $val;
+
             $scoreSerie['moy'] = substr($moy / $nombreNotes, 0, 3);;
         }
 
