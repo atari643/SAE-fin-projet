@@ -21,11 +21,6 @@
      app.request.attributes.get('_route_params')) }}>
         {% block header %}
         {% endblock %}
-		{% if is_granted('IS_IMPERSONATOR') %}
-				<div style="display: flex;align-items: center; position:absolute; top:5px; left:5px;"><a href="{{ impersonation_exit_path(path('app_login') ) }}"><span class="material-symbols-outlined" style="font-size:30px;">
-					preview
-				</span></a></div>
-			{% endif %}
 		<div id="menu">
 			<div id="parentItemMenuLeft">
 				{# {% if app.user!=null and app.user.admin %}
@@ -67,6 +62,12 @@
 						<img src="https://ui-avatars.com/api/?name={{ app.user.name }}&size=32&background=random&rounded=true">
 					{% endif %}
 				</div>
+			{% if is_granted('IS_IMPERSONATOR') %}
+				<div class="itemMenu" onclick="window.location.href = '/users?_switch_user=_exit'">{# <a id="brighterLink" style="color:orange;" href="{{ impersonation_exit_path(path('app_login') ) }}"> #}
+				<span class="material-symbols-outlined">
+					preview
+				</span>{# </a> #}</div>
+			{% endif %}
 			</div>
 		</div>
 		{% block body %}{% endblock %}
