@@ -201,7 +201,7 @@ class UserController extends MotherController
         $pagination = $paginator->paginate(
             $userOfUsername->getSeries(),
             $request->query->getInt('category') === 'series_followed' ? $request->query->getInt('page', 1) : 1,
-            10 // 40 series poster per user
+            10 
         );
         $pagination->setParam('category', 'series_followed');
         //paginating critics
@@ -210,7 +210,7 @@ class UserController extends MotherController
         $pagination2 = $paginator->paginate(
             $infoRating,
             $request->query->get('category') === 'series_critics' ? $request->query->getInt('page', 1) : 1,
-            10 // 5 by page
+            10 
         );
         $pagination2->setParam('category', 'series_critics');
 
