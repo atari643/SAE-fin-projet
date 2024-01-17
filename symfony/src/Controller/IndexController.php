@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Genre;
-use App\Entity\Rating;
 use App\Entity\Series;
 use App\Repository\SeriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,9 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-const SERIES_PER_PAGE = 10;
-
-class IndexController extends AbstractController
+class IndexController extends MotherController
 {
     #[Route('/', name: 'app_default', methods: ['GET', 'POST'])]
     public function index(SeriesRepository $repository, Request $request, PaginatorInterface $paginator, EntityManagerInterface $entityManager): Response
@@ -34,7 +31,7 @@ class IndexController extends AbstractController
 
         $series_infos = $repository->seriesInfo($_SESSION['seed']);
         if (null != $searchQuery) {
-            $series_infos = $series_infos->where('s.title LIKE :query OR s.plot LIKE :query')->setParameter('query', '%' . $searchQuery . '%')->orderBy('CASE WHEN s.title LIKE :query THEN 1 ELSE 2 END')->setParameter('query', '%' . $searchQuery . '%');
+            $series_infos = $series_infos->where('s.title LIKE :query OR s.plot LIKE :query')->setParameter('query', '%'.$searchQuery.'%')->orderBy('CASE WHEN s.title LIKE :query THEN 1 ELSE 2 END')->setParameter('query', '%'.$searchQuery.'%');
         }
 
         if (null != $searchGenre) {
@@ -82,7 +79,7 @@ class IndexController extends AbstractController
         $pagination = $paginator->paginate(
             $series_infos,
             $request->query->getInt('page', 1),
-            SERIES_PER_PAGE
+            ITEMS_PER_PAGE
         );
 
         if (!isset($_SESSION['hasVisited'])) {

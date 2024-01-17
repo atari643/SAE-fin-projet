@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class SerieController extends AbstractController
+class SerieController extends MotherController
 {
     private function getRatings(EntityManagerInterface $entityManager, int $id)
     {
@@ -133,14 +133,14 @@ class SerieController extends AbstractController
         $paginationSeason = $paginator->paginate(
             $seasons,
             'seasons' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
-            SERIES_PER_PAGE
+            ITEMS_PER_PAGE
         );
         $paginationSeason->setParam('pageList', 'seasons');
 
         $paginationComments = $paginator->paginate(
             $comments,
             'comments' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
-            SERIES_PER_PAGE
+            ITEMS_PER_PAGE
         );
         $paginationComments->setParam('pageList', 'comments');
 
