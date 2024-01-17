@@ -18,16 +18,16 @@ th, td {padding-bottom: 40px;}
     color:goldenrod;
 }
 
-#headerOfRatings {
+.headerOfRatings {
     display: flex;
     align-items: center;
     height: 100%;
 }
-#headerOfRatings img{
+.headerOfRatings img{
     margin-left: 15px;
 }
 
-#headerTextOfRatings{
+.headerTextOfRatings{
     display: flex;
     align-items: center;
 }
