@@ -288,6 +288,15 @@ table {
     background-color: #1a242f;
 }
 
+td div:first-child {
+    display: flex;
+    align-items: center;
+}
+
+td div:first-child div{
+    padding: 5px;
+}
+
 th, td {
     padding: 8px;
     text-align: left;    
@@ -295,6 +304,12 @@ th, td {
 
 tr:nth-child(2n) {
     background-color: #221F1F;   
+}
+
+tr {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 tr:hover {
