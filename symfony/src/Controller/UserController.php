@@ -7,7 +7,6 @@ use App\Form\UserType;
 use App\Entity\Rating;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -61,7 +60,7 @@ class UserController extends MotherController
         } else {
             return $this->redirect($this->generateUrl('app_login')); // si accessible alors : $userAdminOrNot=false;
         }
-        $users       = $entityManager->getRepository(User::class);
+        $users = $entityManager->getRepository(User::class)->findAll();
 
         $count = $usersRepository->createQueryBuilder('users')->select('count(users.id)')->getQuery()->getSingleScalarResult();
 

@@ -179,12 +179,17 @@
 
     <div id = "ratingAndHisto">
         <div id="ratingDiv">
+        {% if app.user !=null %}
             <form action="{{ path('app_index_series_info', {id: series.id}) }}" method="post">
+        {% else %}
+            <form action="{{ path('app_login') }}" method="post">
+        {% endif %}
+
                 <label for="rating">Rate the series:</label>
                 <select id="rating" name="rating">
                     <option {% if userRating is null %}selected{% endif %}>Select a rating</option>
                     {% for i in 0..5 %}
-                        <option value="{{ i }}" {% if i == userRating and userRating is not null %}selected{% endif %}>
+                        <option value="{{ i }}" {% if i == userRating and userRating is not null %}selected{% endif %>
                         {% for j in 0..4 %}
                             {% if j < i %}
                                 <span class="material-symbols-outlined"> &#9733 </span>
