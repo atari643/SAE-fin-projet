@@ -1,4 +1,6 @@
-<?php // src/Validator/ContainsAlphanumericValidator.php
+<?php
+
+// src/Validator/ContainsAlphanumericValidator.php
 namespace App\Validator;
 
 use Symfony\Component\Validator\Constraint;

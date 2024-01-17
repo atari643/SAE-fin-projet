@@ -39,7 +39,7 @@ class RegistrationFormType extends AbstractType
                 new NotBlank(['message' => 'Please enter a valid email',]),
                 //new Assert\Email(['message' => 'address must be valid',]),
                 //new Length(['min' => 5,'minMessage' => 'Please enter a valid email',]),
-                
+
             ],])
             ->add('plainPassword', PasswordType::class, [
                                 // instead of being set onto the object directly,
@@ -65,7 +65,6 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('captcha', CaptchaType::class, ['invalid_message' => 'Captcha code does not match.'],)
         ;
-
     }
 
     public function configureOptions(OptionsResolver $resolver): void
