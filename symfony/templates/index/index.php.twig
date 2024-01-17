@@ -17,9 +17,6 @@
 
 {% block body %}
 
-  {% if is_granted('IS_IMPERSONATOR') %}
-    <a href="{{ impersonation_exit_path(path('app_login') ) }}">Exit impersonation</a>
-  {% endif %}
   <div id="show">
     {% for s in pagination %}
       {% set youtubeTrailer = s.youtubeTrailer|replace({'watch?v=': 'embed/'}) %}
