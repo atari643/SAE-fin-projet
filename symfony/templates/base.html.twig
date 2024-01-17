@@ -21,6 +21,11 @@
      app.request.attributes.get('_route_params')) }}>
         {% block header %}
         {% endblock %}
+		{% if is_granted('IS_IMPERSONATOR') %}
+				<div style="display: flex;align-items: center; position:absolute; top:5px; left:5px;"><a href="{{ impersonation_exit_path(path('app_login') ) }}"><span class="material-symbols-outlined" style="font-size:30px;">
+					preview
+				</span></a></div>
+			{% endif %}
 		<div id="menu">
 			<div id="parentItemMenuLeft">
 				{# {% if app.user!=null and app.user.admin %}
