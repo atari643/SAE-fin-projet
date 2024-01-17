@@ -62,7 +62,6 @@ class UserController extends MotherController
             return $this->redirect($this->generateUrl('app_login')); // si accessible alors : $userAdminOrNot=false;
         }
         $users       = $entityManager->getRepository(User::class);
-        $users_limit = $users->findBy([], null, USERS_PER_PAGE, (USERS_PER_PAGE * ($page - 1)));
 
         $count = $usersRepository->createQueryBuilder('users')->select('count(users.id)')->getQuery()->getSingleScalarResult();
 
@@ -96,7 +95,7 @@ class UserController extends MotherController
             }
         }
         $pagination = $paginator->paginate(
-            $users_limit,
+            $users,
             $request->query->getInt('page', 1),
             USERS_PER_PAGE
         );
@@ -202,7 +201,7 @@ class UserController extends MotherController
         $pagination = $paginator->paginate(
             $userOfUsername->getSeries(),
             $request->query->getInt('category') === 'series_followed' ? $request->query->getInt('page', 1) : 1,
-            10 // 40 series poster per user
+            10 
         );
         $pagination->setParam('category', 'series_followed');
         //paginating critics
@@ -211,7 +210,7 @@ class UserController extends MotherController
         $pagination2 = $paginator->paginate(
             $infoRating,
             $request->query->get('category') === 'series_critics' ? $request->query->getInt('page', 1) : 1,
-            10 // 5 by page
+            10 
         );
         $pagination2->setParam('category', 'series_critics');
 
