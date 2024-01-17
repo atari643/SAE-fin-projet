@@ -44,14 +44,14 @@ class SeasonController extends AbstractController
         $pagination = $paginator->paginate(
             $episodes,
             'episodes' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
-            SERIES_PER_PAGE
+            10
         );
         $pagination->setParam('pageList', 'episodes');
 
         $paginationSeason = $paginator->paginate(
             $seasons,
             'seasons' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
-            SERIES_PER_PAGE
+            10
         );
         $paginationSeason->setParam('pageList', 'seasons');
         $val = 0;
@@ -67,7 +67,7 @@ class SeasonController extends AbstractController
         $paginationComments = $paginator->paginate(
             $comments,
             'comments' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
-            SERIES_PER_PAGE
+            10
         );
 
         $user = $this->getUser()->getId();

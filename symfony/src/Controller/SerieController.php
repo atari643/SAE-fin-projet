@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
+
 class SerieController extends AbstractController
 {
     private function getRatings(EntityManagerInterface $entityManager, int $id)
@@ -35,6 +37,7 @@ class SerieController extends AbstractController
             'comments' => $comments,
         ];
     }
+
     #[Route('/series/search', name: 'series_search', methods: ['GET'])]
     public function search(Request $request): Response
     {
@@ -65,12 +68,20 @@ class SerieController extends AbstractController
         return $this->redirectToRoute('app_default', $args);
     }
 
-    
+    #[Route('/series/{id}/sort/{stars}', name: 'series_review_filter')]
+    public function reviewFilter(Request $request, int $id, int $stars): Response
+    {
+        $args = ['id' => $id, 'filter' => $stars];
+
+        return $this->redirectToRoute('app_index_series_info', $args);
+    }
+
     #[Route('/series/{id}', name: 'app_index_series_info')]
     public function seriesInfo(SeriesRepository $repository, EntityManagerInterface $entityManager, int $id, Request $request, PaginatorInterface $paginator): Response
     {
+        $filter = $request->query->get('filter'); 
         $infoRating = $this->getRatings($entityManager, $id);
-
+        
         // region Follow/Unfollow Series
         $user = $this->getUser();
         if (null != $request->request->get('add')) {
@@ -117,15 +128,45 @@ class SerieController extends AbstractController
             // end if
         }// end if
 
-        $val = 0;
+        // Different score (5 stars, 4...)
+        $scoreSerie = array(
+            0 => 0,
+            1 => 0,
+            2 => 0,
+            3 => 0,
+            4 => 0,
+            5 => 0,
+            "moy" => 0,
+        );
+
+        $moy = 0;
         $nombreNotes = 0;
         $comments = $infoRating['comments'];
         if (!empty($comments)) {
             foreach ($comments as $comment) {
-                $val = $val + $comment->getValue();
+                $val = $comment->getValue();
+                $scoreSerie[$val] = $scoreSerie[$val] + 1;
+                $moy = $moy + $val;
                 ++$nombreNotes;
             }
-            $val = substr($val / $nombreNotes, 0, 3);
+            $scoreSerie['moy'] = substr($moy / $nombreNotes, 0, 3);;
+        }
+
+        if ($filter != null){
+
+            $commentsChoisis = array_filter($comments, function($comment) use ($filter) {
+                return $comment->getValue() == $filter;
+            });
+            
+            $autresComments = array_filter($comments, function($comment) use ($filter) {
+                return $comment->getValue() != $filter;
+            });
+            
+            $comments = array_merge($commentsChoisis, $autresComments);
+        } else{
+            usort($comments, function($a, $b) {
+                return $b->getDate() <=> $a->getDate();
+            });
         }
 
         $series = $repository->seriesInfoById($id);
@@ -133,14 +174,14 @@ class SerieController extends AbstractController
         $paginationSeason = $paginator->paginate(
             $seasons,
             'seasons' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
-            SERIES_PER_PAGE
+            10
         );
         $paginationSeason->setParam('pageList', 'seasons');
 
         $paginationComments = $paginator->paginate(
             $comments,
             'comments' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
-            SERIES_PER_PAGE
+            10
         );
         $paginationComments->setParam('pageList', 'comments');
 
@@ -159,7 +200,7 @@ class SerieController extends AbstractController
             'userRating' => $infoRating['userRating'] ? $infoRating['userValue'] : null,
             'userComment' => $infoRating['userRating'] ? $infoRating['userComment'] : null,
             'paginationComments' => $paginationComments,
-            'serieScore' => $val,
+            'serieScore' => $scoreSerie,
             'nombreNotes' => $nombreNotes,
             'seriesView' => $seriesView,
         ]);

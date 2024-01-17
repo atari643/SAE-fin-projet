@@ -176,11 +176,17 @@ class UserController extends AbstractController
             $request->query->getInt('page', 1),
             10 // 5 by page
         );
+
+        $comments = $infoRating['comments'];
+        usort($comments, function($a, $b) {
+            return $b->getDate() <=> $a->getDate();
+        });
+        
         return $this->render('user/profile.html.twig', [
             'user' => $name,
             'pagination' => $pagination,
             'pagination2' => $pagination2,
-            'comments' => $infoRating['comments'],
+            'comments' => $comments,
             ]);
     }//end userProfile()
 

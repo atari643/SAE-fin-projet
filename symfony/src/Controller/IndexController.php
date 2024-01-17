@@ -82,7 +82,7 @@ class IndexController extends AbstractController
         $pagination = $paginator->paginate(
             $series_infos,
             $request->query->getInt('page', 1),
-            SERIES_PER_PAGE
+            10
         );
 
         if (!isset($_SESSION['hasVisited'])) {
