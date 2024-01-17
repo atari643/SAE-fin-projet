@@ -23,7 +23,7 @@ security:
             custom_authenticator: App\Security\AppAuthenticator
             # access_denied_handler: App\Security\AccessDeniedHandler
             logout:
-                path: app_logout
+                path: app_logout    
                 # where to redirect after logout
                 # target: app_any_route
             

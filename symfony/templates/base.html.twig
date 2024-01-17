@@ -23,13 +23,13 @@
         {% endblock %}
 		<div id="menu">
 			<div id="parentItemMenuLeft">
-				{% if app.user!=null and app.user.admin %}
+				{# {% if app.user!=null and app.user.admin %}
 				<div class="itemMenu">
 					<span class="material-symbols-outlined">
 						preview
 					</span>
 				</div>
-				{% endif %}
+				{% endif %} #}
 				<div class="itemMenu" onclick="window.location.href = '/users'">
 					<span class="material-symbols-outlined">
 						groups
@@ -62,6 +62,12 @@
 						<img src="https://ui-avatars.com/api/?name={{ app.user.name }}&size=32&background=random&rounded=true">
 					{% endif %}
 				</div>
+			{% if is_granted('IS_IMPERSONATOR') %}
+				<div class="itemMenu" onclick="window.location.href = '/users?_switch_user=_exit'">{# <a id="brighterLink" style="color:orange;" href="{{ impersonation_exit_path(path('app_login') ) }}"> #}
+				<span class="material-symbols-outlined">
+					preview
+				</span>{# </a> #}</div>
+			{% endif %}
 			</div>
 		</div>
 		{% block body %}{% endblock %}
@@ -77,7 +83,7 @@
             	items[1].classList.add('onThisPage');
             	break;
         	case '/user/series':
-            	items[3].classList.add('onThisPage');
+            	items[2].classList.add('onThisPage');
             	break;
     	}
 

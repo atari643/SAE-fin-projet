@@ -17,13 +17,19 @@ class IndexController extends MotherController
     #[Route('/', name: 'app_default', methods: ['GET', 'POST'])]
     public function index(SeriesRepository $repository, Request $request, PaginatorInterface $paginator, EntityManagerInterface $entityManager): Response
     {
+        if (null == $request->query->get('page') and !$request->isMethod('POST')) {
+            return $this->redirectToRoute('app_default', [
+                'page' => 1,
+            ]);
+        }
+
         if (PHP_SESSION_NONE === session_status()) {
             session_start();
         }
         if (!isset($_SESSION['seed'])) {
             $_SESSION['seed'] = rand();
         }
-        
+
         $searchQuery = $request->query->get('search', '');
         $searchGenre = $request->query->get('genre', '');
         $searchYearStart = $request->query->get('yearStart', '');

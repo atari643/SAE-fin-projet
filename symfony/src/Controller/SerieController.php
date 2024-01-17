@@ -2,14 +2,11 @@
 
 namespace App\Controller;
 
-
-use App\Entity\Genre;
 use App\Entity\Rating;
 use App\Entity\Series;
 use App\Repository\SeriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -35,6 +32,7 @@ class SerieController extends MotherController
             'comments' => $comments,
         ];
     }
+
     #[Route('/series/search', name: 'series_search', methods: ['GET'])]
     public function search(Request $request): Response
     {
@@ -65,7 +63,6 @@ class SerieController extends MotherController
         return $this->redirectToRoute('app_default', $args);
     }
 
-    
     #[Route('/series/{id}', name: 'app_index_series_info')]
     public function seriesInfo(SeriesRepository $repository, EntityManagerInterface $entityManager, int $id, Request $request, PaginatorInterface $paginator): Response
     {
@@ -164,6 +161,7 @@ class SerieController extends MotherController
             'seriesView' => $seriesView,
         ]);
     }
+
     #[Route('/series/{id}/add', name: 'app_index_series_add')]
     public function serieAdd(SeriesRepository $repository, int $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
     {
@@ -204,6 +202,7 @@ class SerieController extends MotherController
 
         return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
     }
+
     private function addRatingIntoBase(EntityManagerInterface $entityManager, int $id, Request $request)
     {
         $series = $entityManager->find(Series::class, $id);
