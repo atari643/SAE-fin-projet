@@ -60,7 +60,7 @@ class UserController extends MotherController
         } else {
             return $this->redirect($this->generateUrl('app_login')); // si accessible alors : $userAdminOrNot=false;
         }
-        $users       = $entityManager->getRepository(User::class);
+        $users = $entityManager->getRepository(User::class)->findAll();
 
         $count = $usersRepository->createQueryBuilder('users')->select('count(users.id)')->getQuery()->getSingleScalarResult();
 

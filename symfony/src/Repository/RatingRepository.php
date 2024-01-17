@@ -22,6 +22,6 @@ class RatingRepository extends ServiceEntityRepository
     }
     public function getRatingUserConnectAndAllRatingComments($userId, $seriesId)
     {
-        return $this->createQueryBuilder('r')->select('r')->leftJoin('r.user', 'user', 'WITH')->leftJoin('r.series', 'series', 'WITH')->where('user.id = :userId')->andWhere('user.id IS NOT NULL')->orWhere('series.id = :seriesId')->orWhere('series.id=:seriesId')->setParameter('userId', $userId)->setParameter('seriesId', $seriesId)->getQuery()->getResult();
+        return $this->createQueryBuilder('r')->select('r')->leftJoin('r.user', 'user', 'WITH')->leftJoin('r.series', 'series', 'WITH')->where('user.id = :userId')->andWhere('user.id IS NOT NULL')->andWhere('series.id = :seriesId')->orWhere('series.id=:seriesId')->setParameter('userId', $userId)->setParameter('seriesId', $seriesId)->getQuery()->getResult();
     }//end getRatingUserConnect()
 }

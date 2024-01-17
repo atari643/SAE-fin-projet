@@ -16,7 +16,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Gregwar\CaptchaBundle\Type\CaptchaType;
-use Symfony\Component\Form\Extension\Core\Type\CountryType;
 
 class RegistrationFormType extends AbstractType
 {

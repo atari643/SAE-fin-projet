@@ -69,8 +69,4 @@ class SeriesRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('s')->select('s')->leftJoin('s.seasons', 'seasons')->leftJoin('seasons.episodes', 'episode')->leftJoin('s.genre', 'genre', 'WITH')->leftJoin('s.user', 'user', 'WITH')->where('s.id = :id')->andWhere('seasons.number = :num')->setParameter('id', $id)->setParameter('num', $num)->getQuery()->getOneOrNullResult();
     }//end seriesInfoByIdAndSeason()
-    public function seriesInfoByIdAndSeasonAndEpisode($id, $num, $ep)
-    {
-        return $this->createQueryBuilder('episode')->select('s')->leftJoin('s.seasons', 'seasons')->leftJoin('seasons.episodes', 'episode')->leftJoin('s.genre', 'genre', 'WITH')->leftJoin('s.user', 'user', 'WITH')->where('s.id = :id')->andWhere('seasons.number = :num')->andWhere('episode.number = :ep')->setParameter('id', $id)->setParameter('num', $num)->setParameter('ep', $ep)->getQuery()->getOneOrNullResult();
-    }//end seriesInfoByIdAndSeasonAndEpisode()
 }//end class

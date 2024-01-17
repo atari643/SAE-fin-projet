@@ -14,25 +14,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SerieController extends MotherController
 {
-    private function getRatings(EntityManagerInterface $entityManager, int $id)
-    {
-        // Recupérer l'avis de l'utilisateur actif
-        $userRating = $entityManager->getRepository(Rating::class)->findOneBy([
-            'user' => $this->getUser(),
-            'series' => $id,
-        ]);
-
-        $comments = $entityManager->getRepository(Rating::class)->findBy([
-            'series' => $id,
-        ]);
-
-        return [
-            'userRating' => $userRating ? $userRating : null,
-            'userValue' => $userRating ? $userRating->getValue() : null,
-            'userComment' => $userRating ? $userRating->getComment() : null,
-            'comments' => $comments,
-        ];
-    }
 
     #[Route('/series/search', name: 'series_search', methods: ['GET'])]
     public function search(Request $request): Response
@@ -65,7 +46,7 @@ class SerieController extends MotherController
     }
 
     #[Route('/series/{id}', name: 'app_index_series_info')]
-    public function seriesInfo(SeriesRepository $repository,RatingRepository $ratingRepository, EntityManagerInterface $entityManager, int $id, Request $request, PaginatorInterface $paginator): Response
+    public function seriesInfo(SeriesRepository $seriesRepository,RatingRepository $ratingRepository, EntityManagerInterface $entityManager, int $id, Request $request, PaginatorInterface $paginator): Response
     {
         
 
@@ -110,8 +91,6 @@ class SerieController extends MotherController
                 $entityManager->remove($userRating);
                 $entityManager->flush();
 
-                $entityManager->remove($userRating);
-                $entityManager->flush();
                 $this->addRatingIntoBase($entityManager, $id, $request);
             } elseif ('Send' == $request->get('action') && null == $userRating) {
                 $this->addRatingIntoBase($entityManager, $id, $request);
@@ -135,7 +114,7 @@ class SerieController extends MotherController
             $val = substr($val / $nombreNotes, 0, 3);
         }
 
-        $series = $repository->seriesInfoById($id);
+        $series = $seriesRepository->seriesInfoById($id);
         $seasons = $series->getSeasons();
         $paginationSeason = $paginator->paginate(
             $seasons,
@@ -155,7 +134,7 @@ class SerieController extends MotherController
         $seriesView = null;
         if (null != $user) {
             $user = $user->getId();
-            $seriesView = $repository->seriesEpisodeCountView($user);
+            $seriesView = $seriesRepository->seriesEpisodeCountView($user);
         }
 
         return $this->render(
@@ -176,9 +155,9 @@ class SerieController extends MotherController
     public function serieAdd(SeriesRepository $repository, int $id, EntityManagerInterface $entityManager): Response
     {
         $seriesToAdd = $repository->seriesInfoById($id);
-        $seasons = $seriesToAdd[0]->getSeasons();
+        $seasons = $seriesToAdd->getSeasons();
         $user = $this->getUser();
-        $user->addSeries($seriesToAdd[0]);
+        $user->addSeries($seriesToAdd);
         $entityManager->flush();
         foreach ($seasons as $season) {
             foreach ($season->getEpisodes() as $episode) {
@@ -194,9 +173,9 @@ class SerieController extends MotherController
     public function serieRemove(SeriesRepository $seriesRepository, int $id, EntityManagerInterface $entityManager): Response
     {
         $seriesToRemove = $seriesRepository->seriesInfoById($id);
-        $seasons = $seriesToRemove[0]->getSeasons();
+        $seasons = $seriesToRemove->getSeasons();
         $user = $this->getUser();
-        $user->removeSeries($seriesToRemove[0]);
+        $user->removeSeries($seriesToRemove);
         $entityManager->flush();
         foreach ($seasons as $season) {
             foreach ($season->getEpisodes() as $episode) {

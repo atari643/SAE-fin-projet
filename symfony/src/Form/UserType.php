@@ -3,8 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Country;
-use App\Entity\Episode;
-use App\Entity\Series;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;

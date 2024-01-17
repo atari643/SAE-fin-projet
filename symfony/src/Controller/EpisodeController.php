@@ -14,9 +14,9 @@ class EpisodeController extends MotherController
     public function episodeAdd(SeriesRepository $seriesRepository, int $id, int $idE, EntityManagerInterface $entityManager): Response
     {
         $seriesToAdd = $seriesRepository->seriesInfoById($id);
-        $seasons = $seriesToAdd[0]->getSeasons();
+        $seasons = $seriesToAdd->getSeasons();
         $user = $this->getUser();
-        $user->addSeries($seriesToAdd[0]);
+        $user->addSeries($seriesToAdd);
         $entityManager->flush();
         foreach ($seasons as $season) {
             foreach ($season->getEpisodes() as $episode) {
@@ -37,7 +37,7 @@ class EpisodeController extends MotherController
     public function episodeRemove(SeriesRepository $seriesRepository, int $id, int $idE, EntityManagerInterface $entityManager): Response
     {
         $seriesToRemove = $seriesRepository->seriesInfoById($id);
-        $seasons = $seriesToRemove[0]->getSeasons();
+        $seasons = $seriesToRemove->getSeasons();
         $user = $this->getUser();
         $count = 0;
         foreach ($seasons as $season) {
@@ -48,7 +48,7 @@ class EpisodeController extends MotherController
             }
         }
         if (1 == $count) {
-            $user->removeSeries($seriesToRemove[0]);
+            $user->removeSeries($seriesToRemove);
             $entityManager->flush();
         }
         foreach ($seasons as $season) {
