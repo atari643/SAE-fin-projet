@@ -4,11 +4,86 @@
 
 {% block body %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/index.css" />
+    <link rel="stylesheet" href="/profile.css" />
     <link rel="stylesheet" href="/css/users.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
 
 {{ user }}
 <img src="https://ui-avatars.com/api/?name={{ user }}&background=random&rounded=true" style="display: inline;">
-<a href="/user/series/{{ user }}">{{user}} 's list of series</a>
+<a href="/user/series/{{ user }}">{{user}} 's list of <span id="bigWord">series</span></a>
+<a href="/user/ratings/{{ user }}">{{user}} 's list of <span id="bigWord">ratings</span></a>
 
+<table id="seriesTable">
+<tbody>
+<script>
+    var i=0;
+    var tbodyRef = document.getElementById('myTable').getElementsByTagName('tbody')[0];
+</script>
+<h2>This user follows the following Series</h2>
+{% for s in pagination %}
+            <script>
+            
+                if (i%10==0){
+                    var newRow = tbodyRef.insertRow();
+                }
+            </script>
+                <td><a href="{{ path('app_index_series_info',{id: s.id}) }}">
+                    <img src="{{ path('app_series_poster',{id: s.id}) }}" style="max-width: 50%;"> 
+                    {# le style des images ne donne pas un rendu uniforme #}
+                    </a><p style="font-size: 12px;">{{ s.title }}</p></td>
+                {# <td><p style="display: inline;">{{ s.title }}</p></td> #}
+
+            <script>
+                i++;
+            </script>
+            
+{% endfor %}
+            
+</tbody>
+</table>
+<h2>This user's (most recent ?) reviews</h2> {# most recent ? = bien order MAIS 
+choix à faire : paginer les reviews (comment) ? ou afficher les ~5 plus récentes #}
+
+<table style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;" id = "tabRating">
+        <tbody>
+            {% for comment in comments|reverse %}
+                <tr>
+                    <td>
+                        <div>
+                            <div><a href="{{path('user_profile_search',{username: comment.user.name})}}"><img src="https://ui-avatars.com/api/?name={{ comment.user.name }}&background=random&rounded=true" style="display: inline;"></a></div>
+                            <div>{{comment.series.title}}</div>
+                        </div>
+                        <div>
+                            {% for i in 0..4 %}
+                                {% if i < comment.value %}
+                                    <span class="material-symbols-outlined" id = "filledStar">star</span>
+                                {% else %}
+                                    <span class="material-symbols-outlined">star</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </td>
+                    <td> 
+                        {{ comment.comment|nl2br }}
+                    </td>
+                    <td>
+                        {% set diff = date().diff(comment.date) %}
+                        {% if diff.y > 0 %}
+                            {{ diff.y }} year(s) ago
+                        {% elseif diff.m > 0 %}
+                            {{ diff.m }} month(s) ago
+                        {% elseif diff.d > 0 %}
+                            {{ diff.d }} day(s) ago
+                        {% elseif diff.h > 0 %}
+                            {{ diff.h }} hour(s) ago
+                        {% else %}
+                            {{ diff.i }} minute(s) ago
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

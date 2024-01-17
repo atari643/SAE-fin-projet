@@ -33,46 +33,46 @@ class RegistrationFormType extends AbstractType
                         ->orderBy('c.name', 'ASC');
                 },
                 ])
-            ->add('name', TextType::class, ['attr' => ['placeholder' => 'username'],'constraints' => [
+            ->add('name', TextType::class, ['label' => 'Name (letters, numbers, hyphens and underscores allowed)','attr' => ['placeholder' => 'username'],'constraints' => [
                 new NotBlank(['message' => 'Please enter a username',]),],])
             ->add('email', EmailType::class, ['attr' => ['placeholder' => 'example@mail.com'],'constraints' => [
                 new NotBlank(['message' => 'Please enter a valid email',]),
                 //new Assert\Email(['message' => 'address must be valid',]),
                 //new Length(['min' => 5,'minMessage' => 'Please enter a valid email',]),
-                
+
             ],])
             ->add('plainPassword', PasswordType::class, [
                                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
-                'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password', 'placeholder' => '6 characters min'],
+                'mapped'      => false,
+                'attr'        => [
+                    'autocomplete' => 'new-password',
+                    'placeholder'  => '6 characters min',
+                ],
                 'constraints' => [
                     new NotBlank(
-                        [
-                        'message' => 'Please enter a password',
-                        ]
+                        ['message' => 'Please enter a password']
                     ),
                     new Length(
                         [
-                        'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
-                        'max' => 4096,
+                            'min'        => 6,
+                            'minMessage' => 'Your password should be at least {{ limit }} characters',
+                            // max length allowed by Symfony for security reasons
+                            'max'        => 4096,
                         ]
                     ),
                 ],
             ])
             ->add('captcha', CaptchaType::class, ['invalid_message' => 'Captcha code does not match.'],)
         ;
-
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(
             [
-            'data_class' => User::class,
+                'data_class' => User::class,
             ]
         );
-    }
-}
+    }//end configureOptions()
+}//end class

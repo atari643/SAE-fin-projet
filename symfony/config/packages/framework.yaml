@@ -12,11 +12,14 @@ framework:
         handler_id: null
         cookie_secure: auto
         cookie_samesite: lax
+        
 
     #esi: true
     #fragments: true
     php_errors:
         log: true
+    assets:
+        version: 'auto'
     form:
         legacy_error_messages: false
 

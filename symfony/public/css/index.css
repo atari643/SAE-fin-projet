@@ -15,3 +15,7 @@ table {
     margin: 2%;
 
 }
+
+#percentageViews::-moz-progress-bar { background: #cba848; }
+#percentageViews::-webkit-progress-value { background: #cba848; }
+#percentageViews { color: #cba848; }

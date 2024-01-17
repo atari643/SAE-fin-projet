@@ -1,0 +1,55 @@
+{% extends './utils/paging.html.twig' %}
+
+{% block title %}Users{% endblock %}
+
+{% block body %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/index.css" />
+    <link rel="stylesheet" href="/profile.css" /> {# link color #}
+    <link rel="stylesheet" href="/css/users.css" />
+
+    <h1>Users List</h1>
+    {# {% include "./utils/searchUserData.html.twig" with { form : form} only %} #}
+
+    <form action="{{ path('app_users') }}" method="get">
+        <input type="text" name="search" placeholder="Search for a user" value="{{ username }}"/>
+        <input type="submit" value="Submit">
+{#         <button type="submit" class="material-symbols-outlined">search</button>
+ #}    </form>
+
+    <table style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
+        <thead>
+            <tr>
+                <td></td>
+                <td>Name</td>
+                <td>View profile</td>
+            </tr>
+        </thead>
+        {% for user in pagination %}
+            {% if username is not empty %}
+                {{username}}
+            {% endif %}
+        <tbody>
+            <tr class="user">
+            <td><img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random&rounded=true" style="display: inline;"></td>
+            <td><p style="display: inline;">{{ user.name }}</p></td>
+            <td><p style="display: inline;"><a href="/user/profile/{{ user.name }}">View</a></p></td>
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+
+    {{ block('paging') }}
+
+    <script>
+        function onSelectChange(element){
+            var values = element.value.split(" ");
+            var form = $('<form action="#" method="post">' +
+            '<input type="text" name="role" value="' + values[0] + '" hidden />' +
+            '<input type="text" name="id" value="' + values[1] + '" hidden />' +
+            '</form>');
+            $('body').append(form);
+            form.submit();
+        }
+    </script>
+{% endblock %}

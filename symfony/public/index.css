@@ -1,0 +1,532 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background-color: #221F1F;
+    display: flex;
+    flex-direction: column;
+    padding: 0 10%;
+    width: 80%;
+    height: fit-content;
+    align-items: center;
+    gap: 40px;
+}
+
+
+#show {
+    display: grid;
+    width: 100%;
+    height: fit-content;
+    margin: 0;
+    padding: 0;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-auto-rows: 350px;
+    align-items: center;
+    justify-content: center;
+    column-gap: 15px;
+    row-gap: 50px;
+    transition: 0.5s;
+}
+
+.showChildSeries {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    justify-items: center;
+    height: 100%;
+    transition: 0.5s;
+}
+
+.posters {
+    height: 100%;
+    border-radius: 6px;
+    transition: cubic-bezier(.68, -0.55, .27, 1.55) 0.5s;
+    border: 1px solid transparent;
+}
+
+.posters:hover {
+    cursor: pointer;
+    border: 1px solid #88ddd5;
+    transform: scale(1.08);
+}
+
+.overlay {
+    position: absolute;
+    background-color: #221f1f8a;
+    backdrop-filter: blur(5px);
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    animation: cubic-bezier(.68, -0.55, .27, 1.55) 0.5s forwards overlaySpawn;
+    transition: 0.5s;
+}
+
+@keyframes overlaySpawn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.parentStarsPosterHover,
+.bannerParentStars {
+    color: #cba848;
+    text-shadow: 0px 0px 4px #fffac0;
+}
+
+.parentStarsPosterHover>span,
+.bannerParentStars>span {
+    font-size: 1.4rem;
+}
+
+.titlePosterHover {
+    color: #ac1536;
+    font-size: 2.2rem;
+    font-family: 'Bebas Neue', cursive;
+    margin: 8px 0 0 0;
+    text-shadow: 1px 1px 5px #000000;
+    text-align: right;
+}
+
+.durationPosterHover,
+.bannerDuration {
+    color: #e3f7f5;
+    font-size: 1.2rem;
+    font-family: 'Oswald', sans-serif;
+    margin: 0;
+}
+
+.banner {
+    display: flex;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    width: 21%;
+    background-color: hsl(347, 79%, 30%, 30%);
+    border-top-left-radius: 15px;
+    flex-direction: column;
+    max-height: 100%;
+    animation: 0.5s forwards ease bannerSpawn;
+    border-left: 1px solid #cba848;
+    border-top: 1px solid #cba848;
+}
+
+@keyframes bannerSpawn {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(0%);
+    }
+}
+
+.bannerClose {
+    color: #db0030;
+    font-size: 2rem;
+    margin: 5px 0 0 10px;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.bannerTitle {
+    color: #e3f7f5;
+    font-size: 2rem;
+    font-family: 'Bebas Neue', cursive;
+    text-shadow: 1px 1px 5px #000000;
+    margin: 10px 0 0 14px;
+}
+
+.bannerImg {
+    width: calc(100% - 38px);
+    margin: 0 0 0 14px;
+    pointer-events: none;
+}
+
+.resumé {
+    color: #e3f7f5;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+    width: calc(100% - 38px);
+    margin: 15px 0 0 14px;
+    text-align: justify;
+}
+
+.parentBottomBanner {
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+    gap: 15px;
+    margin: 10px 0 0 14px;
+    align-items: center;
+    justify-content: left;
+    width: calc(100% - 38px);
+    flex-wrap: wrap;
+}
+
+.bannerDuration {
+    margin-bottom: 3px;
+}
+
+.paging {
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+    gap: 10px;
+    margin: 10px 0 0 14px;
+    align-items: center;
+    justify-content: center;
+}
+
+.bannerButtonMore {
+    color: #e3f7f5;
+    cursor: pointer;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+    background-color: transparent;
+    border: none;
+
+}
+
+.bannerButtonMore:hover {
+    text-shadow: 0px 0px 4px #fffac0;
+}
+
+.paging {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.paging a {
+    color: #007BFF;
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+.paging a:hover {
+    color: #0056B3;
+}
+
+.paging a:active {
+    color: #004085;
+
+}
+
+.paging input[type="number"] {
+    width: 50px;
+    text-align: center;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    margin: 0 5px;
+}
+
+.paging input[type="submit"] {
+    display: none;
+}
+
+.affiche {
+    height: 100%;
+    width: 100%;
+}
+
+.bannerInfoFirstPage {
+    display: flex;
+    flex-direction: column;
+    width: 75vw;
+    background-color: #1a242f;
+    padding: 100px 12.5vw 50px 12.5vw;
+    align-items: center;
+    justify-content: center;
+}
+
+.headerbannerInfoFirstPage {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.textbannerInfoFirstPageParent {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin: 0 0 0 8vw;
+}
+
+.titrebannerInfoFirstPage {
+    color: #cba848;
+    font-size: 7rem;
+    font-family: 'Bebas Neue', cursive;
+    text-shadow: 1px 1px 5px #000000;
+}
+
+.textbannerInfoFirstPage {
+    color: #e3f7f5;
+    font-size: 1.15rem;
+    font-family: 'Roboto', sans-serif;
+    text-shadow: 1px 1px 5px #000000;
+    margin: 20px 0 0 0;
+    text-align: justify;
+}
+
+.imgbannerInfoFirstPage {
+    height: 30%;
+}
+
+.slideLeft,
+.slideRight {
+    position: absolute;
+    background-color: #444;
+    color: #cba848;
+    border: none;
+    padding: 2px 4px;
+    cursor: pointer;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    height: fit-content;
+}
+
+.slideLeft>span,
+.slideRight>span {
+    font-size: 2rem;
+}
+
+.slideLeft {
+    left: 10px;
+}
+
+.slideRight {
+    right: 10px;
+}
+
+@media screen and (max-width: 1700px) {
+    .banner {
+        width: 70%;
+        right: 15%;
+        height: fit-content;
+        position: fixed;
+        background-color: hsl(347, 79%, 30%, 100%);
+        border-top-right-radius: 15px;
+        border-right: 1px solid #cba848;
+        flex-direction: row;
+    }
+
+    .bannerImg {
+        width: auto;
+        height: 1px;
+        margin-top: 10px;
+        border-top-right-radius: 10px;
+        position: absolute;
+        right: 10px;
+    }
+
+    .headerBanner {
+        width: 70%;
+    }
+}
+
+
+@media screen and (max-width: 1240px) {
+    .banner {
+        width: 75%;
+        height: fit-content;
+        right: 12.5%;
+        position: fixed;
+        border-bottom: 1px solid #cba848;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+        background-color: #88ddd560;
+        backdrop-filter: blur(10px);
+    }
+
+    .resumé {
+        text-shadow: 1px 1px 5px #000000;
+    }
+
+    .bannerDuration {
+        text-shadow: 1px 1px 5px #000000;
+    }
+
+    .headerBanner {
+        width: 60%;
+    }
+
+    .bannerImg {
+        width: 35%;
+        height: max-content;
+        position: relative;
+        margin-bottom: 10px;
+        border-bottom-right-radius: 10px;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .headerBanner {
+        width: 92%;
+    }
+}
+
+@media screen and (max-width: 650px) {
+    .posters {
+        border: 1px solid #cba848;
+        border-bottom: unset;
+        width: 150px;
+        border-bottom-left-radius: unset;
+        border-bottom-right-radius: unset;
+    }
+
+    .posters:hover {
+        transform: unset;
+        border: 1px solid #cba848;
+        border-bottom: unset;
+    }
+
+    #show {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: start;
+        row-gap: 15px;
+        margin-top: 20px;
+    }
+
+    .showChildSeries {
+        width: fit-content;
+    }
+
+    #menu {
+        flex-direction: column;
+        border-bottom: unset;
+        padding-bottom: unset;
+        padding-top: unset;
+        width: unset;
+        height: calc(100% - 10px);
+        position: fixed;
+        left: 0;
+        display: none;
+        gap: 5px;
+        padding: 5px;
+        border-right: 2px solid #cba848;
+        background-color: #1a242f;
+        justify-content: center;
+    }
+
+    #parentItemMenuLeft {
+        flex-direction: column;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+    #parentItemMenuRight {
+        flex-direction: column;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+    #parentItemMenuCenter {
+        flex-direction: column;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+        left: unset;
+        transform: unset;
+    }
+
+    #accountButton {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    width: 140px;
+    height: fit-content;
+    padding: 5px;
+    background-color: #1a242f;
+    margin-top: -1px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border: 1px solid #cba848;
+    border-top: unset;
+    align-items: center;
+    justify-content: center;
+}
+
+.titleCard {
+    color: #e3f7f5;
+    font-size: 1.2rem;
+    font-family: 'Bebas Neue', cursive;
+    text-shadow: 1px 1px 5px #000000;
+    margin: 0;
+    text-align: center;
+}
+
+.durationCard {
+    color: #e3f7f5;
+    font-size: 0.8rem;
+    font-family: 'Oswald', sans-serif;
+    margin: 0;
+    text-align: center;
+}
+
+.durationCard>span {
+    font-weight: bold;
+}
+
+.parentStarsCard {
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+    gap: 2px;
+    margin: 0;
+    align-items: center;
+    justify-content: center;
+    color: #cba848;
+}
+
+.parentStarsCard>span {
+    font-size: 1rem;
+}
+
+.burger {
+    color: #cba848;
+    position: fixed;
+    top: 5px;
+    left: 5px;
+    cursor: pointer;
+}
