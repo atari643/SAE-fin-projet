@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Rating;
 use App\Entity\Series;
+use App\Repository\RatingRepository;
 use App\Repository\SeriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -64,12 +65,13 @@ class SerieController extends MotherController
     }
 
     #[Route('/series/{id}', name: 'app_index_series_info')]
-    public function seriesInfo(SeriesRepository $repository, EntityManagerInterface $entityManager, int $id, Request $request, PaginatorInterface $paginator): Response
+    public function seriesInfo(SeriesRepository $repository,RatingRepository $ratingRepository, EntityManagerInterface $entityManager, int $id, Request $request, PaginatorInterface $paginator): Response
     {
-        $infoRating = $this->getRatings($entityManager, $id);
+        
 
         // region Follow/Unfollow Series
         $user = $this->getUser();
+        $infoRating = $ratingRepository->getRatingUserConnectAndAllRatingComments($this->getUser(), $id);
         if (null != $request->request->get('add')) {
             if ('true' == $request->request->get('add')) {
                 $series = $entityManager
@@ -87,26 +89,31 @@ class SerieController extends MotherController
                 $entityManager->flush();
             }
         }
-
+        $userRating = null;
+        foreach ($infoRating as $comment) {
+            if ($comment->getUser() == $this->getUser()) {
+                $userRating = $comment;
+            }
+        }
         // endregion
 
         if ($request->get('rating') && null != $this->getUser()) {
-            if ('Delete' == $request->get('action') && null != $infoRating['userRating']) {
-                $entityManager->remove($infoRating['userRating']);
+            if ('Delete' == $request->get('action') && null != $userRating) {
+                $entityManager->remove($userRating);
                 $entityManager->flush();
 
                 return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
             } elseif ('Edit' == $request->get('action')) {
-                if ($infoRating['userValue'] == $request->get('value') && $infoRating['userComment'] == $request->get('comment')) {
+                if ($userRating->getValue() == $request->get('value') && $userRating->getComment() == $request->get('comment')) {
                     return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
                 }
-                $entityManager->remove($infoRating['userRating']);
+                $entityManager->remove($userRating);
                 $entityManager->flush();
 
-                $entityManager->remove($infoRating['userRating']);
+                $entityManager->remove($userRating);
                 $entityManager->flush();
                 $this->addRatingIntoBase($entityManager, $id, $request);
-            } elseif ('Send' == $request->get('action') && null == $infoRating['userRating']) {
+            } elseif ('Send' == $request->get('action') && null == $userRating) {
                 $this->addRatingIntoBase($entityManager, $id, $request);
             }
 
@@ -116,9 +123,12 @@ class SerieController extends MotherController
 
         $val = 0;
         $nombreNotes = 0;
-        $comments = $infoRating['comments'];
-        if (!empty($comments)) {
-            foreach ($comments as $comment) {
+        $userRating="";
+        if (!empty($infoRating)) {
+            foreach ($infoRating as $comment) {
+                if($comment->getUser()==$this->getUser()){
+                    $userRating=$comment;
+                }
                 $val = $val + $comment->getValue();
                 ++$nombreNotes;
             }
@@ -135,7 +145,7 @@ class SerieController extends MotherController
         $paginationSeason->setParam('pageList', 'seasons');
 
         $paginationComments = $paginator->paginate(
-            $comments,
+            $infoRating,
             'comments' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
             ITEMS_PER_PAGE
         );
@@ -153,8 +163,8 @@ class SerieController extends MotherController
             'series' => $series,
             'paginationSeason' => $paginationSeason,
             'pagination' => null,
-            'userRating' => $infoRating['userRating'] ? $infoRating['userValue'] : null,
-            'userComment' => $infoRating['userRating'] ? $infoRating['userComment'] : null,
+            'userRating' => $userRating ? $userRating->getValue() : null,
+            'userComment' => $userRating ? $userRating->getComment() : null,
             'paginationComments' => $paginationComments,
             'serieScore' => $val,
             'nombreNotes' => $nombreNotes,
@@ -163,11 +173,9 @@ class SerieController extends MotherController
     }
 
     #[Route('/series/{id}/add', name: 'app_index_series_add')]
-    public function serieAdd(SeriesRepository $repository, int $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
+    public function serieAdd(SeriesRepository $repository, int $id, EntityManagerInterface $entityManager): Response
     {
-        $series = $entityManager
-        ->getRepository(Series::class);
-        $seriesToAdd = $series->findBy(['id' => $id]);
+        $seriesToAdd = $repository->seriesInfoById($id);
         $seasons = $seriesToAdd[0]->getSeasons();
         $user = $this->getUser();
         $user->addSeries($seriesToAdd[0]);
@@ -175,20 +183,17 @@ class SerieController extends MotherController
         foreach ($seasons as $season) {
             foreach ($season->getEpisodes() as $episode) {
                 $this->getUser()->addEpisode($episode);
-                $entityManager->flush();
             }
         }
-
+        $entityManager->flush();
         return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
     }
 
     // end seasonInfo()
     #[Route('/series/{id}/remove', name: 'app_index_series_remove')]
-    public function serieRemove(SeriesRepository $repository, int $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
+    public function serieRemove(SeriesRepository $seriesRepository, int $id, EntityManagerInterface $entityManager): Response
     {
-        $series = $entityManager
-        ->getRepository(Series::class);
-        $seriesToRemove = $series->findBy(['id' => $id]);
+        $seriesToRemove = $seriesRepository->seriesInfoById($id);
         $seasons = $seriesToRemove[0]->getSeasons();
         $user = $this->getUser();
         $user->removeSeries($seriesToRemove[0]);
@@ -196,10 +201,10 @@ class SerieController extends MotherController
         foreach ($seasons as $season) {
             foreach ($season->getEpisodes() as $episode) {
                 $this->getUser()->removeEpisode($episode);
-                $entityManager->flush();
+                
             }
         }
-
+        $entityManager->flush();
         return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
     }
 
