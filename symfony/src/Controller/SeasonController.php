@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class SeasonController extends AbstractController
+class SeasonController extends MotherController
 {
     private function getRatings(EntityManagerInterface $entityManager, int $id)
     {
@@ -44,14 +44,14 @@ class SeasonController extends AbstractController
         $pagination = $paginator->paginate(
             $episodes,
             'episodes' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
-            SERIES_PER_PAGE
+            ITEMS_PER_PAGE
         );
         $pagination->setParam('pageList', 'episodes');
 
         $paginationSeason = $paginator->paginate(
             $seasons,
             'seasons' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
-            SERIES_PER_PAGE
+            ITEMS_PER_PAGE
         );
         $paginationSeason->setParam('pageList', 'seasons');
         $val = 0;
@@ -67,7 +67,7 @@ class SeasonController extends AbstractController
         $paginationComments = $paginator->paginate(
             $comments,
             'comments' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
-            SERIES_PER_PAGE
+            ITEMS_PER_PAGE
         );
 
         $user = $this->getUser()->getId();

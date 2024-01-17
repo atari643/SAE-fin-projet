@@ -23,7 +23,7 @@
   <div id="show">
     {% for s in pagination %}
       {% set youtubeTrailer = s.youtubeTrailer|replace({'watch?v=': 'embed/'}) %}
-      <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="4" data-resum="{{s.plot}}" data-trailer="{{ youtubeTrailer }}">
+      <div class="showChildSeries" data-id="{{s.id}}" data-title="{{ s.title }}" data-épisodes="{{ s.season_count }} Seasons | {{ s.episode_count }} Episodes" data-avis="{{s.note}}" data-resum="{{s.plot}}" data-trailer="{{ youtubeTrailer }}">
         <img src="{{ path('app_series_poster', { 'id': s.id }) }}" alt="" class="posters">
       </div>
     {% endfor %}
@@ -224,15 +224,18 @@
               '</div>' +
               '</netflixintro>' +
               '</div>';
+      
       document.body.style.overflow = 'hidden';
       setTimeout(function () {
         document.body.removeChild(document.getElementById('container'));
         document.body.style.overflow = 'auto';
-        window.addEventListener('load', makeScript());
         page = document.querySelectorAll('.pagine .pagination a');
         for (let i = 0; i < page.length; i++) {
           page[i].addEventListener('click', makeScript())
         }
+      }, 5000);
+      }
+      if(document.location.href.includes('?page=1')){
       if(mediaqueries.width>1100){
         const bannerInfoFirstPage = document.createElement('div');
         bannerInfoFirstPage.classList.add('bannerInfoFirstPage');
@@ -288,14 +291,13 @@
           }
         });
       }
-      }, 5000);
-    }else{
+    }
       window.addEventListener('load', makeScript());
       page = document.querySelectorAll('.pagine .pagination a');
       for (let i = 0; i < page.length; i++) {
         page[i].addEventListener('click', makeScript())
       }
-    }
+    
       
 
       function makeScript() {
