@@ -35,7 +35,7 @@
             <td>
                 <p style="display: inline;">{{ user.name }}</p>
                 {% if user.fake == '1' %}
-                    <span class="material-symbols-outlined">smart_toy</span>
+                    <span class="material-symbols-outlined bot-icon">smart_toy</span>
                 {% endif %}
             </td>
             <td><p style="display: inline;">{{ user.email }}</p></td>
@@ -57,7 +57,6 @@
     {% endfor %}
     </table>
 
-    {% dump(pagination) %}
     {{ block('paging') }}
 
     <script>
