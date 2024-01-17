@@ -203,6 +203,24 @@ class SerieController extends MotherController
         return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
     }
 
+    #[Route('/browse/series', name: 'app_index_series_browse', methods: ['GET', 'POST'])]
+    public function browseSeries(PaginatorInterface $paginator, Request $request): Response
+    {
+        $title = $request->request->get('search');
+        $obj = null;
+        
+        if($title != null){
+
+            $json = file_get_contents('http://www.omdbapi.com/?apikey=66410286&s=' . $title);
+            $obj = json_decode($json, true);
+
+        }
+
+        return $this->render('index/browse.html.twig', [
+            'series' => $obj
+        ]);
+    }
+
     private function addRatingIntoBase(EntityManagerInterface $entityManager, int $id, Request $request)
     {
         $series = $entityManager->find(Series::class, $id);
