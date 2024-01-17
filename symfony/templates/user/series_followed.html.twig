@@ -22,25 +22,24 @@
             </thead>
 
             {% set i = 0 %}
-            {% for i in 0..pagination.items()|length - 1 %}
-                {% set items = pagination.items() %}
-                {% set s = items[i] %}
-                {% dump(items) %}
-                {% dump(s) %}
-                {% dump(seriesView) %}
+            {% for s in pagination %}
                 <tbody>
                     <tr class="series">
                         <td><img src="{{ path('app_series_poster',{id: s.id}) }}" style="width: 8%;"></td>
                         <td><p style="display: inline;">{{ s.title }}</p></td>
 
+                        {% set episode_count = 0 %}
                         {% if seriesView|length > 0 %}
-                            {% set episode_count = seriesView[i].episode_count_view %}
-                        {% else %}
-                            {% set episode_count = 0 %}
+                            {% for se in seriesView %}
+
+                                {% if s.id == se.id %}
+                                    {% set episode_count = se.episode_count_view %}
+                                {% endif %}
+
+                            {% endfor %}
                         {% endif %}
 
                         {% if s.episode_count > 0 %}
-                            <h1>{{ s.episode_count }}</h1>
                             {% set percentage = (episode_count / s.episode_count) * 100 %}
                         {% else %}
                             {% set percentage = 0 %}
