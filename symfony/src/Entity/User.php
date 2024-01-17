@@ -53,6 +53,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'admin', type: 'boolean', nullable: false)]
     private $admin = '0';
 
+    #[ORM\Column(name: 'fake', type: 'boolean', nullable: false)]
+    private $fake = '0';
+
     #[ORM\ManyToOne(targetEntity: 'Country')]
     #[ORM\JoinColumn(name: 'country_id', referencedColumnName: 'id')]
     private $country;
@@ -196,6 +199,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }//end setAdmin()
+
+    public function isFake(): ?bool
+    {
+        return $this->fake;
+    }//end isFake()
+
+
+    public function setFake(bool $fake): self
+    {
+        $this->fake = $fake;
+
+        return $this;
+    }//end setFake()
 
 
     public function getCountry(): ?Country
