@@ -22,17 +22,33 @@
             </thead>
 
             {% set i = 0 %}
-            {% for s in pagination %}
+            {% for i in 0..pagination.items()|length - 1 %}
+                {% set items = pagination.items() %}
+                {% set s = items[i] %}
+                {% dump(items) %}
+                {% dump(s) %}
+                {% dump(seriesView) %}
                 <tbody>
                     <tr class="series">
                         <td><img src="{{ path('app_series_poster',{id: s.id}) }}" style="width: 8%;"></td>
                         <td><p style="display: inline;">{{ s.title }}</p></td>
-                        {% set percentage = (seriesView[i].episode_count_view / s.episode_count) * 100 %}
-                        <td>{{ seriesView[i].episode_count_view }}/{{ s.episode_count }}</td>
+
+                        {% if seriesView|length > 0 %}
+                            {% set episode_count = seriesView[i].episode_count_view %}
+                        {% else %}
+                            {% set episode_count = 0 %}
+                        {% endif %}
+
+                        {% if s.episode_count > 0 %}
+                            <h1>{{ s.episode_count }}</h1>
+                            {% set percentage = (episode_count / s.episode_count) * 100 %}
+                        {% else %}
+                            {% set percentage = 0 %}
+                        {% endif %}
+                        <td>{{ episode_count }}/{{ s.episode_count }}</td>
                         <td><progress id="percentageViews" max="100" value="{{ percentage }}"></progress></td>
                         <td><a href="{{ path('app_index_series_info',{id: s.id}) }}"><p>Go to page</p></a></td>
 
-                        {% set i = i + 1 %}
                     </tr>
                 </tbody>
             {% endfor %}
