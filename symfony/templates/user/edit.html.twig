@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block body %}
+    <h1>Edit User</h1>
+
+    <style>
+    .form_body ul{display:none;}
+    </style>
+    <div class="form_body">
+
+    <script>
+    error_n = "{{ errorN|e('js') }}";
+    
+    error_p = "{{ errorP|e('js') }}";
+    
+    error_text = "";
+    if(error_n.length != 0){
+        error_text += error_n;
+    }
+    if(error_p.length != 0){
+        error_text += "\n"+error_p;
+    }
+
+    error_text = error_text.replaceAll("ERROR:", "");
+    console.log(error_text);
+    if(error_text.length != 0){
+        alert(error_text);
+    }
+    </script>
+
+    {{ include('user_editor/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('user_profile') }}">back to your profile</a>
+    </div>
+
+{% endblock %}
