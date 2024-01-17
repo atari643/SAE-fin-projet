@@ -243,6 +243,11 @@ class UserController extends MotherController
     public function seriesReviews(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
         $user = $this->getUser();
+        if (null == $user) {
+            $login = $this->generateUrl('app_login');
+
+            return $this->redirect($login);
+        }
         $id = $user->getId();
         $name = $user->getName();
         $infoRating = $this->getUserRatingsById($entityManager, $id);
@@ -267,6 +272,11 @@ class UserController extends MotherController
         $users = $entityManager
         ->getRepository(User::class);
         $user = $users->findOneBy(array('name' => $username));
+        if (null == $user) {
+            $login = $this->generateUrl('app_login');
+
+            return $this->redirect($login);
+        }
         $id = $user->getId();
         $infoRating = $this->getUserRatingsById($entityManager, $id /* $username */);
         $pagination = $paginator->paginate(
