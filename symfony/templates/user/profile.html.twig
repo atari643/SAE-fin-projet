@@ -14,6 +14,9 @@
 <img src="https://ui-avatars.com/api/?name={{ user }}&background=random&rounded=true" style="display: inline;">
 <a href="/user/series/{{ user }}">{{user}} 's list of <span id="bigWord">series</span></a>
 <a href="/user/ratings/{{ user }}">{{user}} 's list of <span id="bigWord">ratings</span></a>
+{% if app.user.name == user %}
+    <a href="/user/edit">Edit your <span id="bigWord">settings</span></a>
+{% endif %}
 
 <table id="seriesTable">
 <tbody>
