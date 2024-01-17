@@ -2,13 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Genre;
 use App\Entity\Rating;
 use App\Entity\Series;
 use App\Repository\SeriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,6 +32,7 @@ class SeasonController extends MotherController
             'comments' => $comments,
         ];
     }
+
     #[Route('/series/{id}/season/{num}', name: 'app_index_season_info')]
     public function seasonInfo(SeriesRepository $repository, int $id, int $num, EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
     {
@@ -90,6 +89,7 @@ class SeasonController extends MotherController
             ]
         );
     }
+
     #[Route('/series/{id}/season/{num}/add', name: 'app_index_season_info_add')]
     public function seasonAdd(SeriesRepository $repository, int $id, int $num, EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
     {
