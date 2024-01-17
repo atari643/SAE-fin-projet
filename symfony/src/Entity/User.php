@@ -203,7 +203,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function isFake(): ?bool
     {
         return $this->fake;
-    }//end isAdmin()
+    }//end isFake()
 
 
     public function setFake(bool $fake): self
@@ -211,7 +211,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->fake = $fake;
 
         return $this;
-    }//end setAdmin()
+    }//end setFake()
 
 
     public function getCountry(): ?Country

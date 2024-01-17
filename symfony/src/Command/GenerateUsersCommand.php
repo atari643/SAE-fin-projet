@@ -61,6 +61,7 @@ class GenerateUsersCommand extends Command
                     $password
                 )
             );
+            $user->setFake(true);
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 
