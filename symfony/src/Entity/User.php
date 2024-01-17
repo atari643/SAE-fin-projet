@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 // under the assumption that the user must be unique
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 #[ORM\Table(
@@ -122,6 +123,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $metadata->addPropertyConstraint('name', new ContainsAlphanumeric(['mode' => 'loose']));
 
         $metadata->addPropertyConstraint('email', new Assert\Email(['message' => 'The email address is invalid']));
+        $metadata->addPropertyConstraint(
+            'password',
+            new SecurityAssert\UserPassword([
+                'message' => 'Wrong value for your current password',
+                'groups' => ['update'],
+            ])
+        );
     }//end loadValidatorMetadata()
 
 

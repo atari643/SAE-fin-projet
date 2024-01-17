@@ -3,8 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Country;
-use App\Entity\Episode;
-use App\Entity\Series;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -15,13 +13,31 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UserType extends AbstractType
+class EditUserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('name')
-            /* ->add('password') */
+            ->add('password', PasswordType::class, ['mapped'      => false,
+            'attr'        => [
+                'autocomplete' => 'new-password',
+                'placeholder'  => 'Enter your old password',
+            ],
+            'constraints' => [
+                new NotBlank(
+                    ['message' => 'Please enter a password']
+                ),
+                new Length(
+                    [
+                        'min'        => 6,
+                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        // max length allowed by Symfony for security reasons
+                        'max'        => 4096,
+                    ]
+                ),
+            ],
+            ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'mapped'      => false,
@@ -47,7 +63,7 @@ class UserType extends AbstractType
             ])
             ->add('country', EntityType::class, [
                 'class' => Country::class,
-'choice_label' => 'name',
+    'choice_label' => 'name',
             ])
         ;
     }
@@ -56,6 +72,7 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'validation_groups' => ['update'],
         ]);
     }
 }
