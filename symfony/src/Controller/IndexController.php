@@ -3,11 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Genre;
-use App\Entity\Series;
 use App\Repository\SeriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,21 +13,28 @@ use Symfony\Component\Routing\Annotation\Route;
 class IndexController extends MotherController
 {
     #[Route('/', name: 'app_default', methods: ['GET', 'POST'])]
-    public function index(SeriesRepository $repository, Request $request, PaginatorInterface $paginator, EntityManagerInterface $entityManager): Response
+    public function index(SeriesRepository $seriesRepository, Request $request, PaginatorInterface $paginator, EntityManagerInterface $entityManager): Response
     {
+        if (null == $request->query->get('page') and !$request->isMethod('POST')) {
+            return $this->redirectToRoute('app_default', [
+                'page' => 1,
+            ]);
+        }
+
         if (PHP_SESSION_NONE === session_status()) {
             session_start();
         }
         if (!isset($_SESSION['seed'])) {
             $_SESSION['seed'] = rand();
         }
+
         $searchQuery = $request->query->get('search', '');
         $searchGenre = $request->query->get('genre', '');
         $searchYearStart = $request->query->get('yearStart', '');
         $searchYearEnd = $request->query->get('yearEnd', '');
         $searchFollow = $request->query->get('follow', '');
 
-        $series_infos = $repository->seriesInfo($_SESSION['seed']);
+        $series_infos = $seriesRepository->seriesInfo($_SESSION['seed']);
         if (null != $searchQuery) {
             $series_infos = $series_infos->where('s.title LIKE :query OR s.plot LIKE :query')->setParameter('query', '%'.$searchQuery.'%')->orderBy('CASE WHEN s.title LIKE :query THEN 1 ELSE 2 END')->setParameter('query', '%'.$searchQuery.'%');
         }
@@ -58,23 +63,18 @@ class IndexController extends MotherController
         // region Follow/Unfollow Series
         $user = $this->getUser();
         if (null != $request->request->get('add')) {
+            $seriesToModify = $seriesRepository->seriesInfoById($request->request->get('id'));
             if ('true' == $request->request->get('add')) {
-                $series = $entityManager
-                ->getRepository(Series::class);
-                $seriesToAdd = $series->find($request->request->get('id'));
-
-                $user->addSeries($seriesToAdd);
-                $entityManager->persist($seriesToAdd);
-                $entityManager->flush();
+                $user->addSeries($seriesToModify);
+                $entityManager->persist($seriesToModify);
+                
             } else {
-                $series = $entityManager
-                ->getRepository(Series::class);
-                $seriesToRemove = $series->find($request->request->get('id'));
-                $user->removeSeries($seriesToRemove);
-                $entityManager->flush();
+                
+                $user->removeSeries($seriesToModify);
+                $entityManager->persist($seriesToModify);
             }
         }
-
+        $entityManager->flush();
         // endregion
         $pagination = $paginator->paginate(
             $series_infos,

@@ -8,18 +8,39 @@
 	<link rel="stylesheet" href="/ratings.css"/>
 	<link rel="stylesheet" href="/cardRatings.css"/>
 
-	<div id="headerOfRatings">
-		<h1>
-			<div id="headerTextOfRatings">
-				<p>Ratings de l'utilisateur
-					<span class="spanUsernameOfRatingsC">{{ user }}</span>
-				</p>
-				{# </div>
-																																				            <div id="avatarOfRatings"> #}
-				<a href="{{path('user_profile_search',{username: user})}}"><img src="https://ui-avatars.com/api/?name={{ user }}&background=random&rounded=true" style="display: inline;"></a>
-			</div>
-		</h1>
-	</div>
+    <div class="headerOfRatings">
+        <h1>
+            <div class="headerTextOfRatings">
+                <p>Ratings de l'utilisateur <span class="spanUsernameOfRatingsC">{{ user }}</span></p>
+            {# </div>
+            <div id="avatarOfRatings"> #}
+                <a href="{{path('user_profile_search',{username: user})}}"><img src="https://ui-avatars.com/api/?name={{ user }}&background=random&rounded=true" style="display: inline;"></a>
+            </div>
+        </h1>
+    </div>
+    
+    {% if comments is empty %}
+        <div>L'utilisateur <span class="spanUsernameOfRatingsC">{{user}}</span> n'a rien noté !</div>
+    {% else %}
+        <table style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
+            <thead>
+                <tr>
+                    <td>Note</td>
+                    <td>Commentaire</td>
+                    <td>Série</td>
+                    <td><div id="imageTheadOfRatings">Poster</div></td>
+                    <td>Date</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for comment in comments|reverse %}
+                    <tr>
+                        {# <td><a href="{{path('series_reviews_by_user',{username: comment.user.name})}}"><img src="https://ui-avatars.com/api/?name={{ comment.user.name }}&background=random&rounded=true" style="display: inline;"></a>{{comment.user.name}}</td> #}
+                        <td><div id="ratingOfRatings">{{ comment.value }}</div></td>
+                        <td> {{ comment.comment }}</td>
+                        <td> {{ comment.series.title }}</td>
+                        <td><a href="{{ path('app_index_series_info',{id: comment.series.id}) }}">
+                            <img id="imagePoster" src="{{ path('app_series_poster',{id: comment.series.id}) }}" alt='Series Poster'></a></td>
 
 	{% if comments is empty %}
 		<div>L'utilisateur

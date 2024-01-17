@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserType;
 use App\Entity\Rating;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\SeriesRepository;
 
@@ -59,8 +60,7 @@ class UserController extends MotherController
         } else {
             return $this->redirect($this->generateUrl('app_login')); // si accessible alors : $userAdminOrNot=false;
         }
-        $users       = $entityManager->getRepository(User::class);
-        $users_limit = $users->findBy([], null, USERS_PER_PAGE, (USERS_PER_PAGE * ($page - 1)));
+        $users = $entityManager->getRepository(User::class)->findAll();
 
         $count = $usersRepository->createQueryBuilder('users')->select('count(users.id)')->getQuery()->getSingleScalarResult();
 
@@ -94,7 +94,7 @@ class UserController extends MotherController
             }
         }
         $pagination = $paginator->paginate(
-            $users_limit,
+            $users,
             $request->query->getInt('page', 1),
             USERS_PER_PAGE
         );
@@ -176,11 +176,17 @@ class UserController extends MotherController
             $request->query->getInt('page', 1),
             10 // 5 by page
         );
+
+        $comments = $infoRating['comments'];
+        usort($comments, function($a, $b) {
+            return $b->getDate() <=> $a->getDate();
+        });
+        
         return $this->render('user/profile.html.twig', [
             'user' => $name,
             'pagination' => $pagination,
             'pagination2' => $pagination2,
-            'comments' => $infoRating['comments'],
+            'comments' => $comments,
             ]);
     }//end userProfile()
 
@@ -200,7 +206,7 @@ class UserController extends MotherController
         $pagination = $paginator->paginate(
             $userOfUsername->getSeries(),
             $request->query->getInt('category') === 'series_followed' ? $request->query->getInt('page', 1) : 1,
-            10 // 40 series poster per user
+            10 
         );
         $pagination->setParam('category', 'series_followed');
         //paginating critics
@@ -209,7 +215,7 @@ class UserController extends MotherController
         $pagination2 = $paginator->paginate(
             $infoRating,
             $request->query->get('category') === 'series_critics' ? $request->query->getInt('page', 1) : 1,
-            10 // 5 by page
+            10 
         );
         $pagination2->setParam('category', 'series_critics');
 
@@ -286,5 +292,38 @@ class UserController extends MotherController
             'user' => $username,
             ]
         );
+    }
+
+    #[Route('/user/edit/', name: 'user_editor_edit', methods: ['GET', 'POST'])]
+    public function editProfile(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        if (null == $user) {
+            $login = $this->generateUrl('app_login');
+
+            return $this->redirect($login);
+        }
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid() && $user instanceof User) {
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('user_profile');
+        }
+
+        return $this->render('user/edit.html.twig', [
+            'user' => $user,
+            'form' => $form->createView(),
+            'errorN' => $form['name']->getErrors(true),
+            'errorP' => $form['plainPassword']->getErrors(true),
+        ]);
     }
 }

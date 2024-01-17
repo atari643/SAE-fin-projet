@@ -10,10 +10,19 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
 
-{{ user }}
+
+{% if app.user.name == user %}
+<h1>Hello {{ user }}</h1>
+{% else %}<h1>{{ user }}'s page</h1>
+{% endif %}
+
+
 <img src="https://ui-avatars.com/api/?name={{ user }}&background=random&rounded=true" style="display: inline;">
 <a href="/user/series/{{ user }}">{{user}} 's list of <span id="bigWord">series</span></a>
 <a href="/user/ratings/{{ user }}">{{user}} 's list of <span id="bigWord">ratings</span></a>
+{% if app.user.name == user %}
+    <a href="/user/edit">Edit your <span id="bigWord">settings</span></a>
+{% endif %}
 
 <table id="seriesTable">
 <tbody>

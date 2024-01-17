@@ -5,7 +5,9 @@ namespace App\Repository;
 use App\Entity\Series;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use DoctrineExtensions\Query\Mysql\Round;
 use DoctrineExtensions\Query\Mysql\Rand;
+
 
 /**
  * @extends ServiceEntityRepository<Series>
@@ -28,7 +30,7 @@ class SeriesRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('s')->select(
             's.id as id, s.title as title, s.poster, s.plot as plot, 
-            COUNT(DISTINCT se.number) as season_count, COUNT(e.number) as episode_count, s.youtubeTrailer, AVG(rating.value) as note'
+            COUNT(DISTINCT se.number) as season_count, COUNT(e.number) as episode_count, s.youtubeTrailer, ROUND(AVG(rating.value)) as note'
         )->leftJoin('App:Season', 'se', 'WITH', 's = se.series')
         ->leftJoin('App:Episode', 'e', 'WITH', 'se = e.season')
         ->leftJoin('s.genre', 'genre', 'WITH')
@@ -51,7 +53,12 @@ class SeriesRepository extends ServiceEntityRepository
             's.id as id, s.title as title, COUNT(Distinct(e.id)) as episode_count_view'
         )->leftJoin('App:Season', 'se', 'WITH', 's = se.series')->leftJoin('App:Episode', 'e', 'WITH', 'se = e.season')->leftJoin('s.user', 'user', 'WITH')->groupBy('s.id')->where(':user MEMBER OF e.user')->setParameter('user', $user)->getQuery()->getResult();
     }//end seriesAllInfo()
-
+    public function seriesEpisodeCountViewBySeries($user, $series)
+    {
+        return $this->createQueryBuilder('s')->select(
+            's.id as id, s.title as title, COUNT(Distinct(e.id)) as episode_count_view'
+        )->leftJoin('App:Season', 'se', 'WITH', 's = se.series')->leftJoin('App:Episode', 'e', 'WITH', 'se = e.season')->leftJoin('s.user', 'user', 'WITH')->groupBy('s.id')->where(':user MEMBER OF e.user')->andWhere('s.id = :series')->setParameter('user', $user)->setParameter('series', $series)->getQuery()->getResult();
+    }//end seriesAllInfo()
     public function seriesInfoById($id)
     {
         return $this->createQueryBuilder('s')->select('s')->leftJoin('s.seasons', 'seasons')->leftJoin('seasons.episodes', 'episode')->leftJoin('s.genre', 'genre', 'WITH')->leftJoin('s.user', 'user', 'WITH')->where('s.id = :id')->setParameter('id', $id)->orderBy('episode.number', 'ASC')->getQuery()->getOneOrNullResult();
@@ -62,8 +69,4 @@ class SeriesRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('s')->select('s')->leftJoin('s.seasons', 'seasons')->leftJoin('seasons.episodes', 'episode')->leftJoin('s.genre', 'genre', 'WITH')->leftJoin('s.user', 'user', 'WITH')->where('s.id = :id')->andWhere('seasons.number = :num')->setParameter('id', $id)->setParameter('num', $num)->getQuery()->getOneOrNullResult();
     }//end seriesInfoByIdAndSeason()
-    public function seriesInfoByIdAndSeasonAndEpisode($id, $num, $ep)
-    {
-        return $this->createQueryBuilder('episode')->select('s')->leftJoin('s.seasons', 'seasons')->leftJoin('seasons.episodes', 'episode')->leftJoin('s.genre', 'genre', 'WITH')->leftJoin('s.user', 'user', 'WITH')->where('s.id = :id')->andWhere('seasons.number = :num')->andWhere('episode.number = :ep')->setParameter('id', $id)->setParameter('num', $num)->setParameter('ep', $ep)->getQuery()->getOneOrNullResult();
-    }//end seriesInfoByIdAndSeasonAndEpisode()
 }//end class

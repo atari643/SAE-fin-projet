@@ -24,6 +24,7 @@ doctrine:
         dql:
             numeric_functions:
                 rand: DoctrineExtensions\Query\Mysql\Rand
+                round: DoctrineExtensions\Query\Mysql\Round
                 
 
 when@test:

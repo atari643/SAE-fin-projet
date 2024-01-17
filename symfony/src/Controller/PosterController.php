@@ -2,23 +2,17 @@
 
 namespace App\Controller;
 
-use App\Entity\Genre;
-use App\Entity\Rating;
-use App\Entity\Series;
+
 use App\Repository\SeriesRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PosterController extends MotherController
 {
     #[Route('/poster/{id}', name: 'app_series_poster')]
-    public function showPoster(EntityManagerInterface $entityManager, int $id): ?Response
+    public function showPoster(SeriesRepository $seriesRepository, int $id): ?Response
     {
-        $series = $entityManager->find(Series::class, $id);
+        $series = $seriesRepository->seriesInfoById($id);
         header('Content-Type: image/jpeg');
         $response = new Response(
             'Content-Type',

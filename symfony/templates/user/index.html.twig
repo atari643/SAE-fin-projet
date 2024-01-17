@@ -6,6 +6,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="/index.css" />
     <link rel="stylesheet" href="/css/users.css" />
+    <style>td p a:link {color:yellow;}
+    td p a:visited {color:orange;}</style>
 
     <h1>Users List</h1>
 
@@ -19,7 +21,7 @@
             <tr>
                 <td></td>
                 <td>Name</td>
-                {# <td>Email</td> #}
+                <td>Email</td>
                 <td>View profile</td>
                 <td>Creation Date</td>
                 <td>Role</td>
@@ -32,8 +34,13 @@
         <tbody>
             <tr class="user">
             <td><img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random&rounded=true" style="display: inline;"></td>
-            <td><p style="display: inline;">{{ user.name }}</p></td>
-            {# <td><p style="display: inline;">{{ user.email }}</p></td> #}
+            <td>
+                <p style="display: inline;">{{ user.name }}</p>
+                {% if user.fake == '1' %}
+                    <span class="material-symbols-outlined bot-icon">smart_toy</span>
+                {% endif %}
+            </td>
+            <td><p style="display: inline;">{{ user.email }}</p></td>
             <td><p style="display: inline;"><a href="/user/profile/{{ user.name }}">View</a></p></td>
             <td><p style="display: inline;">{{ user.registerDate|date('Y-m-d') }}</p></td>
             <td>
@@ -45,7 +52,7 @@
             </td>
             
             {% if app.user and app.user.admin == 1 %}
-            <td class="impersonate"><a href="http://localhost:8000/?page=1&_switch_user={{user.name}}"><span style="display: inline;" class="material-symbols-outlined">login</span>Impersonate</a></td>
+            <td class="impersonate"><a href="http://localhost:8000/?page=1&_switch_user={{user.email}}"><span style="display: inline;" class="material-symbols-outlined">login</span>Impersonate</a></td>
             {% endif %}
             </tr>
         </tbody>
