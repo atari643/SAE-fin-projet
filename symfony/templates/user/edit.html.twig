@@ -3,13 +3,14 @@
 {% block title %}Edit User{% endblock %}
 
 {% block body %}
-    <h1>Edit User</h1>
+    <link rel="stylesheet" href="/ratings.css" />
+    <link rel="stylesheet" href="/profile.css" />
+    <link rel="stylesheet" href="{{ asset('/register-login.css') }}"> 
+    <h1>Edit your profile</h1>
 
     <style>
     .form_body ul{display:none;}
     </style>
-    <div class="form_body">
-
     <script>
     error_n = "{{ errorN|e('js') }}";
     
@@ -30,9 +31,24 @@
     }
     </script>
 
-    {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
+<div class="form_body">
 
-    <a href="{{ path('user_profile') }}">back to your profile</a>
+    {{ form_start(form) }} 
+        {{ form_row(form.name)}}        
+        {{ form_row(form.plainPassword, {
+            label: 'Password'
+        }) }}
+        {{ form_row(form.country) }}
+        {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ form_end(form) }}
+
+    <div class="HeaderOfRatings" style="width: fit-content; transform : translateX(40%); margin-top : 15px;">
+        <div class="headerTextOfRatings" style=""><p><a href="{{ path('user_profile') }}">Check</a> your profile</p>
+            <a href="{{ path('user_profile') }}">
+            <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random&rounded=true" style="display: inline; margin-left : 15px;"></a>
+        </div>
     </div>
+
+</div>
 
 {% endblock %}

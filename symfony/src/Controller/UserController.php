@@ -307,7 +307,7 @@ class UserController extends MotherController
 
         return $this->render('user/edit.html.twig', [
             'user' => $user,
-            'form' => $form,
+            'form' => $form->createView(),
             'errorN' => $form['name']->getErrors(true),
             'errorP' => $form['plainPassword']->getErrors(true),
         ]);
