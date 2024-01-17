@@ -327,6 +327,53 @@
         const series = document.getElementsByClassName('showChildSeries');
         const seriesPoster = document.getElementsByClassName('posters');
         let hover = false;
+        if(mediaqueries.width <= 650){
+          const burger = document.createElement('div');
+          burger.classList.add('burger');
+          burger.innerHTML = '<span class="material-symbols-outlined">menu</span>';
+          document.body.appendChild(burger);
+          burger.addEventListener('click', function () {
+            if(document.getElementById('menu').style.display == 'flex'){
+              document.getElementById('menu').style.display = 'none';
+            }else{
+              document.getElementById('menu').style.display = 'flex';
+            }
+          });
+          for (let i = 0; i < series.length; i++) {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            series[i].appendChild(card);
+            const title = document.createElement('p');
+            title.classList.add('titleCard');
+            title.innerHTML = series[i].dataset.title;
+            card.appendChild(title);
+            const duration = document.createElement('p');
+            duration.classList.add('durationCard');
+            if (series[i].dataset.duration != null) {
+              duration.innerHTML = series[i].dataset.duration;
+            } else if (series[i].dataset.épisodes != null) {
+              duration.innerHTML = series[i].dataset.épisodes;
+            } else {
+              duration.innerHTML = 'Pas de durée estimée';
+            } card.appendChild(duration);
+            if(duration.innerHTML.includes('Seasons')){
+              const duration2 = duration.innerHTML.split(' ');
+              const seasons = duration2[0];
+              const episodes = duration2[3];
+              duration.innerHTML = 'S' + seasons + ' <span>·</span> E' + episodes;
+            }
+            const parentStars = document.createElement('div');
+            parentStars.classList.add('parentStarsCard');
+            for (let j = 0; j < series[i].dataset.avis; j++) {
+              parentStars.innerHTML += '<span class="material-symbols-outlined">grade</span>';
+            }
+            for (let j = 0; j < 5 - series[i].dataset.avis; j++) {
+              parentStars.innerHTML += '<span class="material-symbols-outlined">grade</span>';
+              parentStars.lastChild.style.color = '#e3f7f5';
+            }
+            card.appendChild(parentStars);
+          }
+        }
         for (let i = 0; i < series.length; i++) {
           if (mediaqueries.width > 650) {
             seriesPoster[i].addEventListener('mouseover', function () {
@@ -349,7 +396,11 @@
                 document.getElementById('show').style.marginRight = '0';
               }
             }
-            makeBannerLeft(series[i], seriesPoster[i]);
+            if(mediaqueries.width > 650){
+              makeBannerLeft(series[i], seriesPoster[i]);
+            }else{
+              window.location.href = "/series/" + series[i].dataset.id;
+            }
           });
           let hoverTimer;
           let hoverTimer2;
@@ -430,7 +481,6 @@
           });
         }
 
-
         function posterHover(i) {
           const overlay = document.createElement('div');
           overlay.classList.add('overlay');
@@ -466,25 +516,6 @@
           ) + 'px) scale(1.08)';
         }
       }
-    if(mediaqueries.width <= 650){
-      const show = document.getElementById('show');
-      const slideLeft = document.createElement('div');
-      const slideRight = document.createElement('div');
-      slideLeft.classList.add('slideLeft');
-      slideRight.classList.add('slideRight');
-      slideLeft.innerHTML = '<span class="material-symbols-outlined">arrow_left</span>';
-      slideRight.innerHTML = '<span class="material-symbols-outlined">arrow_right</span>';
-      document.body.appendChild(slideLeft);
-      document.body.appendChild(slideRight);
-      slideLeft.addEventListener('click', function () {
-        show.scrollLeft -= 250;
-      });
-      slideRight.addEventListener('click', function () {
-        show.scrollLeft += 250;
-      });
-      slideLeft.style.top = show.offsetTop + ((show.offsetHeight - slideLeft.offsetTop)/2) + 'px';
-      slideRight.style.top = show.offsetTop + ((show.offsetHeight - slideRight.offsetTop)/2) + 'px';
-    }
       function makeBannerLeft(poster, posterImg) {
         const banner = document.createElement('div');
         banner.classList.add('banner');
