@@ -14,7 +14,7 @@ use App\Repository\SeriesRepository;
 
 const USERS_PER_PAGE = 10;
 
-class UserController extends AbstractController
+class UserController extends MotherController
 {
     #[Route('/users', name: 'app_users', methods: ['GET', 'POST'])]
     public function index(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
