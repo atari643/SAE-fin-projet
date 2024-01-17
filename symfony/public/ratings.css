@@ -1,21 +1,24 @@
-#ratingOfRatings{
+#ratingOfRatings {
     font-weight: bold;
 }
 
-th, td {padding-bottom: 40px;}
+th,
+td {
+    padding-bottom: 40px;
+}
 
-#imagePoster{
+#imagePoster {
     height: auto;
     max-width: 20%;
     margin-left: 40%;
 }
 
-#imageTheadOfRatings{
+#imageTheadOfRatings {
     margin-left: 45%;
 }
 
-.spanUsernameOfRatingsC{
-    color:goldenrod;
+.spanUsernameOfRatingsC {
+    color: goldenrod;
 }
 
 #headerOfRatings {
@@ -23,16 +26,62 @@ th, td {padding-bottom: 40px;}
     align-items: center;
     height: 100%;
 }
-#headerOfRatings img{
+
+#headerOfRatings img {
     margin-left: 15px;
 }
 
-#headerTextOfRatings{
+#headerTextOfRatings {
     display: flex;
     align-items: center;
 }
+
 /*
 #avatarOfRatings{
     margin-bottom: 10px;
     flex-direction: column;
 } */
+
+.ratingRatings {
+    transform: translateZ(100px);
+    font-weight: 600;
+    position: absolute;
+    top: 20px;
+    right: 0px;
+    color: white;
+    transform-style: preserve-3d;
+    z-index: 3;
+    font-size: 2.2em;
+    transform: translateZ(0px);
+    margin: 0;
+    height: fit-content;
+}
+
+.ratingRatings>span{
+    display: block;
+    font-size: 0.5em;
+    font-weight: 400;
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 10px;
+    text-shadow: 2px 2px 2px rgba(0,0,0,1);
+}
+
+.containerRatings {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 276px);
+    grid-gap: 2em;
+    width: 100%;
+    justify-content: center;
+}
+
+.comentRatings,
+.dateRatings {
+    transform: translateZ(-60px) rotatey(-180deg);
+}
+
+.comentRatings>a{
+    color: #fff;
+}
