@@ -23,6 +23,7 @@ class IndexController extends MotherController
         if (!isset($_SESSION['seed'])) {
             $_SESSION['seed'] = rand();
         }
+        
         $searchQuery = $request->query->get('search', '');
         $searchGenre = $request->query->get('genre', '');
         $searchYearStart = $request->query->get('yearStart', '');
