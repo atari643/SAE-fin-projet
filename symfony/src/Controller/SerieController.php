@@ -2,21 +2,16 @@
 
 namespace App\Controller;
 
-
-use App\Entity\Genre;
 use App\Entity\Rating;
 use App\Entity\Series;
 use App\Repository\SeriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-
-
-class SerieController extends AbstractController
+class SerieController extends MotherController
 {
     private function getRatings(EntityManagerInterface $entityManager, int $id)
     {
@@ -174,14 +169,14 @@ class SerieController extends AbstractController
         $paginationSeason = $paginator->paginate(
             $seasons,
             'seasons' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
-            10
+            ITEMS_PER_PAGE
         );
         $paginationSeason->setParam('pageList', 'seasons');
 
         $paginationComments = $paginator->paginate(
             $comments,
             'comments' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
-            10
+            ITEMS_PER_PAGE
         );
         $paginationComments->setParam('pageList', 'comments');
 
@@ -205,6 +200,7 @@ class SerieController extends AbstractController
             'seriesView' => $seriesView,
         ]);
     }
+
     #[Route('/series/{id}/add', name: 'app_index_series_add')]
     public function serieAdd(SeriesRepository $repository, int $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
     {
@@ -245,6 +241,7 @@ class SerieController extends AbstractController
 
         return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
     }
+
     private function addRatingIntoBase(EntityManagerInterface $entityManager, int $id, Request $request)
     {
         $series = $entityManager->find(Series::class, $id);

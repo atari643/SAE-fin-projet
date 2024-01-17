@@ -92,3 +92,23 @@ Pour enlever un utilisateur adminstrateur lancez le script:
     ./scriptBDAdminRights/removeAdminRights.sh
     ```
 
+# Générer de faux utilisateurs pour peupler la base de données
+
+Nous avons réalisé une commande Symfony qui vous permet de générer un certain nombre d'utilisateurs fictifs dans la base de données.
+Afin d'utiliser cette commande vous devez vous positionner à la racine de votre projet Symfony puis exécuter cette commande en remplaçant le paramètre "Nombre" par le nombre d'utilisateurs à générer :
+
+```
+    symfony console app:generate-users <Nombre>
+```
+
+# Générer de fausses critiques pour peupler la base de données
+
+Nous avons réalisé une commande Symfony qui vous permet de générer un certain nombre de critiques fictives dans la base de données.
+Afin d'utiliser cette commande vous devez avoir générer des utilisateurs fictifs grâce à l'étape précédente.
+Vous pouvez ensuite vous placer à la racine de votre projet et exécuter la commande suivante avec en argument obligatoire le "Nombre" de critiques à générer :
+
+```
+    symfony console app:generate-reviews <Nombre> <Moyenne> <Ecart Type>
+```
+
+Les arguments "Moyenne" et "Ecart Type" ne sont pas obligatoire, ils permettent de générer les notes aléatoires suivant une fonction de Gauss.

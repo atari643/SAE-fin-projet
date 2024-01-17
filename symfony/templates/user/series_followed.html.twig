@@ -4,6 +4,8 @@
 
 {% block body %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>td a:link {color:yellow;}
+    td a:visited {color:orange;}</style>
 
     <h1>Followed series</h1>
 
@@ -27,12 +29,27 @@
                     <tr class="series">
                         <td><img src="{{ path('app_series_poster',{id: s.id}) }}" style="width: 8%;"></td>
                         <td><p style="display: inline;">{{ s.title }}</p></td>
-                        {% set percentage = (seriesView[i].episode_count_view / s.episode_count) * 100 %}
-                        <td>{{ seriesView[i].episode_count_view }}/{{ s.episode_count }}</td>
+
+                        {% set episode_count = 0 %}
+                        {% if seriesView|length > 0 %}
+                            {% for se in seriesView %}
+
+                                {% if s.id == se.id %}
+                                    {% set episode_count = se.episode_count_view %}
+                                {% endif %}
+
+                            {% endfor %}
+                        {% endif %}
+
+                        {% if s.episode_count > 0 %}
+                            {% set percentage = (episode_count / s.episode_count) * 100 %}
+                        {% else %}
+                            {% set percentage = 0 %}
+                        {% endif %}
+                        <td>{{ episode_count }}/{{ s.episode_count }}</td>
                         <td><progress id="percentageViews" max="100" value="{{ percentage }}"></progress></td>
                         <td><a href="{{ path('app_index_series_info',{id: s.id}) }}"><p>Go to page</p></a></td>
 
-                        {% set i = i + 1 %}
                     </tr>
                 </tbody>
             {% endfor %}

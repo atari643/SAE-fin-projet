@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class EpisodeController extends AbstractController
+class EpisodeController extends MotherController
 {
     #[Route('/series/{id}/season/{num}/episode/{idE}/add', name: 'app_index_episode_add')]
     public function episodeAdd(SeriesRepository $repository, int $id, int $num, int $idE, EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response

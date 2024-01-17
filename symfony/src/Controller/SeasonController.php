@@ -2,18 +2,16 @@
 
 namespace App\Controller;
 
-use App\Entity\Genre;
 use App\Entity\Rating;
 use App\Entity\Series;
 use App\Repository\SeriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class SeasonController extends AbstractController
+class SeasonController extends MotherController
 {
     private function getRatings(EntityManagerInterface $entityManager, int $id)
     {
@@ -34,6 +32,7 @@ class SeasonController extends AbstractController
             'comments' => $comments,
         ];
     }
+
     #[Route('/series/{id}/season/{num}', name: 'app_index_season_info')]
     public function seasonInfo(SeriesRepository $repository, int $id, int $num, EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
     {
@@ -44,14 +43,14 @@ class SeasonController extends AbstractController
         $pagination = $paginator->paginate(
             $episodes,
             'episodes' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
-            10
+            ITEMS_PER_PAGE
         );
         $pagination->setParam('pageList', 'episodes');
 
         $paginationSeason = $paginator->paginate(
             $seasons,
             'seasons' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
-            10
+            ITEMS_PER_PAGE
         );
         $paginationSeason->setParam('pageList', 'seasons');
         $val = 0;
@@ -67,10 +66,10 @@ class SeasonController extends AbstractController
         $paginationComments = $paginator->paginate(
             $comments,
             'comments' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
-            10
+            ITEMS_PER_PAGE
         );
 
-        $user = $this->getUser()->getId();
+        $user = $this->getUser();
         $seriesView = $repository->seriesEpisodeCountView($user);
 
         $paginationComments->setParam('pageList', 'comments');
@@ -90,6 +89,7 @@ class SeasonController extends AbstractController
             ]
         );
     }
+
     #[Route('/series/{id}/season/{num}/add', name: 'app_index_season_info_add')]
     public function seasonAdd(SeriesRepository $repository, int $id, int $num, EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
     {
@@ -109,39 +109,43 @@ class SeasonController extends AbstractController
             }
         }
 
-        return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
-    }
-
-    // end seasonInfo()
-    #[Route('/series/{id}/season/{num}/remove', name: 'app_index_season_info_remove')]
-    public function seasonRemove(SeriesRepository $repository, int $id, int $num, EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
-    {
-        $series = $entityManager
-        ->getRepository(Series::class);
-        $seriesToRemove = $series->findBy(['id' => $id]);
-        $seasons = $seriesToRemove[0]->getSeasons();
-        $user = $this->getUser();
-        $count = 0;
-        foreach ($seasons as $season) {
+    foreach ($seriesToAdd->getSeasons() as $season) {
+        if ($season->getNumber() == $num) {
             foreach ($season->getEpisodes() as $episode) {
-                if ($this->getUser()->getEpisode()->contains($episode)) {
-                    ++$count;
-                }
+                $user->addEpisode($episode);
             }
         }
-        if (1 == $count) {
-            $user->removeSeries($seriesToRemove[0]);
-            $entityManager->flush();
-        }
-        foreach ($seasons as $season) {
-            if ($season->getNumber() == $num) {
-                foreach ($season->getEpisodes() as $episode) {
-                    $this->getUser()->removeEpisode($episode);
-                    $entityManager->flush();
-                }
-            }
-        }
-
-        return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
     }
+
+    $entityManager->flush();
+
+    return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
+}
+
+#[Route('/series/{id}/season/{num}/remove', name: 'app_index_season_info_remove')]
+public function seasonRemove(SeriesRepository $repository, int $id, int $num, EntityManagerInterface $entityManager): Response
+{
+    $seriesToRemove = $repository->find($id);
+    $user = $this->getUser();
+
+    foreach ($seriesToRemove->getSeasons() as $season) {
+        if ($season->getNumber() == $num) {
+            foreach ($season->getEpisodes() as $episode) {
+                if ($user->getEpisode()->contains($episode)) {
+                    $user->removeEpisode($episode);
+                }
+            }
+        }
+    }
+    $entityManager->flush();
+    $count = $repository->seriesEpisodeCountViewBySeries($user, $seriesToRemove);
+    if ($count==[]) {
+        $user->removeSeries($seriesToRemove);
+    }
+   
+
+    $entityManager->flush();
+
+    return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
+}
 }

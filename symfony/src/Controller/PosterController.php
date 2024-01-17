@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class PosterController extends AbstractController
+class PosterController extends MotherController
 {
     #[Route('/poster/{id}', name: 'app_series_poster')]
     public function showPoster(EntityManagerInterface $entityManager, int $id): ?Response
