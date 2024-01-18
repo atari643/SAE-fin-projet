@@ -32,17 +32,17 @@
 				{% endif %}
 			</div>
 			<div id="parentItemMenuCenter">
-				<div class="itemMenu" onclick="window.location.href = '/?page=1'">
+				<div class="itemMenu" id="home" onclick="window.location.href = '/?page=1'">
 					<span class="material-symbols-outlined">
 						home
 					</span>
 				</div>
-				<div class="itemMenu" onclick="window.location.href = '/user/series'">
+				<div class="itemMenu" id="subscriptions" onclick="window.location.href = '/user/series'">
 					<span class="material-symbols-outlined">
 						subscriptions
 					</span>
 				</div>
-				<div class="itemMenu" onclick="window.location.href = '/users'">
+				<div class="itemMenu" id="group" onclick="window.location.href = '/users'">
 					<span class="material-symbols-outlined">
 						groups
 					</span>
@@ -71,17 +71,17 @@
     	const onThisPage = document.querySelector('body').dataset.onthispage;
     	const items = document.querySelectorAll('.itemMenu');
 		</script>
-		{% if is_granted('IS_IMPERSONATOR')  %}
+		{% if is_granted('ROLE_ADMIN')  %}
 			<script>
 			switch(onThisPage) {
 				case '/':
-					items[2].classList.add('onThisPage');
+					document.querySelector('#home').classList.add('onThisPage');
 					break;
 				case '/users':
-					items[3].classList.add('onThisPage');
+					document.querySelector('#group').classList.add('onThisPage');
 					break;
 				case '/user/series':
-					items[2].classList.add('onThisPage');
+					document.querySelector('#subscriptions').classList.add('onThisPage');
 					break;
 			}
 			</script>
@@ -89,13 +89,13 @@
 			<script>
 			switch(onThisPage) {
 				case '/':
-					items[1].classList.add('onThisPage');
+					document.querySelector('#home').classList.add('onThisPage');
 					break;
 				case '/users':
-					items[2].classList.add('onThisPage');
+					document.querySelector('#group').classList.add('onThisPage');
 					break;
 				case '/user/series':
-					items[1].classList.add('onThisPage');
+					document.querySelector('#subscriptions').classList.add('onThisPage');
 					break;
 			}
 			</script>

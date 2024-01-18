@@ -9,6 +9,10 @@
 
     <form action="{{ path('app_index_series_browse') }}" method="POST"><input type="text" name="page" class="page" value="1" hidden /><input type="text" name="search" class="search" placeholder="Search... for a series" value="{{ title }}" /><button type="submit" class="material-symbols-outlined">search</button></form>
 
+    {% if series == null and title != null %}
+        <p>Error, OMDB API key invalid or not specified. Please contact the administrator.</p>
+    {% endif %}
+
     {% if series != null %}
         {% if series['Error'] is not defined %}
             <div id="show">
