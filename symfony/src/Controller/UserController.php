@@ -135,19 +135,21 @@ class UserController extends MotherController
     }// end seriesFollowed()
 
     #[Route('/user/series/{username}', name: 'series_followed_search_user', methods: ['GET', 'POST'])]
-    public function seriesFollowedByUser(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, string $username): Response
+    public function seriesFollowedByUser(SeriesRepository $repository,  EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, string $username): Response
     {
         $users = $entityManager->getRepository(User::class);
         $user = $users->findOneBy(['name' => $username]);
+        $series = $repository->seriesEpisodesCount($user);
         $pagination = $paginator->paginate(
-            $user->getSeries(),
+            $series,
             $request->query->getInt('page', 1),
             10
         );
+        $seriesView = $repository->seriesEpisodeCountView($user);
 
         return $this->render(
             'user/series_followed.html.twig',
-            ['pagination' => $pagination]
+            ['pagination' => $pagination, 'seriesView' => $seriesView]
         );
     }// end seriesFollowedByUser()
 
