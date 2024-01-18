@@ -40,8 +40,11 @@ class SerieController extends MotherController
         if (null != $searchFollow) {
             $args['follow'] = $searchFollow;
         }
-        if (null != $searchRating) {
-            $args['rating'] = $searchRating;
+        if ('Select a rating' != $searchRating) {
+            $valid = ($searchRating <= 5) & ($searchRating >= 0);
+            if ($valid) {
+                $args['rating'] = $searchRating;
+            }
         }
 
         return $this->redirectToRoute('app_default', $args);
@@ -123,7 +126,7 @@ class SerieController extends MotherController
         $moy = 0;
         $nombreNotes = 0;
         $comments = $infoRating;
-        
+
         if (!empty($comments)) {
             foreach ($comments as $comment) {
                 $val = $comment->getValue();
@@ -151,12 +154,10 @@ class SerieController extends MotherController
                 });
 
                 $comments = array_merge($commentsChoisis, $autresComments);
-                
             } else {
                 usort($comments, function ($a, $b) {
                     return $b->getDate() <=> $a->getDate();
                 });
-                
             }
         }
 
