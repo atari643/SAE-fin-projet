@@ -60,7 +60,6 @@ class SerieController extends MotherController
     public function seriesInfo(SeriesRepository $seriesRepository,RatingRepository $ratingRepository, EntityManagerInterface $entityManager, int $id, Request $request, PaginatorInterface $paginator): Response
     {
         $filter = $request->query->get('filter');
-
         // region Follow/Unfollow Series
         $user = $this->getUser();
         $infoRating = $ratingRepository->getRatingUserConnectAndAllRatingComments($this->getUser(), $id);
@@ -224,6 +223,33 @@ class SerieController extends MotherController
         }
         $entityManager->flush();
         return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
+    }
+
+    #[Route('/browse/series', name: 'app_index_series_browse', methods: ['GET', 'POST'])]
+    public function browseSeries(PaginatorInterface $paginator, Request $request): Response
+    {
+        $title = $request->request->get('search');
+        $page = $request->request->get('page');
+        $obj = null;
+
+        if($page <= 0){
+            $page = 1;
+        }
+        
+        if($title != null){
+
+            $url = 'http://www.omdbapi.com/?apikey=66410286&s=' . $title . '&page=' . $page;
+            $finalURL = str_replace(' ', '+', $url);
+            $json = file_get_contents($finalURL);
+            $obj = json_decode($json, true);
+
+        }
+        
+        return $this->render('index/browse.html.twig', [
+            'title' => $title,
+            'series' => $obj,
+            'page' => $page
+        ]);
     }
 
     private function addRatingIntoBase(EntityManagerInterface $entityManager, int $id, Request $request)

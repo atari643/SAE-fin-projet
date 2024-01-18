@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Browse Series{% endblock %}
+
+{% block body %}
+    <link rel="stylesheet" href="/index.css" />
+
+    <h1>Browse Series Via OMDB API</h1>
+
+    <form action="{{ path('app_index_series_browse') }}" method="POST"><input type="text" name="page" class="page" value="1" hidden /><input type="text" name="search" class="search" placeholder="Search... for a series" value="{{ title }}" /><button type="submit" class="material-symbols-outlined">search</button></form>
+
+    {% if series != null %}
+        <div id="show">
+            {% for s in series['Search'] %}
+                <div class="showChildSeries" data-title="{{ s['Title'] }}">
+                    <img src="{{ s['Poster'] }}" alt="" class="posters">
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if series != null %}
+        <div class="pagination">
+            <form action="{{ path('app_index_series_browse') }}" method="POST"><input type="text" name="search" class="search" value="{{ title }}" hidden /><input type="text" name="page" class="page" value="{{ page - 1 }}" hidden /><button type="submit" class="api-pagination"><</button></form>
+            <form action="{{ path('app_index_series_browse') }}" method="POST"><input type="text" name="search" class="search" value="{{ title }}" hidden /><input type="text" name="page" class="page" value="{{ page + 1 }}" hidden /><button type="submit" class="api-pagination">></button></form>
+        </div>
+    {% endif %}
+
+{% endblock %}

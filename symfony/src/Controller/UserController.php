@@ -3,7 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\UserType;
+use App\Form\EditUserType;
+use App\Form\EditUserAdminType;
 use App\Entity\Rating;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -303,7 +304,7 @@ class UserController extends MotherController
 
             return $this->redirect($login);
         }
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(EditUserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $user instanceof User) {
@@ -324,6 +325,43 @@ class UserController extends MotherController
             'form' => $form->createView(),
             'errorN' => $form['name']->getErrors(true),
             'errorP' => $form['plainPassword']->getErrors(true),
+            'errorOldP' => $form['password']->getErrors(true),
+        ]);
+    }
+
+    #[Route('/user/edit/{username}/', name: 'user_editor_edit_Admin', methods: ['GET', 'POST'])]
+    public function editProfileUsername(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager,string $username): Response
+    {
+        $userIsAdmin = $this->getUser();
+        if (null == $userIsAdmin or (!$this->isGranted(('IS_IMPERSONATOR')))) {
+            $login = $this->generateUrl('app_login');
+
+            return $this->redirect($login);
+        }
+        $users      = $entityManager->getRepository(User::class);
+        $user       = $users->findOneBy(['name' => $username]);
+        $form = $this->createForm(EditUserAdminType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid() && $user instanceof User) {
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('user_profile');
+        }
+
+        return $this->render('user/edit.html.twig', [
+            'user' => $user,
+            'form' => $form->createView(),
+            'errorN' => $form['name']->getErrors(true),
+            'errorP' => $form['plainPassword']->getErrors(true),
+            'errorOldP' => '',
         ]);
     }
 }
