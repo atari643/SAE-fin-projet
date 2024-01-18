@@ -28,7 +28,7 @@ class UserController extends MotherController
             $get_string = '?';
             foreach (array_keys($get_args) as $key) {
                 $arg = $get_args[$key];
-                $get_string .= $key.'='.$arg.'&';
+                $get_string .= $key . '=' . $arg . '&';
             }
 
             $get_string .= 'page=1';
@@ -67,10 +67,10 @@ class UserController extends MotherController
 
         $search_query = $request->query->get('search');
         $user_specific = $entityManager->createQueryBuilder()
-        ->select(
-            'u.id as id, u.name as name, u.registerDate as registerDate, u.admin, u.fake, u.email'
-        )
-        ->from('App:User', 'u');
+            ->select(
+                'u.id as id, u.name as name, u.registerDate as registerDate, u.admin, u.fake, u.email'
+            )
+            ->from('App:User', 'u');
         if (!empty($search_query)) {
             $user_specific = $user_specific->where('u.name LIKE :search')
                 ->setParameter('search', "$search_query%");
@@ -107,9 +107,9 @@ class UserController extends MotherController
             ]);
         } else {
             return $this->render('user/index_user.html.twig', [
-            'pagination' => $pagination,
-            'count' => $count,
-            'username' => '',
+                'pagination' => $pagination,
+                'count' => $count,
+                'username' => '',
             ]);
         }
     }
@@ -129,13 +129,15 @@ class UserController extends MotherController
 
         return $this->render(
             'user/series_followed.html.twig',
-            ['pagination' => $pagination,
-             'seriesView' => $seriesView]
+            [
+                'pagination' => $pagination,
+                'seriesView' => $seriesView
+            ]
         );
-    }// end seriesFollowed()
+    } // end seriesFollowed()
 
     #[Route('/user/series/{username}', name: 'series_followed_search_user', methods: ['GET', 'POST'])]
-    public function seriesFollowedByUser(SeriesRepository $repository,  EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, string $username): Response
+    public function seriesFollowedByUser(SeriesRepository $repository, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, string $username): Response
     {
         $users = $entityManager->getRepository(User::class);
         $user = $users->findOneBy(['name' => $username]);
@@ -151,7 +153,7 @@ class UserController extends MotherController
             'user/series_followed.html.twig',
             ['pagination' => $pagination, 'seriesView' => $seriesView]
         );
-    }// end seriesFollowedByUser()
+    } // end seriesFollowedByUser()
 
     #[Route('/user/profile', name: 'user_profile', methods: ['GET', 'POST'])]
     public function userProfile(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
@@ -187,8 +189,8 @@ class UserController extends MotherController
             'pagination' => $pagination,
             'pagination2' => $pagination2,
             'comments' => $comments,
-            ]);
-    }// end userProfile()
+        ]);
+    } // end userProfile()
 
     #[Route('/user/profile/{username}', name: 'user_profile_search', methods: ['GET', 'POST'])]
     public function userProfileSearch(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, string $username): Response
@@ -258,9 +260,9 @@ class UserController extends MotherController
         return $this->render(
             'user/ratings.html.twig',
             [
-            'pagination' => $pagination,
-            'comments' => $infoRating['comments'],
-            'user' => $name,
+                'pagination' => $pagination,
+                'comments' => $infoRating['comments'],
+                'user' => $name,
             ]
         );
     }
@@ -269,7 +271,7 @@ class UserController extends MotherController
     public function seriesReviewsByUser(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, string $username): Response
     {
         $users = $entityManager
-        ->getRepository(User::class);
+            ->getRepository(User::class);
         $user = $users->findOneBy(['name' => $username]);
         if (null == $user) {
             $login = $this->generateUrl('app_login');
@@ -287,9 +289,9 @@ class UserController extends MotherController
         return $this->render(
             'user/ratings.html.twig',
             [
-            'pagination' => $pagination,
-            'comments' => $infoRating['comments'],
-            'user' => $username,
+                'pagination' => $pagination,
+                'comments' => $infoRating['comments'],
+                'user' => $username,
             ]
         );
     }
@@ -306,8 +308,8 @@ class UserController extends MotherController
         $form = $this->createForm(EditUserType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()&& $user instanceof User){
-            if($form->isValid()) {
+        if ($form->isSubmitted() && $user instanceof User) {
+            if ($form->isValid()) {
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
                         $user,
@@ -318,8 +320,7 @@ class UserController extends MotherController
                 $entityManager->flush();
 
                 return $this->redirectToRoute('user_profile');
-            } else if (($form['plainPassword']->getViewData()['first'])=="" && ($form['plainPassword']->getViewData()['second'])=="" && ($form['password']->getViewData())=="")
-            {
+            } elseif (($form['plainPassword']->getViewData()['first']) == "" && ($form['plainPassword']->getViewData()['second']) == "" && ($form['password']->getViewData()) == "") {
                 dump($form['plainPassword']);
                 $entityManager->persist($user);
                 $entityManager->flush();

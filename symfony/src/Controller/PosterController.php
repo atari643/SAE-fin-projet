@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-
 use App\Repository\SeriesRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,5 +21,5 @@ class PosterController extends MotherController
         $response->setContent(stream_get_contents($series->getPoster()));
 
         return $response;
-    }// end showPoster()
+    } // end showPoster()
 }// end class

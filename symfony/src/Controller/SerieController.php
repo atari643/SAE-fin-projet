@@ -111,7 +111,7 @@ class SerieController extends MotherController
 
             return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
             // end if
-        }// end if
+        } // end if
 
         // Different score (5 stars, 4...)
         $scoreSerie = [
@@ -186,17 +186,19 @@ class SerieController extends MotherController
         }
 
         return $this->render(
-            'index/seriesInfo.html.twig', [
-            'series' => $series,
-            'paginationSeason' => $paginationSeason,
-            'pagination' => null,
-            'userRating' => $userRating ? $userRating->getValue() : null,
-            'userComment' => $userRating ? $userRating->getComment() : null,
-            'paginationComments' => $paginationComments,
-            'serieScore' => $scoreSerie,
-            'nombreNotes' => $nombreNotes,
-            'seriesView' => $seriesView,
-        ]);
+            'index/seriesInfo.html.twig',
+            [
+                'series' => $series,
+                'paginationSeason' => $paginationSeason,
+                'pagination' => null,
+                'userRating' => $userRating ? $userRating->getValue() : null,
+                'userComment' => $userRating ? $userRating->getComment() : null,
+                'paginationComments' => $paginationComments,
+                'serieScore' => $scoreSerie,
+                'nombreNotes' => $nombreNotes,
+                'seriesView' => $seriesView,
+            ]
+        );
     }
 
     #[Route('/series/{id}/add', name: 'app_index_series_add')]
@@ -249,12 +251,13 @@ class SerieController extends MotherController
 
         if (null != $title) {
             $omdbkey = $this->getParameter('app.omdbapi_key');
-            $url = 'http://www.omdbapi.com/?apikey=' . $omdbkey . '&s='.$title.'&page='.$page;
+            $url = 'http://www.omdbapi.com/?apikey=' . $omdbkey . '&s=' . $title . '&page=' . $page;
             $finalURL = str_replace(' ', '+', $url);
             try {
                 $json = file_get_contents($finalURL);
                 $obj = json_decode($json, true);
-            } catch(Exception $e){}
+            } catch (Exception $e) {
+            }
         }
 
         return $this->render('index/browse.html.twig', [

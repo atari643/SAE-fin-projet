@@ -36,11 +36,11 @@ class IndexController extends MotherController
         $searchRating = $request->query->get('rating', '');
 
         $series_infos = $seriesRepository->seriesInfo();
-        if(null != $searchRating){
+        if (null != $searchRating) {
             $series_infos = $series_infos->having('ROUND(AVG(rating.value)) = :rating')->setParameter('rating', $searchRating);
         }
         if (null != $searchQuery) {
-            $series_infos = $series_infos->where('s.title LIKE :query OR s.plot LIKE :query')->setParameter('query', '%'.$searchQuery.'%')->orderBy('CASE WHEN s.title LIKE :query THEN 1 ELSE 2 END')->setParameter('query', '%'.$searchQuery.'%');
+            $series_infos = $series_infos->where('s.title LIKE :query OR s.plot LIKE :query')->setParameter('query', '%' . $searchQuery . '%')->orderBy('CASE WHEN s.title LIKE :query THEN 1 ELSE 2 END')->setParameter('query', '%' . $searchQuery . '%');
         }
 
         if (null != $searchGenre) {
@@ -71,9 +71,7 @@ class IndexController extends MotherController
             if ('true' == $request->request->get('add')) {
                 $user->addSeries($seriesToModify);
                 $entityManager->persist($seriesToModify);
-                
             } else {
-                
                 $user->removeSeries($seriesToModify);
                 $entityManager->persist($seriesToModify);
             }
@@ -102,5 +100,5 @@ class IndexController extends MotherController
                 'hasVisited' => $_SESSION['hasVisited'],
             ]
         );
-    }// end index()
+    } // end index()
 }

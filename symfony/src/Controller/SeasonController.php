@@ -65,7 +65,7 @@ class SeasonController extends MotherController
 
             return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
             // end if
-        }// end if
+        } // end if
 
         // Different score (5 stars, 4...)
         $scoreSerie = [
@@ -140,17 +140,19 @@ class SeasonController extends MotherController
         }
 
         return $this->render(
-            'index/seriesInfo.html.twig', [
-            'series' => $series,
-            'paginationSeason' => $paginationSeason,
-            'pagination' => $pagination,
-            'userRating' => $userRating ? $userRating->getValue() : null,
-            'userComment' => $userRating ? $userRating->getComment() : null,
-            'paginationComments' => $paginationComments,
-            'serieScore' => $scoreSerie,
-            'nombreNotes' => $nombreNotes,
-            'seriesView' => $seriesView,
-        ]);
+            'index/seriesInfo.html.twig',
+            [
+                'series' => $series,
+                'paginationSeason' => $paginationSeason,
+                'pagination' => $pagination,
+                'userRating' => $userRating ? $userRating->getValue() : null,
+                'userComment' => $userRating ? $userRating->getComment() : null,
+                'paginationComments' => $paginationComments,
+                'serieScore' => $scoreSerie,
+                'nombreNotes' => $nombreNotes,
+                'seriesView' => $seriesView,
+            ]
+        );
     }
 
     #[Route('/series/{id}/season/{num}/add', name: 'app_index_season_info_add')]

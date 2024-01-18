@@ -46,18 +46,17 @@ class GenerateReviewsCommand extends Command
         $average = $input->getArgument('average');
         $deviation = $input->getArgument('deviation');
 
-        if($average == null){
+        if ($average == null) {
             $average = 3;
         }
 
-        if($deviation == null){
+        if ($deviation == null) {
             $deviation = 2;
         }
 
         $io = new SymfonyStyle($input, $output);
-        
-        for($i = 0; $i < $numberOfReviews; $i++){
 
+        for ($i = 0; $i < $numberOfReviews; $i++) {
             $userRows = $this->entityManager->createQuery('SELECT COUNT(u.id) FROM App:User u')->getSingleScalarResult();
             $offset = max(0, rand(0, $userRows - $userRows - 1));
             $query = $this->entityManager->createQuery('SELECT DISTINCT u FROM App:User u')->setMaxResults($userRows)->setFirstResult($offset);
@@ -65,16 +64,14 @@ class GenerateReviewsCommand extends Command
 
             $found = false;
             $y = 0;
-            while(!$found && $y < $userRows){
-
+            while (!$found && $y < $userRows) {
                 $userRows = $this->entityManager->createQuery('SELECT COUNT(u.id) FROM App:User u')->getSingleScalarResult();
                 $offset = max(0, rand(0, $userRows - 1 - 1));
                 $query = $this->entityManager->createQuery('SELECT DISTINCT u FROM App:User u')->setMaxResults(1)->setFirstResult($offset);
                 $usersResult = $query->getResult();
 
                 $user = $usersResult[0];
-                if($user->isFake()){
-
+                if ($user->isFake()) {
                     $seriesRows = $this->entityManager->createQuery('SELECT COUNT(s.id) FROM App:Series s')->getSingleScalarResult();
                     $seriesOffset = max(0, rand(0, $seriesRows - 1 - 1));
                     $seriesQuery = $this->entityManager->createQuery('SELECT DISTINCT s FROM App:Series s')->setMaxResults(1)->setFirstResult($seriesOffset);
@@ -87,25 +84,23 @@ class GenerateReviewsCommand extends Command
                     $io->success($user->getName() . " - " . $series->getTitle());
 
                     $found = true;
-
                 }
 
                 $y++;
-
             }
 
-            if(!$found){
+            if (!$found) {
                 $io->error("Il n'y a aucun faux compte dans la base de données !");
                 return Command::FAILURE;
             }
-
         }
 
         $this->entityManager->flush();
         return Command::SUCCESS;
     }
 
-    private function createRating(Series $series, User $user){
+    private function createRating(Series $series, User $user)
+    {
 
         $faker = Faker\Factory::create();
         $rating = new Rating();
@@ -115,17 +110,17 @@ class GenerateReviewsCommand extends Command
         $rating->setSeries($series);
         $rating->setUser($user);
         $this->entityManager->persist($rating);
-
     }
 
-    private function gaussianRandom($mean, $stdDev, $min, $max) {
+    private function gaussianRandom($mean, $stdDev, $min, $max)
+    {
         do {
             $rand1 = (float)rand() / (float)getrandmax();
             $rand2 = (float)rand() / (float)getrandmax();
             $gaussianNumber = sqrt(-2 * log($rand1)) * cos(2 * M_PI * $rand2);
             $scaledGaussian = $mean + ($stdDev * $gaussianNumber);
         } while ($scaledGaussian < $min || $scaledGaussian > $max);
-    
+
         return $scaledGaussian;
     }
 }

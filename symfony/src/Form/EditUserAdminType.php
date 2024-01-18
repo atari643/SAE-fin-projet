@@ -38,14 +38,13 @@ class EditUserAdminType extends AbstractType
                 'invalid_message' => 'The password fields must match.',
                 'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
-                'first_options' => ['label' => 'New Password', 'attr' =>['autocomplete' => 'new-password','placeholder'  => '6 characters min'],],
-                'second_options' => ['label' => 'Repeat Password', 'attr' =>['autocomplete' => 'new-password','placeholder'  => '6 characters min'],],
+                'first_options' => ['label' => 'New Password', 'attr' => ['autocomplete' => 'new-password', 'placeholder'  => '6 characters min'],],
+                'second_options' => ['label' => 'Repeat Password', 'attr' => ['autocomplete' => 'new-password', 'placeholder'  => '6 characters min'],],
             ])
             /* ->add('country', EntityType::class, [
                 'class' => Country::class,
 'choice_label' => 'name',
-            ]) */
-        ;
+            ]) */;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
