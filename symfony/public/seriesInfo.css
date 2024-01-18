@@ -221,28 +221,33 @@ nav ul li a:hover{
     font-size: 0.9em;
     color: #6c757d;
 }
-#rating {
+#ratingDiv {
+    display: flex;
+    align-items: center;
+    text-align: center;
     width: 100%;
-    max-width: 600px;
+    max-width: 500px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 12px;
     background-color: #e3f7f5;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-#rating form {
+#ratingDiv form {
+    width: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: space-around;
 }
 
-#rating label {
+#ratingDiv label {
     font-weight: bold;
     color: #221F1F;
     margin-top: 20px;
 }
 
-#rating select, #rating textarea {
+#ratingDiv select, #ratingDiv textarea {
     margin-top: 5px;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -250,12 +255,17 @@ nav ul li a:hover{
     width: 100%;
 }
 
-#rating textarea {
+#ratingDiv select{
+    padding: 20px;
+    background-color: white;
+}
+
+#ratingDiv textarea {
     height: 150px;
     resize: none;
 }
 
-#rating input[type="submit"] {
+#ratingDiv input[type="submit"] {
     margin-top: 20px;
     padding: 10px 20px;
     background-color: #cba848;
@@ -266,16 +276,16 @@ nav ul li a:hover{
     font-size: 16px;
 }
 
-#rating input:nth-of-type(2){
+#ratingDiv input:nth-of-type(2){
     background-color: #ac1536;
 }
 
 
-#rating input[type="submit"]:hover {
+#ratingDiv input[type="submit"]:hover {
     background-color: #aba848;
 }
 
-#rating input:nth-of-type(2):hover{
+#ratingDiv input:nth-of-type(2):hover{
     background-color: #85102a;
 }
 
@@ -336,5 +346,78 @@ tr img {
 }
 
 #filledStar{
-    color: yellow;
+    color: #f5c518;
 }
+
+#emptyStar{
+    color: #d1d1d1;
+}
+
+#rating-histogram {
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #e3f7f5;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    color: #221F1F;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+#rating-histogram > div:first-child {
+    font-weight: bold;
+    color: #221F1F;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#rating-histogram div:first-child {
+    padding-top: 5px;
+    
+}
+
+#rating-histogram *{
+    cursor: default;
+    user-select: none;
+}
+
+#rating-histogram .bar-container {
+    display: flex;
+    flex-direction: column;
+}
+
+#rating-histogram a {
+    cursor: pointer;
+}
+
+
+.bar-container > div{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bar-container progress{
+    width: 100%;
+    height: 20px;
+}
+
+#ratingAndHisto{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    
+}
+
+
+
+
+

@@ -63,12 +63,12 @@ class GenerateUsersCommand extends Command
             );
             $user->setFake(true);
             $this->entityManager->persist($user);
-            $this->entityManager->flush();
 
             $io->success($name . " " . $email);
 
         }
 
+        $this->entityManager->flush();
         return Command::SUCCESS;
     }
 

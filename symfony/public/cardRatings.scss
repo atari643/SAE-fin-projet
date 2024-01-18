@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;600&display=swap');
+
+$transition-time: 2.3s;
+
+body {
+    font-family: 'Oswald', sans-serif;
+}
+
+.cardRatings {
+    position: relative;
+    height: 384px;
+    width: 276px;
+    transition: ease all $transition-time;
+    perspective: 1200px;
+
+    &:hover {
+        .cover {
+            transform: rotateX(0deg) rotateY(-180deg);
+
+            &:before {
+                transform: translateZ(30px);
+            }
+
+            &:after {
+                background-color: black;
+            }
+
+            .titleRatings {
+                transform: translateZ(100px);
+            }
+
+            .progress-pie-chart {
+                transform: translateZ(-60px) rotatey(-180deg);
+            }
+        }
+    }
+
+    .cover {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        transform-style: preserve-3d;
+        transition: ease all $transition-time;
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+
+        &:before {
+            content: '';
+            position: absolute;
+            border: 5px solid rgba(255, 255, 255, .5);
+            box-shadow: 0 0 12px rgba(0, 0, 0, .3);
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            z-index: 2;
+            transition: ease all $transition-time;
+            transform-style: preserve-3d;
+            transform: translateZ(0px);
+        }
+
+        &:after {
+            content: '';
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            z-index: 2;
+            transition: ease all 1.3s;
+            background: rgba(0, 0, 0, .4);
+        }
+
+        .titleRatings {
+            font-weight: 600;
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            color: white;
+            transform-style: preserve-3d;
+            transition: ease all $transition-time;
+            z-index: 3;
+            font-size: 2.2em;
+            transform: translateZ(0px);
+            margin: 0;
+        }
+    }
+
+    .card-back {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        background: #221F1F;
+        transform-style: preserve-3d;
+        transition: ease all $transition-time;
+        transform: translateZ(-1px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        .progress-pie-chart {
+            transform-style: preserve-3d;
+            transition: ease transform $transition-time, ease background .5s;
+            transform: translateZ(-1px) rotatey(-180deg);
+        }
+    }
+}

@@ -1,10 +1,12 @@
 {% extends './utils/paging.html.twig' %}
 
-{% block title %}Ratings{% endblock %}
+{% block title %}Ratings
+{% endblock %}
 
 {% block body %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="/ratings.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="/ratings.css"/>
+	<link rel="stylesheet" href="/cardRatings.css"/>
 
     <div class="headerOfRatings">
         <h1>
@@ -17,7 +19,7 @@
         </h1>
     </div>
     
-    {% if comments is empty %}
+    {#{% if comments is empty %}
         <div>L'utilisateur <span class="spanUsernameOfRatingsC">{{user}}</span> n'a rien noté !</div>
     {% else %}
         <table style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
@@ -33,44 +35,80 @@
             <tbody>
                 {% for comment in comments|reverse %}
                     <tr>
-                        {# <td><a href="{{path('series_reviews_by_user',{username: comment.user.name})}}"><img src="https://ui-avatars.com/api/?name={{ comment.user.name }}&background=random&rounded=true" style="display: inline;"></a>{{comment.user.name}}</td> #}
+                        #}{# <td><a href="{{path('series_reviews_by_user',{username: comment.user.name})}}"><img src="https://ui-avatars.com/api/?name={{ comment.user.name }}&background=random&rounded=true" style="display: inline;"></a>{{comment.user.name}}</td> #}{#
                         <td><div id="ratingOfRatings">{{ comment.value }}</div></td>
                         <td> {{ comment.comment }}</td>
                         <td> {{ comment.series.title }}</td>
                         <td><a href="{{ path('app_index_series_info',{id: comment.series.id}) }}">
                             <img id="imagePoster" src="{{ path('app_series_poster',{id: comment.series.id}) }}" alt='Series Poster'></a></td>
-
-                        <td>
+				{% endfor %}
+	{% endif %}#}
+	{% if comments is empty %}
+		<div>L'utilisateur
+			<span class="spanUsernameOfRatingsC">{{user}}</span>
+			n'a rien noté !</div>
+	{% else %}
+		<div class="containerRatings">
+			{% for comment in comments|reverse %}
+				<div class="cardRatings">
+					<div class="cover" style="background-image: url('{{ path('app_series_poster',{id: comment.series.id}) }}')">
+						<p class="titleRatings">{{ comment.series.title }}</p>
+						<p class="ratingRatings">
+							{% if comment.value != 0 %}
+								{% for i in 0..(comment.value - 1) %}
+									<span class="material-symbols-outlined" style="color:#cba848;">star</span>
+								{% endfor %}
+							{% endif %}
+							{% if comment.value != 5 %}
+								{% for i in 0..(4 - comment.value) %}
+									<span class="material-symbols-outlined" style="color:#fff;">star</span>
+								{% endfor %}
+							{% endif %}
+						</p>
+						<div class="card-back">
+							<p class="comentRatings">
+								{{ comment.comment|length > 600 ? comment.comment|slice(0, 600) ~ '...' : comment.comment  }}
+								<a href="{{ path('app_index_series_info',{id: comment.series.id}) }}">En savoir plus</a>
+							</p>
+							<p class="dateRatings">
                             {% set diff = date().diff(comment.date) %}
-                            {% if diff.y > 0 %}
-                                Publié il y a {{ diff.y }} an(s)
-                            {% elseif diff.m > 0 %}
-                                Publié il y a {{ diff.m }} mois
-                            {% elseif diff.d > 0 %}
-                                Publié il y a {{ diff.d }} jour(s)
-                            {% elseif diff.h > 0 %}
-                                Publié il y a {{ diff.h }} heure(s)
-                            {% else %}
-                                Publié il y a {{ diff.i }} minute(s)
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
-    {{ block('paging') }}
+								{% if diff.y > 0 %}
+									Publié il y a
+									{{ diff.y }}
+									an(s)
+								{% elseif diff.m > 0 %}
+									Publié il y a
+									{{ diff.m }}
+									mois
+								{% elseif diff.d > 0 %}
+									Publié il y a
+									{{ diff.d }}
+									jour(s)
+								{% elseif diff.h > 0 %}
+									Publié il y a
+									{{ diff.h }}
+									heure(s)
+								{% else %}
+									Publié il y a
+									{{ diff.i }}
+									minute(s)
+								{% endif %}
+							</p>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	{% endif %}
+	{{ block('paging') }}
 
-    <script>
-        function onSelectChange(element){
-            var values = element.value.split(" ");
-            var form = $('<form action="#" method="post">' +
-            '<input type="text" name="role" value="' + values[0] + '" hidden />' +
-            '<input type="text" name="id" value="' + values[1] + '" hidden />' +
-            '</form>');
-            $('body').append(form);
-            form.submit();
-        }
-    </script>
+	<script>
+		function onSelectChange(element) {
+var values = element.value.split(" ");
+var form = $('<form action="#" method="post">' + '<input type="text" name="role" value="' + values[0] + '" hidden />' + '<input type="text" name="id" value="' + values[1] + '" hidden />' + '</form>');
+$('body').append(form);
+form.submit();
+}
+	</script>
 
 {% endblock %}

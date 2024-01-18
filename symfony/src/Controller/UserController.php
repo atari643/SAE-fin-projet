@@ -8,7 +8,6 @@ use App\Form\EditUserAdminType;
 use App\Entity\Rating;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -62,8 +61,7 @@ class UserController extends MotherController
         } else {
             return $this->redirect($this->generateUrl('app_login')); // si accessible alors : $userAdminOrNot=false;
         }
-        $users       = $entityManager->getRepository(User::class);
-        $users_limit = $users->findBy([], null, USERS_PER_PAGE, (USERS_PER_PAGE * ($page - 1)));
+        $users = $entityManager->getRepository(User::class)->findAll();
 
         $count = $usersRepository->createQueryBuilder('users')->select('count(users.id)')->getQuery()->getSingleScalarResult();
 
@@ -97,7 +95,7 @@ class UserController extends MotherController
             }
         }
         $pagination = $paginator->paginate(
-            $users_limit,
+            $users,
             $request->query->getInt('page', 1),
             USERS_PER_PAGE
         );
@@ -179,11 +177,17 @@ class UserController extends MotherController
             $request->query->getInt('page', 1),
             10 // 5 by page
         );
+
+        $comments = $infoRating['comments'];
+        usort($comments, function($a, $b) {
+            return $b->getDate() <=> $a->getDate();
+        });
+        
         return $this->render('user/profile.html.twig', [
             'user' => $name,
             'pagination' => $pagination,
             'pagination2' => $pagination2,
-            'comments' => $infoRating['comments'],
+            'comments' => $comments,
             ]);
     }//end userProfile()
 
@@ -203,7 +207,7 @@ class UserController extends MotherController
         $pagination = $paginator->paginate(
             $userOfUsername->getSeries(),
             $request->query->getInt('category') === 'series_followed' ? $request->query->getInt('page', 1) : 1,
-            10 // 40 series poster per user
+            10 
         );
         $pagination->setParam('category', 'series_followed');
         //paginating critics
@@ -212,7 +216,7 @@ class UserController extends MotherController
         $pagination2 = $paginator->paginate(
             $infoRating,
             $request->query->get('category') === 'series_critics' ? $request->query->getInt('page', 1) : 1,
-            10 // 5 by page
+            10 
         );
         $pagination2->setParam('category', 'series_critics');
 
@@ -240,6 +244,11 @@ class UserController extends MotherController
     public function seriesReviews(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
         $user = $this->getUser();
+        if (null == $user) {
+            $login = $this->generateUrl('app_login');
+
+            return $this->redirect($login);
+        }
         $id = $user->getId();
         $name = $user->getName();
         $infoRating = $this->getUserRatingsById($entityManager, $id);
@@ -264,6 +273,11 @@ class UserController extends MotherController
         $users = $entityManager
         ->getRepository(User::class);
         $user = $users->findOneBy(array('name' => $username));
+        if (null == $user) {
+            $login = $this->generateUrl('app_login');
+
+            return $this->redirect($login);
+        }
         $id = $user->getId();
         $infoRating = $this->getUserRatingsById($entityManager, $id /* $username */);
         $pagination = $paginator->paginate(
