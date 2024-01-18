@@ -46,9 +46,10 @@ class IndexController extends MotherController
         if (null != $searchQuery) {
             $searchQuery = strtolower($searchQuery);
             $series_infos = $series_infos
-                ->where('LOWER(s.title) LIKE :title')
-                ->orderBy('CASE WHEN LOWER(s.title) LIKE :title THEN 1 ELSE 2 END')
-                ->setParameter('title', $searchQuery . '%');
+                ->where('LOWER(s.title) LIKE :title OR s.plot LIKE :plot')
+                ->addorderBy('CASE WHEN LOWER(s.title) LIKE :title THEN 1 ELSE 2 END')
+                ->setParameter('title', $searchQuery.'%')
+                ->setParameter('plot', '%'.$searchQuery.'%');
         }
 
         if (null != $searchGenre) {
@@ -72,9 +73,7 @@ class IndexController extends MotherController
         }
         $genres = $entityManager->getRepository(Genre::class)->findAll();
 
-        if (null == $searchQuery) {
-            $series_infos = $series_infos->orderBy('RAND(:seed)')->setParameter('seed', $_SESSION['seed'])->getQuery()->getResult();
-        }
+        $series_infos = $series_infos->addorderBy('RAND(:seed)')->setParameter('seed', $_SESSION['seed'])->getQuery()->getResult();
 
         // region Follow/Unfollow Series
         $user = $this->getUser();
