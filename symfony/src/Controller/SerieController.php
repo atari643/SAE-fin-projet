@@ -57,7 +57,6 @@ class SerieController extends MotherController
     public function seriesInfo(SeriesRepository $seriesRepository,RatingRepository $ratingRepository, EntityManagerInterface $entityManager, int $id, Request $request, PaginatorInterface $paginator): Response
     {
         $filter = $request->query->get('filter');
-
         // region Follow/Unfollow Series
         $user = $this->getUser();
         $infoRating = $ratingRepository->getRatingUserConnectAndAllRatingComments($this->getUser(), $id);
