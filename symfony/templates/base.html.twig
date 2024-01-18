@@ -23,13 +23,13 @@
         {% endblock %}
 		<div id="menu">
 			<div id="parentItemMenuLeft">
-				{# {% if app.user!=null and app.user.admin %}
-				<div class="itemMenu">
-					<span class="material-symbols-outlined">
-						preview
-					</span>
-				</div>
-				{% endif %} #}
+				{% if app.user!=null and app.user.admin %}
+					<div class="itemMenu" onclick="window.location.href = '/browse/series'">
+						<span class="material-symbols-outlined">
+							saved_search
+							</span>
+						</div>
+				{% endif %}
 				<div class="itemMenu" onclick="window.location.href = '/users'">
 					<span class="material-symbols-outlined">
 						groups

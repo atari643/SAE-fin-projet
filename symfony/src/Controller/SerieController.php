@@ -207,17 +207,26 @@ class SerieController extends MotherController
     public function browseSeries(PaginatorInterface $paginator, Request $request): Response
     {
         $title = $request->request->get('search');
+        $page = $request->request->get('page');
         $obj = null;
+
+        if($page <= 0){
+            $page = 1;
+        }
         
         if($title != null){
 
-            $json = file_get_contents('http://www.omdbapi.com/?apikey=66410286&s=' . $title);
+            $url = 'http://www.omdbapi.com/?apikey=66410286&s=' . $title . '&page=' . $page;
+            $finalURL = str_replace(' ', '+', $url);
+            $json = file_get_contents($finalURL);
             $obj = json_decode($json, true);
 
         }
-
+        
         return $this->render('index/browse.html.twig', [
-            'series' => $obj
+            'title' => $title,
+            'series' => $obj,
+            'page' => $page
         ]);
     }
 
