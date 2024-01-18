@@ -15,10 +15,13 @@
     error_n = "{{ errorN|e('js') }}";
     
     error_p = "{{ errorP|e('js') }}";
-    
+    error_oldP = "{{ errorOldP|e('js') }}";
     error_text = "";
     if(error_n.length != 0){
         error_text += error_n;
+    }
+    if(error_oldP.length != 0){
+        error_text += "\n"+error_oldP;
     }
     if(error_p.length != 0){
         error_text += "\n"+error_p;
@@ -34,7 +37,10 @@
 <div class="form_body">
 
     {{ form_start(form) }} 
-        {{ form_row(form.name)}}        
+        {{ form_row(form.name)}}
+        {% if not is_granted('IS_IMPERSONATOR')%}
+            {{ form_row(form.password)}}       
+        {% endif %} 
         {{ form_row(form.plainPassword, {
             label: 'Password'
         }) }}
