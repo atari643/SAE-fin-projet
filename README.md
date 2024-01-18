@@ -54,7 +54,7 @@ Notre projet Symfony utilise une base de données MySQL. Pour installer la base 
 
 Pour vous connecter à la base de données, suivez les étapes suivantes :
 
-1. Créer le fichier ".env.local" à la racine du projet.
+1. Créez le fichier ".env.local" en clonant le fichier ".env" qui se trouve à la racine du projet.
 
 2. Dans le fichier ".env.local", écriver la ligne suivante :
     ```
@@ -65,6 +65,20 @@ Pour vous connecter à la base de données, suivez les étapes suivantes :
 3. Enregistrez le fichier et fermez-le.
 
 4. Maintenant, vous êtes connecté à la base de données !
+   
+## Connexion à l'API OMDB
+
+Afin d'afficher les séries de l'API OMDb vous devez obtenir une clé d'accès.
+
+1. Rendez vous sur le site [OMDb API](https://www.omdbapi.com/apikey.aspx) et inscrivez vous.
+
+2. Dans le fichier ".env.local", modifiez la ligne suivante :
+   ```
+    OMDBAPI_KEY=KEY
+    ```
+3. Enregistrez le fichier et fermez-le.
+
+4. Maintenant, vous pouvez utiliser les fonctionnalitées de l'API OMDb !
 
 ## Lancer le projet 
 Maintenant que vous avez fait l'installation vous pouvez lancer le projet symphony 
