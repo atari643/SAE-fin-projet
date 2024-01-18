@@ -71,7 +71,7 @@
     	const onThisPage = document.querySelector('body').dataset.onthispage;
     	const items = document.querySelectorAll('.itemMenu');
 		</script>
-		{% if is_granted('IS_IMPERSONATOR')  %}
+		{% if is_granted('ROLE_ADMIN')  %}
 			<script>
 			switch(onThisPage) {
 				case '/':
