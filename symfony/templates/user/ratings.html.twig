@@ -19,7 +19,7 @@
         </h1>
     </div>
     
-    {% if comments is empty %}
+    {#{% if comments is empty %}
         <div>L'utilisateur <span class="spanUsernameOfRatingsC">{{user}}</span> n'a rien noté !</div>
     {% else %}
         <table style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
@@ -35,13 +35,14 @@
             <tbody>
                 {% for comment in comments|reverse %}
                     <tr>
-                        {# <td><a href="{{path('series_reviews_by_user',{username: comment.user.name})}}"><img src="https://ui-avatars.com/api/?name={{ comment.user.name }}&background=random&rounded=true" style="display: inline;"></a>{{comment.user.name}}</td> #}
+                        #}{# <td><a href="{{path('series_reviews_by_user',{username: comment.user.name})}}"><img src="https://ui-avatars.com/api/?name={{ comment.user.name }}&background=random&rounded=true" style="display: inline;"></a>{{comment.user.name}}</td> #}{#
                         <td><div id="ratingOfRatings">{{ comment.value }}</div></td>
                         <td> {{ comment.comment }}</td>
                         <td> {{ comment.series.title }}</td>
                         <td><a href="{{ path('app_index_series_info',{id: comment.series.id}) }}">
                             <img id="imagePoster" src="{{ path('app_series_poster',{id: comment.series.id}) }}" alt='Series Poster'></a></td>
-
+				{% endfor %}
+	{% endif %}#}
 	{% if comments is empty %}
 		<div>L'utilisateur
 			<span class="spanUsernameOfRatingsC">{{user}}</span>
