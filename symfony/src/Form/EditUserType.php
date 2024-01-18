@@ -12,6 +12,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
+
 
 class EditUserType extends AbstractType
 {
@@ -35,7 +37,9 @@ class EditUserType extends AbstractType
                         // max length allowed by Symfony for security reasons
                         'max'        => 4096,
                     ]
-                ),
+                ),new SecurityAssert\UserPassword([
+                    'message' => 'Wrong value for your current password.',
+                ])
             ],
             ])
             ->add('plainPassword', RepeatedType::class, [
@@ -72,7 +76,6 @@ class EditUserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            'validation_groups' => ['update'],
         ]);
     }
 }

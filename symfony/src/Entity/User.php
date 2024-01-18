@@ -123,13 +123,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $metadata->addPropertyConstraint('name', new ContainsAlphanumeric(['mode' => 'loose']));
 
         $metadata->addPropertyConstraint('email', new Assert\Email(['message' => 'The email address is invalid']));
-        $metadata->addPropertyConstraint(
+        /* $metadata->addPropertyConstraint(
             'password',
             new SecurityAssert\UserPassword([
-                'message' => 'Wrong value for your current password',
+                'message' => 'Wrong value for your current password.',
                 'groups' => ['update'],
             ])
-        );
+        ); */
     }//end loadValidatorMetadata()
 
 
