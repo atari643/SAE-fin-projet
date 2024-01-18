@@ -26,7 +26,7 @@ class SeriesRepository extends ServiceEntityRepository
     }//end __construct()
 
 
-    public function seriesInfo($seed)
+    public function seriesInfo()
     {
         return $this->createQueryBuilder('s')->select(
             's.id as id, s.title as title, s.poster, s.plot as plot, 
@@ -36,7 +36,7 @@ class SeriesRepository extends ServiceEntityRepository
         ->leftJoin('s.genre', 'genre', 'WITH')
         ->leftJoin('s.user', 'user', 'WITH')
         ->leftJoin('App:Rating', 'rating', 'WITH', 's = rating.series')
-        ->groupBy('s.id')->orderBy('RAND(' . $seed . ')');
+        ->groupBy('s.id');
     }//end seriesInfo()
 
     public function seriesEpisodesCount($user)

@@ -33,8 +33,12 @@ class IndexController extends MotherController
         $searchYearStart = $request->query->get('yearStart', '');
         $searchYearEnd = $request->query->get('yearEnd', '');
         $searchFollow = $request->query->get('follow', '');
+        $searchRating = $request->query->get('rating', '');
 
-        $series_infos = $seriesRepository->seriesInfo($_SESSION['seed']);
+        $series_infos = $seriesRepository->seriesInfo();
+        if(null != $searchRating){
+            $series_infos = $series_infos->having('ROUND(AVG(rating.value)) = :rating')->setParameter('rating', $searchRating);
+        }
         if (null != $searchQuery) {
             $series_infos = $series_infos->where('s.title LIKE :query OR s.plot LIKE :query')->setParameter('query', '%'.$searchQuery.'%')->orderBy('CASE WHEN s.title LIKE :query THEN 1 ELSE 2 END')->setParameter('query', '%'.$searchQuery.'%');
         }
@@ -59,7 +63,7 @@ class IndexController extends MotherController
             $series_infos = $series_infos->andWhere('user.id IS NULL');
         }
         $genres = $entityManager->getRepository(Genre::class)->findAll();
-        $series_infos = $series_infos->getQuery();
+        $series_infos = $series_infos->orderBy('RAND(:seed)')->setParameter('seed', $_SESSION['seed'])->getQuery()->getResult();
         // region Follow/Unfollow Series
         $user = $this->getUser();
         if (null != $request->request->get('add')) {

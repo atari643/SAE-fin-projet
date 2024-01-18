@@ -23,7 +23,7 @@ class SerieController extends MotherController
         $searchYearStart = $request->query->get('yearStart');
         $searchYearEnd = $request->query->get('yearEnd');
         $searchFollow = $request->query->get('follow');
-
+        $searchRating = $request->query->get('rating');
         $args = ['page' => 1];
 
         if (null != $searchQuery) {
@@ -40,6 +40,9 @@ class SerieController extends MotherController
         }
         if (null != $searchFollow) {
             $args['follow'] = $searchFollow;
+        }
+        if (null != $searchRating) {
+            $args['rating'] = $searchRating;
         }
 
         return $this->redirectToRoute('app_default', $args);
