@@ -35,6 +35,7 @@ class IndexController extends MotherController
         $searchFollow = $request->query->get('follow', '');
         $searchRating = $request->query->get('rating', '');
 
+        
         $series_infos = $seriesRepository->seriesInfo();
         if(null != $searchRating){
             $series_infos = $series_infos->having('ROUND(AVG(rating.value)) = :rating')->setParameter('rating', $searchRating);
