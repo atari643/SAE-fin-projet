@@ -304,17 +304,25 @@ class UserController extends MotherController
         $form = $this->createForm(EditUserType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid() && $user instanceof User) {
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
-            $entityManager->persist($user);
-            $entityManager->flush();
+        if ($form->isSubmitted()&& $user instanceof User){
+            if($form->isValid()) {
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $form->get('plainPassword')->getData()
+                    )
+                );
+                $entityManager->persist($user);
+                $entityManager->flush();
 
-            return $this->redirectToRoute('user_profile');
+                return $this->redirectToRoute('user_profile');
+            } else if (($form['plainPassword']->getViewData()['first'])=="" && ($form['plainPassword']->getViewData()['second'])=="" && ($form['password']->getViewData())=="")
+            {
+                dump($form['plainPassword']);
+                $entityManager->persist($user);
+                $entityManager->flush();
+                return $this->redirectToRoute('user_profile');
+            }
         }
 
         return $this->render('user/edit.html.twig', [
@@ -356,9 +364,10 @@ class UserController extends MotherController
         return $this->render('user/edit.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
-            'errorN' => $form['name']->getErrors(true),
+            'errorN' => '',/* $form['name']->getErrors(true), */
             'errorP' => $form['plainPassword']->getErrors(true),
             'errorOldP' => '',
+            'user' => $user,
         ]);
     }
 }
