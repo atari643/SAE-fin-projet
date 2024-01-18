@@ -199,7 +199,10 @@ Voici le schéma MCD de la base :
     - **id** : clé primaire.
     - **series_id** : clé étrangère faisant référence à _**series.id**_.
     - **user_id** : clé étrangère faisant référence à _**user.id**_.
+    -  **value** : doit être compris entre 0 et 5 inclus.
+    - Unicité du couple (**series_id**,**user_id**)
     - Tous les attributs sont obligatoires sauf **comment**.
+    
 
     ---
 
@@ -260,6 +263,7 @@ Voici le schéma MCD de la base :
     - **register_date** : date de création du compte. _**(datetime)**_
     - **admin** : 1 si l'utilisateur est admin sinon 0. _**(tinyint)**_
     - **country_id** : identifiant du pays de l'utilisateur. _**(int)**_
+    - **fake** : 1 si l'utilisateur est généré par un script sinon 0 _**(tinyint)**_
     
     _**Contraintes :**_
 
