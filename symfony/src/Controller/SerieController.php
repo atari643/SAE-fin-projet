@@ -11,6 +11,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Exception;
 
 class SerieController extends MotherController
 {
@@ -247,10 +248,13 @@ class SerieController extends MotherController
         }
 
         if (null != $title) {
-            $url = 'http://www.omdbapi.com/?apikey=66410286&s='.$title.'&page='.$page;
+            $omdbkey = $this->getParameter('app.omdbapi_key');
+            $url = 'http://www.omdbapi.com/?apikey=' . $omdbkey . '&s='.$title.'&page='.$page;
             $finalURL = str_replace(' ', '+', $url);
-            $json = file_get_contents($finalURL);
-            $obj = json_decode($json, true);
+            try {
+                $json = file_get_contents($finalURL);
+                $obj = json_decode($json, true);
+            } catch(Exception $e){}
         }
 
         return $this->render('index/browse.html.twig', [
