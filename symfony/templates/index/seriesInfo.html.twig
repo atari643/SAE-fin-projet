@@ -1,350 +1,374 @@
 {% extends './utils/paging.html.twig' %}
 
-{% block title %}Series Infos{% endblock %}
+{% block title %}Series Infos
+{% endblock %}
 {% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('/seriesInfo.css') }}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('/seriesInfo.css') }}">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0"/>
 {% endblock %}
 
 {% block body %}
-    <div id="pageInfo">
+	{% set episodes = 0 %}
+	{% for season in series.seasons %}
+		{% set episodes = episodes + season.episodes|length %}
+	{% endfor %}
+	<div id="pageInfo">
+		<p id='Titleofseries'>
+			{{ series.title }}
+		</p>
+		<div id="seriesGenre">
+			<ul>
+				{% for genre in series.genre %}
+					<li>
+						{{ genre.name }}
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+		<div id="visual">
+			<div id='headervisual'>
+				<img id="imagePoster" src="{{ path('app_series_poster',{id: series.id}) }}" data-id="{{ series.id }}">
+				<iframe id="trailer" src="{{ series.youtubeTrailer }}" frameborder="0" allowfullscreen autoplay></iframe>
+			</div>
+			{% if app.user != null %}
+				{% set found = false %}
+				{% for s in seriesView %}
+					{% if s.id == series.id %}
+						{% set percentage = (s.episode_count_view / episodes) * 100 %}
+						{% set nbVus = percentage * episodes / 100 %}
+						<progress id="percentageViews" max="100" value="{{ percentage }}"></progress>
+					<span>{{ nbVus}}/{{episodes}}</span>
+					{% set found = true %}
+				{% endif %}
+			{% endfor %}
+			{% if found == false %}
+				{% set percentage = 0 %}
+				{% set nbVus = percentage * episodes / 100 %}
+				<progress id="percentageViews" max="100" value="{{ percentage }}"></progress>
+			<span>{{ nbVus}}/{{episodes}}</span>
+		{% endif %}
+	{% endif %}
+</div>
+<div id="header">
+	<div id="seriesRatingsheader">
+		<span id="titleseriesRatingsheader">Avis</span>
+		{% if serieScore == 0 and nombreNotes == 0 %}
+			<div id="seriesScore">Score : Aucune critique n'a été entrée pour cette série</div>
+		{% else %}
+			<div id="starsHeader">
+				{% for i in 0..4 %}
+					{% if i < serieScore["moy"] %}
+						<span class="material-symbols-outlined">&#9733</span>
+					{% else %}
+						<span class="material-symbols-outlined">&#9734</span>
+					{% endif %}
+				{% endfor %}
+			</div>
+			<span id="notationheader">{{nombreNotes}}
+				critique(s)</span>
+		{% endif %}
+	</div>
+	<div>
+		<div id="seriesDate">
+			<u style="text-decoration-color: white;">Date :</u>
+			<span>{{ series.yearStart|date('d/m/Y') }}</span>
+			to
+			<span>{{ series.yearEnd|date('d/m/Y') }}</span>
+		</div>
+		<div id="seriesCountry">
+			<u style="text-decoration-color: white;">Country :</u>
+			{% for country in series.country %}
+				<span>{{ country.name }}</span>
+			{% endfor %}
+		</div>
+		<div id="seriesSeasons">
+			<u style="text-decoration-color: white;">Seasons :</u>
+			<span>
+				{{ series.seasons|length }}</span>
+		</div>
+		<div id="seriesEpisodes">
+			<u style="text-decoration-color: white;">Episodes :</u>
+			<span>
+				{{ episodes }}</span>
+		</div>
+		<div id="seriesActors">
+			<ul>
+				<u style="text-decoration-color: white;">Actors :</u>
+				{% for actor in series.actor %}
+					<li>{{ actor.name }}</li>,
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+</div>
+<div id="tools">
+	<div class="borderRight">
+		{% if app.user != null %}
+			{% set found = true %}
+			{% for season in series.getSeasons() %}
+				{% for episode in season.getEpisodes() %}
+					{% if not app.user.getEpisode.contains(episode) %}
+						{% set found = false %}
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+			{% if found %}
+				<a class="eye" href="{{ path('app_index_series_remove', {id: series.id}) }}">
+					<span class="material-symbols-outlined">visibility_off</span>
+				</a>
+			{% else %}
+				<a class="eye" href="{{ path('app_index_series_add', {id: series.id}) }}">
+					<span class="material-symbols-outlined">visibility</span>
+				</a>
+			{% endif %}
+		{% else %}
+			<a class="eye" href="{{ path('app_login') }}">
+				<span class="material-symbols-outlined">visibility</span>
+			</a>
+		{% endif %}
+	</div>
+	<div class="borderRight">
+		<div id="seriesIMDB">
+			<a href="https://www.imdb.com/title/{{ series.imdb }}" target="_BLANK">Go to IMDB</a>
+		</div>
+	</div>
+</div></div><div id="content">
+<div id="information">
+	<div id="seriesPlot">{{ series.plot }}</div>
+</div></div><nav id="allseasons">
+<ul>{% set route = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) %}{% set seasonNumber = route|slice(route|length-1, route|length) %}
+	{% for s in paginationSeason %}
+		{% if s.number == seasonNumber %}
+			<li>
+				<a onclick="window.location.reload()" href="{{ path('app_index_season_info', {id: series.id, num: s.number}) }}">Season
+					{{ s.number }}</a>
+				{% if app.request.attributes.get('_route') == 'app_index_season_info' %}
 
-    <div id="header">
-        {% set episodes = 0 %}
-        {% for season in series.seasons %}
-            {% set episodes = episodes + season.episodes|length %}
-        {% endfor %}
+					{% if app.user != null %}
+						{% set found = true %}
+						{% for episode in s.getEpisodes() %}
+							{% if not app.user.getEpisode.contains(episode) %}
+								{% set found = false %}
+							{% endif %}
+						{% endfor %}
+						{% if found %}
+							<a class="eye" href="{{ path('app_index_season_info_remove', {id: series.id, num: s.number}) }}">
+								<span class="material-symbols-outlined">visibility_off</span>
+							</a>
+						{% else %}
+							<a class="eye" href="{{ path('app_index_season_info_add', {id: series.id, num: s.number}) }}">
+								<span class="material-symbols-outlined">visibility</span>
+							</a>
+						{% endif %}
+					{% else %}
+						<a class="eye" href="{{ path('app_login') }}">
+							<span class="material-symbols-outlined">visibility</span>
+						</a>
+					{% endif %}
+				{% endif %}
+			</li>
+		{% else %}
+			<li>
+				<a onclick="window.location.reload()" href="{{ path('app_index_season_info', {id: series.id, num: s.number}) }}">Season
+					{{ s.number }}</a>
+			</li>
+		{% endif %}
+	{% endfor %}
+</ul></nav><div id="contentEpisode">
+{% if pagination != null %}
+	{% set saisonActuel = app.request.attributes.get('_route_params') %}<h2 style="color:white">Episodes de la Saison{{ saisonActuel.num }}</h2>
+	<ul id="episodeList">
+		{% for episode in pagination %}
+			<li>
+				{{ episode.number }}
+				episode
+				<h2>{{ episode.title }}</h2>
+				<p>{{ episode.date|date('d/m/Y') }}</p>
+				{% if app.user != null %}
+					{% set found = false %}
+					{% for e in app.user.getEpisode() %}
+						{% if e.getId() == episode.id %}
+							{% set found = true %}
+						{% endif %}
+					{% endfor %}
+					{% if found %}
+						<a class="eye" href="{{ path('app_index_episode_remove', {id: episode.season.series.id, num: episode.season.number, idE: episode.id}) }}">
+							<span class="material-symbols-outlined">visibility_off</span>
+						</a>
+					{% else %}
+						<a class="eye" href="{{ path('app_index_episode_add', {id: episode.season.series.id, num: episode.season.number, idE: episode.id}) }}">
+							<span class="material-symbols-outlined">visibility</span>
+						</a>
+					{% endif %}
+				{% else %}
+					<a class="eye" href="{{ path('app_login') }}">
+						<span class="material-symbols-outlined">visibility</span>
+					</a>
+				{% endif %}
+			</li>
+		{% endfor %}
+	</ul>
+{% endif %}
+{% if pagination != null %}
+	{{ block('paging') }}
+{% endif %}</div></div><div id="ratingAndHisto"><div id="ratingDiv">
+{% if app.user !=null %}
+	<form action="{{ path('app_index_series_info', {id: series.id}) }}" method="post">
+	{% else %}
+		<form action="{{ path('app_login') }}" method="post">
+		{% endif %}
+		<label for="rating">Rate the series:</label>
+		<select id="rating" name="rating">
+			<option {% if userRating is null %} selected {% endif %}>Select a rating</option>
+			{% for i in 0..5 %}
+				<option value="{{ i }}" {% if i == userRating and userRating is not null %} selected {% endif %}>
+					{% for j in 0..4 %}
+						{% if j < i %}
+							<span class="material-symbols-outlined">
+								&#9733
+							</span>
+						{% else %}
+							<span class="material-symbols-outlined">
+								&#9734
+							</span>
+						{% endif %}
+					{% endfor %}
+				</option>
+			{% endfor %}
+		</select>
+		<label for="comment">Leave a review:</label>
+		<textarea id="comment" name="comment">{{ userComment }}</textarea><input type="submit" name="action" value="{{ userRating != null ? 'Edit' : 'Send' }}">
+		{% if userRating != null %}
+			<input type="submit" name="action" value="Delete">
+		{% endif %}
+	</form>
+</div>
+<div id="rating-histogram">
+	<div>
+		<div>Rating histogram</div>
+		<div>
+			<a href="{{ path('app_index_series_info', {id: series.id}) }}">by date</a>
+		</div>
+	</div>
+	{% for i in range(5,0,-1) %}
+		<div class="bar-container">
+			<div>
+				<div>
+					{% for j in 0..4 %}
+						{% if j < i%}
+							<div class="material-symbols-outlined" id="filledStar">star</div>
+						{% else %}
+							<div class="material-symbols-outlined" id="emptyStar">star</div>
+						{% endif %}
 
-        <div id="seriesTitle">{{ series.title }} 
-            {% if app.user != null %}
-                {% set found = true %}
-                    {% for season in series.getSeasons() %}
-                        {% for episode in season.getEpisodes() %}
-                            {% if not app.user.getEpisode.contains(episode) %}
-                                {% set found = false %}
-                            {% endif %}
-                        {% endfor %}
-                    {% endfor %}
-                {% if found %}
-                    <a class="eye" href="{{ path('app_index_series_remove', {id: series.id}) }}"><span class="material-symbols-outlined">visibility_off</span></a>
-                {% else %}
-                    <a class="eye" href="{{ path('app_index_series_add', {id: series.id}) }}"><span class="material-symbols-outlined">visibility</span></a>
-                {% endif %}
-            {% else %}
-                <a  class="eye" href="{{ path('app_login') }}"><span class="material-symbols-outlined">visibility</span></a>
-            {% endif %}
+					{% endfor %}
+				</div>
+				<div>
+					<a href="{{ path('series_review_filter', {id: series.id,stars: i}) }}">{{serieScore[i]}}
+						rating(s)</a>
+				</div>
+			</div>
+			<div><progress value="{{serieScore[i]}}" max="{{nombreNotes}}" class="progress-Bar"></progress>
+		</div>
+	</div>
+{% endfor %}</div></div><table style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;"><tbody>
+{% for comment in paginationComments %}
+	<tr>
+		<td>
+			<div>
+				<div>
+					<a href="{{path('user_profile_search',{username: comment.user.name})}}"><img src="https://ui-avatars.com/api/?name={{ comment.user.name }}&background=random&rounded=true" style="display: inline;"></a>
+				</div>
+				<div>{{comment.user.name}}</div>
+			</div>
+			<div>
+				{% for i in 0..4 %}
+					{% if i < comment.value %}
+						<span class="material-symbols-outlined" id="filledStar">star</span>
+					{% else %}
+						<span class="material-symbols-outlined" id="emptyStar">star</span>
+					{% endif %}
+				{% endfor %}
+			</div>
+		</td>
+		<td>
+			{{ comment.comment|nl2br }}</td>
+		<td>
+			{% set diff = date().diff(comment.date) %}
+			{% if diff.y > 0 %}
+				{{ diff.y }}
+				year(s) ago
+			{% elseif diff.m > 0 %}
+				{{ diff.m }}
+				month(s) ago
+			{% elseif diff.d > 0 %}
+				{{ diff.d }}
+				day(s) ago
+			{% elseif diff.h > 0 %}
+				{{ diff.h }}
+				hour(s) ago
+			{% else %}
+				{{ diff.i }}
+				minute(s) ago
+			{% endif %}
+		</td>
+	</tr>
+{% endfor %}</tbody></table>{% if paginationComments != null %}{{ knp_pagination_render(paginationComments) }}{% endif %}<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script><script>window.onload = function () {
+var img = document.querySelector('#visual img');
+var trailer = document.querySelector('#trailer');
+trailer.style.width = getComputedStyle(img).width;
+const poster = document.querySelector('#imagePoster');
+const title = document.querySelector('#tools');
+const suivieButton = document.createElement("div");
+suivieButton.classList.add('suivieButtonadd');
+suivieButton.style.display = "inline-block";
+var found = false;{% if app.user != null %}{% for s in app.user.getSeries() %}if (poster.dataset.id == {{ s.getId() }}) {
+suivieButton.innerHTML = '<span class="material-symbols-outlined">heart_minus</span>';
+found = true;
+}
+{% endfor %}
+{% else %}suivieButton.innerHTML = '<span class="material-symbols-outlined">heart_plus</span>';{% endif %}if (! found) {
+suivieButton.innerHTML = '<span class="material-symbols-outlined">heart_plus</span>';
+}
+title.appendChild(suivieButton);{% if app.user == null %}suivieButton.addEventListener('click', function () {
+window.location.replace("{{ path("app_login") }}");
+});
+{% else %}suivieButton.addEventListener('click', function () {
+if (suivieButton.querySelector('span').innerHTML == 'heart_plus') {
+suivieButton.querySelector('span').innerHTML = 'heart_check';
+suivieButton.style.color = 'rgb(0, 105, 0)';
+setTimeout(function () {
+suivieButton.style.color = '#cba848';
+suivieButton.querySelector('span').innerHTML = 'heart_minus';
+}, 600);
 
-            {% if app.user != null %}
-                {% set found = false %}
-                {% for s in seriesView %}
-                    {% if s.id == series.id %}
-                        {% set percentage = (s.episode_count_view / episodes) * 100 %}
-                        <td>{{ s.episode_count_view }}/{{ episodes }}</td>
-                        <td><progress id="percentageViews" max="100" value="{{ percentage }}"></progress></td>
-                        {% set found = true %}
-                    {% endif %}
-                {% endfor %}
+$.ajax({
+type: "POST",
+url: "{{ path('app_default') }}",
+data: {
+add: true,
+id: poster.dataset.id
+}
+});
 
-                {% if found == false %}
-                    {% set percentage = 0 %}
-                    <td>{{ percentage }}/{{ episodes }}</td>
-                    <td><progress id="percentageViews" max="100" value="{{ percentage }}"></progress></td>
-                {% endif %}
-            {% endif %}
-        </div>
-        <div id="seriesDate">Date : {{ series.yearStart|date('d/m/Y') }} - {{ series.yearEnd|date('d/m/Y') }}</div>
-        <div id="seriesCountry">Country : 
-        {% for country in series.country %}
-            {{ country.name }}
-        {% endfor %}
-        </div>
-        <div id="seriesSeasons">Seasons : {{ series.seasons|length }}</div>
-        <div id="seriesEpisodes">Episodes : 
-        {{ episodes }}
-        </div>
-        <div id="seriesActors">
-            <ul><span>Actors :</span>
-        {% for actor in series.actor %}
-            <li>{{ actor.name }} </li>
-        {% endfor %}
-        </ul>
-        {% if serieScore == 0 and nombreNotes == 0 %}
-            <div id="seriesScore">Score :</span> Aucune critique n'a été entrée pour cette série</div>
-        {% else %} 
-            {%for i in 0..4%}
-                {% if i < serieScore["moy"] %}
-                    <span class="material-symbols-outlined"> &#9733 </span>
-                {% else %}
-                    <span class="material-symbols-outlined"> &#9734 </span>
-                {% endif %}
-            {% endfor %} {{nombreNotes}} notations
-        {% endif %}
-        </div>
-        
-    </div>
-    <hr>
-    <div id="content">
-        <div id="visual">
-            <img id="imagePoster" src="{{ path('app_series_poster',{id: series.id}) }}" data-id="{{ series.id }}">
-            <iframe id="trailer" src="{{ series.youtubeTrailer }}" frameborder="0" allowfullscreen autoplay></iframe>
-        </div>   
-        <div id="information">
-            <div id="seriesGenre">
-                <ul>
-                {% for genre in series.genre %}
-                    <li> {{ genre.name }}</li>
-                {% endfor %}
-                </ul>
-            </div>
-            <hr>
-            <div id="seriesPlot">{{ series.plot }}</div>
-            <hr>
-            <div id="seriesIMDB"><a href="https://www.imdb.com/title/{{ series.imdb }}" target="_BLANK">Go to IMDB</a></div>
-            <hr>
-        </div>
-    </div>
-    <div class="paging paginSeason">
-        {{ knp_pagination_render(paginationSeason) }}
-    </div>
-    <nav>
-        <ul>
-            {% set route = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) %}
-            {% set seasonNumber = route|slice(route|length-1, route|length) %}
-            {% for s in paginationSeason %}
-                {% if s.number == seasonNumber %}
-                    <li ><a onclick="window.location.reload()"
-                     href="{{ path('app_index_season_info', {id: series.id, num: s.number}) }}">Season {{ s.number }}</a>
-                     {% if app.request.attributes.get('_route') == 'app_index_season_info' %}
-                        
-                     {% if app.user != null %}
-                        {% set found = true %}
-                        {% for episode in s.getEpisodes() %}
-                            {% if not app.user.getEpisode.contains(episode) %}
-                                {% set found = false %}
-                            {% endif %}
-                        {% endfor %}
-                        {% if found %}
-                            <a  class="eye" href="{{ path('app_index_season_info_remove', {id: series.id, num: s.number}) }}"><span class="material-symbols-outlined">visibility_off</span></a>
-                        {% else %}
-                            <a  class="eye" href="{{ path('app_index_season_info_add', {id: series.id, num: s.number}) }}"><span class="material-symbols-outlined">visibility</span></a>
-                        {% endif %}
-                        {% else %}
-                        <a class="eye" href="{{ path('app_login') }}"><span class="material-symbols-outlined">visibility</span></a>
-                    {% endif %}
-                    {% endif %}
-                    </li>
-                {% else %}
-                    <li ><a onclick="window.location.reload()" href="{{ path('app_index_season_info', {id: series.id, num: s.number}) }}">Season {{ s.number }}</a></li>
-                {% endif %}
-            {% endfor %}
-        </ul>
-    </nav> 
-    <div id="contentEpisode">
-        {% if pagination != null %}
-            {% set saisonActuel = app.request.attributes.get('_route_params') %}
-            <h2 style="color:white">Episodes de la Saison {{ saisonActuel.num }}</h2>
-            <ul id="episodeList">
-                {% for episode in pagination %}
-                    <li>
-                        {{ episode.number }} episode
-                        <h2>{{ episode.title }}</h2>
-                        <p>{{ episode.date|date('d/m/Y') }}</p>
-                        {% if app.user != null %}
-                            {% set found = false %}
-                            {% for e in app.user.getEpisode() %}
-                                {% if e.getId() == episode.id %}
-                                    {% set found = true %}
-                                {% endif %}
-                            {% endfor %}
-                            {% if found %}
-                                <a class="eye" href="{{ path('app_index_episode_remove', {id: episode.season.series.id, num: episode.season.number, idE: episode.id}) }}"><span class="material-symbols-outlined">visibility_off</span></a>
-                            {% else %}
-                            <a class="eye" href="{{ path('app_index_episode_add', {id: episode.season.series.id, num: episode.season.number, idE: episode.id}) }}"><span class="material-symbols-outlined">visibility</span></a>
-                            {% endif %}
-                        {% else %}
-                            <a class="eye" href="{{ path('app_login') }}"><span class="material-symbols-outlined">visibility</span></a>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        {% if pagination != null %}
-            {{ block('paging') }}
-        {% endif %}
-    </div>
-    
-    </div>
+} else if (suivieButton.querySelector('span').innerHTML == 'heart_minus') {
+suivieButton.querySelector('span').innerHTML = 'heart_check';
+suivieButton.style.color = '#ac1536';
+setTimeout(function () {
+suivieButton.style.color = '#cba848';
+suivieButton.querySelector('span').innerHTML = 'heart_plus';
+}, 600);
 
-    <div id = "ratingAndHisto">
-        <div id="ratingDiv">
-        {% if app.user !=null %}
-            <form action="{{ path('app_index_series_info', {id: series.id}) }}" method="post">
-        {% else %}
-            <form action="{{ path('app_login') }}" method="post">
-        {% endif %}
-
-                <label for="rating">Rate the series:</label>
-                <select id="rating" name="rating">
-                    <option {% if userRating is null %}selected{% endif %}>Select a rating</option>
-                    {% for i in 0..5 %}
-                        <option value="{{ i }}" {% if i == userRating and userRating is not null %}selected{% endif %}>
-                        {% for j in 0..4 %}
-                            {% if j < i %}
-                                <span class="material-symbols-outlined"> &#9733 </span>
-                            {% else %}
-                                <span class="material-symbols-outlined"> &#9734 </span>
-                            {% endif %}
-                        {% endfor %}
-                        </option>
-                    {% endfor %}
-                </select>
-                <label for="comment">Leave a review:</label>
-                <textarea id="comment" name="comment">{{ userComment }}</textarea>
-                <input type="submit" name="action" value="{{ userRating != null ? 'Edit' : 'Send' }}">
-                {% if userRating != null %}
-                    <input type="submit" name="action" value="Delete">
-                {% endif %}
-            </form>
-        </div>
-        <div id="rating-histogram">
-            <div>
-                <div>Rating histogram</div>
-                <div><a href = "{{ path('app_index_series_info', {id: series.id}) }}">by date</a></div>
-            </div>
-            {% for i in range(5,0,-1) %}
-            <div class="bar-container">
-                <div>
-                    <div>
-                        {% for j in 0..4 %}
-                            {% if j < i%}
-                                <div class="material-symbols-outlined" id = "filledStar">star</div>
-                            {% else %}
-                                <div class="material-symbols-outlined" id = "emptyStar">star</div>
-                            {% endif %}
-                            
-                        {% endfor %}
-                    </div> 
-                    <div><a href = "{{ path('series_review_filter', {id: series.id,stars: i}) }}">{{serieScore[i]}} rating(s)</a></div>
-                </div>
-                <div><progress value="{{serieScore[i]}}" max="{{nombreNotes}}" class = "progress-Bar"></progress></div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-
-    <table style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
-        <tbody>
-            {% for comment in paginationComments %}
-                <tr>
-                    <td>
-                        <div>
-                            <div><a href="{{path('user_profile_search',{username: comment.user.name})}}"><img src="https://ui-avatars.com/api/?name={{ comment.user.name }}&background=random&rounded=true" style="display: inline;"></a></div>
-                            <div>{{comment.user.name}}</div>
-                        </div>
-                        <div>
-                            {% for i in 0..4 %}
-                                {% if i < comment.value %}
-                                    <span class="material-symbols-outlined" id = "filledStar">star</span>
-                                {% else %}
-                                    <span class="material-symbols-outlined" id = "emptyStar">star</span>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </td>
-                    <td> 
-                        {{ comment.comment|nl2br }}
-                    </td>
-                    <td>
-                        {% set diff = date().diff(comment.date) %}
-                        {% if diff.y > 0 %}
-                            {{ diff.y }} year(s) ago
-                        {% elseif diff.m > 0 %}
-                            {{ diff.m }} month(s) ago
-                        {% elseif diff.d > 0 %}
-                            {{ diff.d }} day(s) ago
-                        {% elseif diff.h > 0 %}
-                            {{ diff.h }} hour(s) ago
-                        {% else %}
-                            {{ diff.i }} minute(s) ago
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% if paginationComments != null %}
-        {{ knp_pagination_render(paginationComments) }}
-    {% endif %}
-      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-      
-        window.onload = function() {
-            var img = document.querySelector('#visual img');
-            var trailer = document.querySelector('#trailer');
-            trailer.style.width = getComputedStyle(img).width;
-            const poster = document.querySelector('#imagePoster');
-            const title = document.querySelector('#seriesTitle');
-            const suivieButton = document.createElement("div");
-            suivieButton.classList.add('suivieButtonadd');
-            suivieButton.style.display = "inline-block";
-            var found = false;
-            {% if app.user != null %}
-                {% for s in app.user.getSeries() %}
-                    if(poster.dataset.id == {{ s.getId() }}){
-                        suivieButton.innerHTML = '<span class="material-symbols-outlined">heart_minus</span>';
-                        found = true;
-                    }
-                {% endfor %}
-            {% else %}
-                suivieButton.innerHTML = '<span class="material-symbols-outlined">heart_plus</span>';
-            {% endif %}
-
-            if(!found){
-                suivieButton.innerHTML = '<span class="material-symbols-outlined">heart_plus</span>';
-            }
-            title.appendChild(suivieButton);
-
-            {% if app.user == null %}
-                suivieButton.addEventListener('click', function () {
-                    window.location.replace("{{ path("app_login") }}");
-                });
-            {% else %}
-            suivieButton.addEventListener('click', function () {
-                if (suivieButton.querySelector('span').innerHTML == 'heart_plus') {
-                    suivieButton.querySelector('span').innerHTML = 'heart_check';
-                    suivieButton.style.color = 'rgb(0, 105, 0)';
-                    setTimeout(function () {
-                        suivieButton.style.color = 'white';
-                        suivieButton.querySelector('span').innerHTML = 'heart_minus';
-                    }, 600);
-
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ path('app_default') }}",
-                        data: {add : true, id : poster.dataset.id}
-                    });
-
-                }else if(suivieButton.querySelector('span').innerHTML == 'heart_minus'){
-                    suivieButton.querySelector('span').innerHTML = 'heart_check';
-                    suivieButton.style.color = '#ac1536';
-                    setTimeout(function () {
-                        suivieButton.style.color = 'white';
-                        suivieButton.querySelector('span').innerHTML = 'heart_plus';
-                    }, 600);
-
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ path('app_default') }}",
-                        data: {add : false, id : poster.dataset.id}
-                    });
-                }
-            });
-            {% endif %}
-        }
-    </script>
-
-{% endblock %}
-
-
+$.ajax({
+type: "POST",
+url: "{{ path('app_default') }}",
+data: {
+add: false,
+id: poster.dataset.id
+}
+});
+}
+});{% endif %}
+}</script>{% endblock %}

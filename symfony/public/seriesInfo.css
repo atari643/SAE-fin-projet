@@ -2,17 +2,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
-#visual{
-    width: 100%;
-    height: 100%;
+#visual {
+    width: fit-content;
+    height: fit-content;
     display: flex;
-    margin: 5px
-    
+    flex-direction: column;
+    margin-bottom: 10px;
 }
-#trailer{
-    width: 75% !important;
-    margin-left: 5px;
+
+#headervisual {
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
+
+#visual img {
+    height: 22.44vw;
+    border-right: 8px solid #cba848;
+}
+
+#trailer {
+    width: 40vw !important;
+    height: 22.44vw !important;
+    border-left: 2px solid #970e0e;
+}
+
 a.eye {
     color: #221F1F;
     background-color: #cba848;
@@ -22,60 +38,89 @@ a.eye {
     align-items: center;
     display: flex;
     justify-content: center;
-    
+
 }
-#seriesTitle{
+
+#seriesTitle {
     font-family: 'Bebas Neue', cursive;
     font-size: 50px;
     color: #cba848;
     margin: 0;
     padding: 0;
 }
-#seriesDate{
+
+#seriesDate {
     font-family: 'Oswald', sans-serif;
-    font-size: 20px;
+    font-size: 1.4rem;
     color: #cba848;
     margin: 0;
     padding: 0;
 }
-#seriesCountry{
+
+#seriesDate span {
+    text-shadow: 1px 1px 1px #970e0e;
+    font-size: 1.3rem;
+}
+
+#seriesCountry {
     font-family: 'Roboto', sans-serif;
-    font-size: 20px;
+    font-size: 1.4rem;
     color: #cba848;
     margin: 0;
     padding: 0;
 }
-#seriesSeasons{
+
+#seriesCountry span {
+    text-shadow: 1px 1px 1px #970e0e;
+    font-size: 1.3rem;
+}
+
+#seriesSeasons {
     font-family: 'Roboto', sans-serif;
-    font-size: 20px;
+    font-size: 1.4rem;
     color: #cba848;
     margin: 0;
     padding: 0;
 }
-#seriesEpisodes{
+
+#seriesSeasons span {
+    text-shadow: 1px 1px 1px #970e0e;
+    font-size: 1.3rem;
+}
+
+#seriesEpisodes {
     font-family: 'Roboto', sans-serif;
-    font-size: 20px;
+    font-size: 1.4rem;
     color: #cba848;
     margin: 0;
     padding: 0;
 }
-#seriesActors{
+
+#seriesEpisodes span {
+    text-shadow: 1px 1px 1px #970e0e;
+    font-size: 1.3rem;
+}
+
+#seriesActors {
     font-family: 'Roboto', sans-serif;
-    font-size: 20px;
+    font-size: 1.4rem;
     color: #cba848;
     margin: 0;
     padding: 0;
-    
+
 }
-#seriesActors ul{
+
+#seriesActors ul {
     list-style: none;
     margin: 0;
     display: flex;
     padding: 0;
 }
 
-#seriesActors ul li{
+#seriesActors ul li {
     padding-left: 5px;
+    text-shadow: 1px 1px 1px #970e0e;
+    font-size: 1.3rem;
 }
 
 #seriesGenre {
@@ -84,8 +129,10 @@ a.eye {
     color: #cba848;
     margin: 0;
     padding: 0;
+    margin-bottom: 10px;
 }
-#seriesGenre ul{
+
+#seriesGenre ul {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -93,37 +140,42 @@ a.eye {
 
 }
 
-#seriesGenre ul li{
+#seriesGenre ul li {
     margin-right: 10px;
-    border: 1px solid #cba848;
+    border: 1px solid white;
     border-radius: 5px;
     padding: 5px;
 }
-#seriesGenre ul li:hover{
+
+#seriesGenre ul li:hover {
     background-color: #cba848;
     color: white;
     cursor: pointer;
     transition: 0.3s;
+    border: 1px solid #cba848;
 }
 
-#seriesPlot{
+#seriesPlot {
     font-family: 'Roboto', sans-serif;
     font-size: 20px;
     color: #cba848;
     margin: 0;
     padding: 0;
 }
-hr{
+
+hr {
     border: 1px solid white;
     margin: 10px 0;
 }
-nav{
+
+nav {
     width: 100%;
     height: 100%;
     border-radius: 5px;
     padding: 10px;
 }
-nav ul{
+
+nav ul {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -131,10 +183,12 @@ nav ul{
     flex-direction: row;
     justify-content: space-around;
 }
-nav ul li{
+
+nav ul li {
     margin: 10px 0;
 }
-nav ul li a{
+
+nav ul li a {
     text-decoration: none;
     color: white;
     font-family: 'Roboto', sans-serif;
@@ -144,7 +198,8 @@ nav ul li a{
     transition: 0.3s;
     background-color: #cba848;
 }
-nav ul li a:hover{
+
+nav ul li a:hover {
     background-color: white;
     color: #cba848;
     border-radius: 5px;
@@ -152,6 +207,7 @@ nav ul li a:hover{
     padding: 5px;
 
 }
+
 .paging {
     display: flex;
     justify-content: center;
@@ -171,7 +227,7 @@ nav ul li a:hover{
 
 .paging a:active {
     color: #004085;
-    
+
 }
 
 .paging input[type="number"] {
@@ -185,8 +241,8 @@ nav ul li a:hover{
 .paging input[type="submit"] {
     display: none;
 }
+
 #contentEpisode {
-    padding: 20px;
     background-color: #221F1F;
     color: #e3f7f5;
     border-bottom: 1px solid #dee2e6;
@@ -221,6 +277,7 @@ nav ul li a:hover{
     font-size: 0.9em;
     color: #6c757d;
 }
+
 #ratingDiv {
     display: flex;
     align-items: center;
@@ -247,7 +304,8 @@ nav ul li a:hover{
     margin-top: 20px;
 }
 
-#ratingDiv select, #ratingDiv textarea {
+#ratingDiv select,
+#ratingDiv textarea {
     margin-top: 5px;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -255,7 +313,7 @@ nav ul li a:hover{
     width: 100%;
 }
 
-#ratingDiv select{
+#ratingDiv select {
     padding: 20px;
     background-color: white;
 }
@@ -276,7 +334,7 @@ nav ul li a:hover{
     font-size: 16px;
 }
 
-#ratingDiv input:nth-of-type(2){
+#ratingDiv input:nth-of-type(2) {
     background-color: #ac1536;
 }
 
@@ -285,7 +343,7 @@ nav ul li a:hover{
     background-color: #aba848;
 }
 
-#ratingDiv input:nth-of-type(2):hover{
+#ratingDiv input:nth-of-type(2):hover {
     background-color: #85102a;
 }
 
@@ -303,17 +361,18 @@ td div:first-child {
     align-items: center;
 }
 
-td div:first-child div{
+td div:first-child div {
     padding: 5px;
 }
 
-th, td {
+th,
+td {
     padding: 8px;
-    text-align: left;    
+    text-align: left;
 }
 
 tr:nth-child(2n) {
-    background-color: #221F1F;   
+    background-color: #221F1F;
 }
 
 tr {
@@ -325,31 +384,36 @@ tr {
 tr:hover {
     background-color: #cba848;
 }
+
 tr img {
     border-radius: 50%;
     width: 50px;
     height: 50px;
 }
-#seriesIMDB a{
-    background-color: #f5c518;
+
+#seriesIMDB a {
+    background-color: #cba848;
     border: none;
     color: black;
-    padding: 10px 20px;
+    padding: 3px 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
+    font-size: 0.9rem;
     cursor: pointer;
     border-radius: 4px;
     font-weight: bold;
 }
 
-#filledStar{
+#seriesIMDB a:hover {
+    background-color: #f5c518;
+}
+
+#filledStar {
     color: #f5c518;
 }
 
-#emptyStar{
+#emptyStar {
     color: #d1d1d1;
 }
 
@@ -365,10 +429,10 @@ tr img {
     color: #221F1F;
     display: flex;
     flex-direction: column;
-    
+
 }
 
-#rating-histogram > div:first-child {
+#rating-histogram>div:first-child {
     font-weight: bold;
     color: #221F1F;
     display: flex;
@@ -378,10 +442,10 @@ tr img {
 
 #rating-histogram div:first-child {
     padding-top: 5px;
-    
+
 }
 
-#rating-histogram *{
+#rating-histogram * {
     cursor: default;
     user-select: none;
 }
@@ -396,26 +460,147 @@ tr img {
 }
 
 
-.bar-container > div{
+.bar-container>div {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
 }
 
-.bar-container progress{
+.bar-container progress {
     width: 100%;
     height: 20px;
 }
 
-#ratingAndHisto{
+#ratingAndHisto {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    
+
 }
+
+#Titleofseries {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 5rem;
+    color: #cba848;
+    padding: 0;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    text-shadow: 2px 2px 2px #970e0e;
+}
+
+#pageInfo {
+    width: 100%;
+    height: fit-content;
+}
+
+#header {
+    display: flex;
+    flex-direction: row;
+}
+
+#seriesRatingsheader {
+    display: flex;
+    border-radius: 15px;
+    border: 1px white solid;
+    flex-direction: column;
+    text-align: center;
+    justify-content: space-around;
+    padding: 5px;
+    margin-right: 10px;
+    margin-top: 5px;
+}
+
+#starsHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    color: #cba848;
+}
+
+#titleseriesRatingsheader {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.6rem;
+    color: #cba848;
+    padding: 0;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    text-shadow: 2px 2px 2px #970e0e;
+}
+
+#notationheader {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.1rem;
+    color: #cba848;
+    padding: 0;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    margin-top: 10px;
+}
+
+#percentageViews {
+    height: 15px;
+    border-radius: 10px;
+    border-color: #970e0e;
+    margin-top: 5px;
+}
+
+#visual>span {
+    color: #970e0e;
+    transform: translateY(-16px) translateX(5px);
+    font-size: 0.8rem;
+}
+
+#tools {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    gap: 10px;
+    width: fit-content;
+    border: 1px solid white;
+    border-radius: 10px;
+    padding: 0 10px;
+    margin-top: 10px;
+}
+
+.suivieButtonadd{
+    color: #cba848;
+    height: fit-content;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.suivieButtonadd:hover{
+    color: #f5c518;
+}
+
+.borderRight{
+    border-right: 1px solid white;
+    padding: 10px 10px 10px 0; 
+}
+
+.eye:hover{
+    background-color: #f5c518;
+}
+
+#allseasons{
+    border: 1px solid white;
+    border-radius: 15px;
+}
+
 .suivieButtonadd{
     color: white;
     cursor: pointer;
