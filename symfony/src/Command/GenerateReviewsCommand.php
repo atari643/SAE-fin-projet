@@ -67,7 +67,12 @@ class GenerateReviewsCommand extends Command
             $y = 0;
             while(!$found && $y < $userRows){
 
-                $user = $usersResult[$y];
+                $userRows = $this->entityManager->createQuery('SELECT COUNT(u.id) FROM App:User u')->getSingleScalarResult();
+                $offset = max(0, rand(0, $userRows - 1 - 1));
+                $query = $this->entityManager->createQuery('SELECT DISTINCT u FROM App:User u')->setMaxResults(1)->setFirstResult($offset);
+                $usersResult = $query->getResult();
+
+                $user = $usersResult[0];
                 if($user->isFake()){
 
                     $seriesRows = $this->entityManager->createQuery('SELECT COUNT(s.id) FROM App:Series s')->getSingleScalarResult();
