@@ -14,7 +14,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 
-
 class EditUserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -23,7 +22,7 @@ class EditUserType extends AbstractType
             ->add('name')
             ->add('password', PasswordType::class, ['mapped'      => false,
             'label' => 'Old password',
-            'attr'        => [ 
+            'attr'        => [
                 'autocomplete' => 'new-password',
                 'placeholder'  => 'Enter your old password',
             ],
@@ -40,7 +39,7 @@ class EditUserType extends AbstractType
                     ]
                 ),new SecurityAssert\UserPassword([
                     'message' => 'Wrong value for your old password.',
-                ])  
+                ])
             ],
             ])
             ->add('plainPassword', RepeatedType::class, [
@@ -61,13 +60,13 @@ class EditUserType extends AbstractType
                 ],
                 'invalid_message' => 'The new password fields must match.',
                 'options' => ['attr' => ['class' => 'password-field']],
-                'first_options' => ['label' => 'New Password', 'attr' =>['placeholder'  => '6 characters min'],],
-                'second_options' => ['label' => 'Repeat Password', 'attr' =>['placeholder'  => '6 characters min'],],
+                'first_options' => ['label' => 'New Password', 'attr' => ['placeholder'  => '6 characters min'],],
+                'second_options' => ['label' => 'Repeat Password', 'attr' => ['placeholder'  => '6 characters min'],],
                 'attr' => ['autocomplete' => 'off'],
             ])
             ->add('country', EntityType::class, [
                 'class' => Country::class,
-    'choice_label' => 'name',
+        'choice_label' => 'name',
             ])
         ;
     }

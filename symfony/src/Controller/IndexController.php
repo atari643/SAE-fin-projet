@@ -48,7 +48,7 @@ class IndexController extends MotherController
             $series_infos = $series_infos
                 ->where('LOWER(s.title) LIKE :title')
                 ->orderBy('CASE WHEN LOWER(s.title) LIKE :title THEN 1 ELSE 2 END')
-                ->setParameter('title', $searchQuery.'%');
+                ->setParameter('title', $searchQuery . '%');
         }
 
         if (null != $searchGenre) {

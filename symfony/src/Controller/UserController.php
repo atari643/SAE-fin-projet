@@ -28,7 +28,7 @@ class UserController extends MotherController
             $get_string = '?';
             foreach (array_keys($get_args) as $key) {
                 $arg = $get_args[$key];
-                $get_string .= $key.'='.$arg.'&';
+                $get_string .= $key . '=' . $arg . '&';
             }
 
             $get_string .= 'page=1';
@@ -135,7 +135,7 @@ class UserController extends MotherController
     }// end seriesFollowed()
 
     #[Route('/user/series/{username}', name: 'series_followed_search_user', methods: ['GET', 'POST'])]
-    public function seriesFollowedByUser(SeriesRepository $repository,  EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, string $username): Response
+    public function seriesFollowedByUser(SeriesRepository $repository, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, string $username): Response
     {
         $users = $entityManager->getRepository(User::class);
         $user = $users->findOneBy(['name' => $username]);
@@ -306,8 +306,8 @@ class UserController extends MotherController
         $form = $this->createForm(EditUserType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()&& $user instanceof User){
-            if($form->isValid()) {
+        if ($form->isSubmitted() && $user instanceof User) {
+            if ($form->isValid()) {
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
                         $user,
@@ -318,8 +318,7 @@ class UserController extends MotherController
                 $entityManager->flush();
 
                 return $this->redirectToRoute('user_profile');
-            } else if (($form['plainPassword']->getViewData()['first'])=="" && ($form['plainPassword']->getViewData()['second'])=="" && ($form['password']->getViewData())=="")
-            {
+            } elseif (($form['plainPassword']->getViewData()['first']) == "" && ($form['plainPassword']->getViewData()['second']) == "" && ($form['password']->getViewData()) == "") {
                 dump($form['plainPassword']);
                 $entityManager->persist($user);
                 $entityManager->flush();

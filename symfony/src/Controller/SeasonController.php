@@ -140,7 +140,8 @@ class SeasonController extends MotherController
         }
 
         return $this->render(
-            'index/seriesInfo.html.twig', [
+            'index/seriesInfo.html.twig',
+            [
             'series' => $series,
             'paginationSeason' => $paginationSeason,
             'pagination' => $pagination,
@@ -150,7 +151,8 @@ class SeasonController extends MotherController
             'serieScore' => $scoreSerie,
             'nombreNotes' => $nombreNotes,
             'seriesView' => $seriesView,
-        ]);
+            ]
+        );
     }
 
     #[Route('/series/{id}/season/{num}/add', name: 'app_index_season_info_add')]

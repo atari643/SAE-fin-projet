@@ -44,9 +44,8 @@ class GenerateUsersCommand extends Command
         $numberOfUsers = $input->getArgument('numberOfUsers');
 
         $io = new SymfonyStyle($input, $output);
-        
-        for($i = 0; $i < $numberOfUsers; $i++){
 
+        for ($i = 0; $i < $numberOfUsers; $i++) {
             $user = new User();
             $faker = Faker\Factory::create();
             $name = $faker->name();
@@ -65,21 +64,20 @@ class GenerateUsersCommand extends Command
             $this->entityManager->persist($user);
 
             $io->success($name . " " . $email);
-
         }
 
         $this->entityManager->flush();
         return Command::SUCCESS;
     }
 
-    private function generatePassword($length, $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'){
+    private function generatePassword($length, $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+    {
 
         $password = '';
-        for($i = 0; $i < $length; $i++){
-            $password .= $characters[rand(0, strlen($characters)-1)];
+        for ($i = 0; $i < $length; $i++) {
+            $password .= $characters[rand(0, strlen($characters) - 1)];
         }
 
         return $password;
-
     }
 }
