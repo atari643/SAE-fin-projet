@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-
 use App\Repository\SeriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +29,7 @@ class EpisodeController extends MotherController
             }
         }
         $entityManager->flush();
+
         return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
     }
 

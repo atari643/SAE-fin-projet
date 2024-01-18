@@ -14,7 +14,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SerieController extends MotherController
 {
-
     #[Route('/series/search', name: 'series_search', methods: ['GET'])]
     public function search(Request $request): Response
     {
@@ -57,7 +56,7 @@ class SerieController extends MotherController
     }
 
     #[Route('/series/{id}', name: 'app_index_series_info')]
-    public function seriesInfo(SeriesRepository $seriesRepository,RatingRepository $ratingRepository, EntityManagerInterface $entityManager, int $id, Request $request, PaginatorInterface $paginator): Response
+    public function seriesInfo(SeriesRepository $seriesRepository, RatingRepository $ratingRepository, EntityManagerInterface $entityManager, int $id, Request $request, PaginatorInterface $paginator): Response
     {
         $filter = $request->query->get('filter');
         // region Follow/Unfollow Series
@@ -111,15 +110,15 @@ class SerieController extends MotherController
         }// end if
 
         // Different score (5 stars, 4...)
-        $scoreSerie = array(
+        $scoreSerie = [
             0 => 0,
             1 => 0,
             2 => 0,
             3 => 0,
             4 => 0,
             5 => 0,
-            "moy" => 0,
-        );
+            'moy' => 0,
+        ];
 
         $moy = 0;
         $nombreNotes = 0;
@@ -134,8 +133,7 @@ class SerieController extends MotherController
                 $scoreSerie['moy'] = substr($moy / $nombreNotes, 0, 3);
             }
 
-            if ($filter != null) {
-
+            if (null != $filter) {
                 $commentsChoisis = array_filter($comments, function ($comment) use ($filter) {
                     return $comment->getValue() == $filter;
                 });
@@ -151,7 +149,7 @@ class SerieController extends MotherController
                 });
             }
         }
-          
+
         $series = $seriesRepository->seriesInfoById($id);
         $seasons = $series->getSeasons();
         $paginationSeason = $paginator->paginate(
@@ -203,6 +201,7 @@ class SerieController extends MotherController
             }
         }
         $entityManager->flush();
+
         return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
     }
 
@@ -218,10 +217,10 @@ class SerieController extends MotherController
         foreach ($seasons as $season) {
             foreach ($season->getEpisodes() as $episode) {
                 $this->getUser()->removeEpisode($episode);
-                
             }
         }
         $entityManager->flush();
+
         return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
     }
 
@@ -232,23 +231,21 @@ class SerieController extends MotherController
         $page = $request->request->get('page');
         $obj = null;
 
-        if($page <= 0){
+        if ($page <= 0) {
             $page = 1;
         }
-        
-        if($title != null){
 
-            $url = 'http://www.omdbapi.com/?apikey=66410286&s=' . $title . '&page=' . $page;
+        if (null != $title) {
+            $url = 'http://www.omdbapi.com/?apikey=66410286&s='.$title.'&page='.$page;
             $finalURL = str_replace(' ', '+', $url);
             $json = file_get_contents($finalURL);
             $obj = json_decode($json, true);
-
         }
-        
+
         return $this->render('index/browse.html.twig', [
             'title' => $title,
             'series' => $obj,
-            'page' => $page
+            'page' => $page,
         ]);
     }
 
