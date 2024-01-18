@@ -106,11 +106,12 @@ body {
     justify-content: center;
     color: black;
     font-family: 'Roboto', sans-serif;
-    border-radius: 5px;
-    background-color: #88ddd5;
     cursor: pointer;
     transition: 0.4s;
     font-size: 0.9rem;
+    margin: 2px;
+    border-radius: 5px;
+    background-color: #88ddd5;
 }
 
 .disconnect>span{

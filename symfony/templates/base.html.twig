@@ -114,6 +114,7 @@
 			const accountNav = document.createElement('div');
 			accountNav.classList.add('disconnect');
 			accountNav.innerHTML = '<span class="material-symbols-outlined">logout</span><a href=" {{ path('app_logout') }}">Logout</a>';
+			accountNav.innerHTML += '<a href=" {{ path('user_profile') }}">Profile</a>';
 			return accountNav;
 		}
 
