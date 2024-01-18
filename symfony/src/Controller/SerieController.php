@@ -57,7 +57,6 @@ class SerieController extends MotherController
     public function seriesInfo(SeriesRepository $seriesRepository,RatingRepository $ratingRepository, EntityManagerInterface $entityManager, int $id, Request $request, PaginatorInterface $paginator): Response
     {
         $filter = $request->query->get('filter');
-        $infoRating = $this->getRatings($entityManager, $id);
 
         // region Follow/Unfollow Series
         $user = $this->getUser();
@@ -122,9 +121,9 @@ class SerieController extends MotherController
 
         $moy = 0;
         $nombreNotes = 0;
-        $comments = $infoRating['comments'];
+        $comments = $infoRating;
         if (!empty($comments)) {
-            foreach ($comments as $comment) {
+            foreach ($infoRating as $comment) {
                 $val = $comment->getValue();
                 $scoreSerie[$val] = $scoreSerie[$val] + 1;
                 $moy = $moy + $val;
@@ -148,55 +147,42 @@ class SerieController extends MotherController
                     return $b->getDate() <=> $a->getDate();
                 });
             }
+        }
+          
+        $series = $seriesRepository->seriesInfoById($id);
+        $seasons = $series->getSeasons();
+        $paginationSeason = $paginator->paginate(
+            $seasons,
+            'seasons' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
+            ITEMS_PER_PAGE
+        );
+        $paginationSeason->setParam('pageList', 'seasons');
 
-            $series = $seriesRepository->seriesInfoById($id);
-            $seasons = $series->getSeasons();
-            $paginationSeason = $paginator->paginate(
-                $seasons,
-                'seasons' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
-                ITEMS_PER_PAGE
-            );
-            $paginationSeason->setParam('pageList', 'seasons');
+        $paginationComments = $paginator->paginate(
+            $infoRating,
+            'comments' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
+            ITEMS_PER_PAGE
+        );
+        $paginationComments->setParam('pageList', 'comments');
 
-            $paginationComments = $paginator->paginate(
-                $infoRating,
-                'comments' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
-                ITEMS_PER_PAGE
-            );
-            $paginationComments->setParam('pageList', 'comments');
-
-            $user = $this->getUser();
-            $seriesView = null;
-            if (null != $user) {
-                $user = $user->getId();
-                $seriesView = $seriesRepository->seriesEpisodeCountView($user);
-            }
-
-            return $this->render(
-                'index/seriesInfo.html.twig', [
-                'series' => $series,
-                'paginationSeason' => $paginationSeason,
-                'pagination' => null,
-                'userRating' => $userRating ? $userRating->getValue() : null,
-                'userComment' => $userRating ? $userRating->getComment() : null,
-                'paginationComments' => $paginationComments,
-                'serieScore' => $scoreSerie,
-                'nombreNotes' => $nombreNotes,
-                'seriesView' => $seriesView,
-            ]);
+        $user = $this->getUser();
+        $seriesView = null;
+        if (null != $user) {
+            $user = $user->getId();
+            $seriesView = $seriesRepository->seriesEpisodeCountView($user);
         }
 
         return $this->render(
             'index/seriesInfo.html.twig', [
             'series' => $series,
-            'paginationSeason' => null,
+            'paginationSeason' => $paginationSeason,
             'pagination' => null,
             'userRating' => $userRating ? $userRating->getValue() : null,
             'userComment' => $userRating ? $userRating->getComment() : null,
-            'paginationComments' => null,
+            'paginationComments' => $paginationComments,
             'serieScore' => $scoreSerie,
             'nombreNotes' => $nombreNotes,
-            'seriesView' => null,
+            'seriesView' => $seriesView,
         ]);
     }
 
