@@ -68,7 +68,7 @@ class UserController extends MotherController
         $search_query = $request->query->get('search');
         $user_specific = $entityManager->createQueryBuilder()
         ->select(
-            'u.id as id, u.name as name, u.registerDate as registerDate, u.admin'
+            'u.id as id, u.name as name, u.registerDate as registerDate, u.admin, u.fake, u.email'
         )
         ->from('App:User', 'u');
         if (!empty($search_query)) {
