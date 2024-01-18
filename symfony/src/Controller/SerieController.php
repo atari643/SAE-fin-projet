@@ -11,10 +11,10 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Exception;
 
 class SerieController extends MotherController
 {
-
     #[Route('/series/search', name: 'series_search', methods: ['GET'])]
     public function search(Request $request): Response
     {
@@ -23,7 +23,7 @@ class SerieController extends MotherController
         $searchYearStart = $request->query->get('yearStart');
         $searchYearEnd = $request->query->get('yearEnd');
         $searchFollow = $request->query->get('follow');
-
+        $searchRating = $request->query->get('rating');
         $args = ['page' => 1];
 
         if (null != $searchQuery) {
@@ -41,6 +41,12 @@ class SerieController extends MotherController
         if (null != $searchFollow) {
             $args['follow'] = $searchFollow;
         }
+        if ('Select a rating' != $searchRating) {
+            $valid = ($searchRating <= 5) & ($searchRating >= 0);
+            if ($valid) {
+                $args['rating'] = $searchRating;
+            }
+        }
 
         return $this->redirectToRoute('app_default', $args);
     }
@@ -54,10 +60,9 @@ class SerieController extends MotherController
     }
 
     #[Route('/series/{id}', name: 'app_index_series_info')]
-    public function seriesInfo(SeriesRepository $seriesRepository,RatingRepository $ratingRepository, EntityManagerInterface $entityManager, int $id, Request $request, PaginatorInterface $paginator): Response
+    public function seriesInfo(SeriesRepository $seriesRepository, RatingRepository $ratingRepository, EntityManagerInterface $entityManager, int $id, Request $request, PaginatorInterface $paginator): Response
     {
         $filter = $request->query->get('filter');
-
         // region Follow/Unfollow Series
         $user = $this->getUser();
         $infoRating = $ratingRepository->getRatingUserConnectAndAllRatingComments($this->getUser(), $id);
@@ -109,19 +114,20 @@ class SerieController extends MotherController
         }// end if
 
         // Different score (5 stars, 4...)
-        $scoreSerie = array(
+        $scoreSerie = [
             0 => 0,
             1 => 0,
             2 => 0,
             3 => 0,
             4 => 0,
             5 => 0,
-            "moy" => 0,
-        );
+            'moy' => 0,
+        ];
 
         $moy = 0;
         $nombreNotes = 0;
         $comments = $infoRating;
+
         if (!empty($comments)) {
             foreach ($comments as $comment) {
                 $val = $comment->getValue();
@@ -132,14 +138,20 @@ class SerieController extends MotherController
                 $scoreSerie['moy'] = substr($moy / $nombreNotes, 0, 3);
             }
 
-            if ($filter != null) {
-
+            if (null != $filter) {
                 $commentsChoisis = array_filter($comments, function ($comment) use ($filter) {
                     return $comment->getValue() == $filter;
                 });
 
+                usort($commentsChoisis, function ($a, $b) {
+                    return $b->getDate() <=> $a->getDate();
+                });
+
                 $autresComments = array_filter($comments, function ($comment) use ($filter) {
                     return $comment->getValue() != $filter;
+                });
+                usort($autresComments, function ($a, $b) {
+                    return $b->getDate() <=> $a->getDate();
                 });
 
                 $comments = array_merge($commentsChoisis, $autresComments);
@@ -149,7 +161,7 @@ class SerieController extends MotherController
                 });
             }
         }
-          
+
         $series = $seriesRepository->seriesInfoById($id);
         $seasons = $series->getSeasons();
         $paginationSeason = $paginator->paginate(
@@ -160,7 +172,7 @@ class SerieController extends MotherController
         $paginationSeason->setParam('pageList', 'seasons');
 
         $paginationComments = $paginator->paginate(
-            $infoRating,
+            $comments,
             'comments' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
             ITEMS_PER_PAGE
         );
@@ -201,6 +213,7 @@ class SerieController extends MotherController
             }
         }
         $entityManager->flush();
+
         return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
     }
 
@@ -216,11 +229,39 @@ class SerieController extends MotherController
         foreach ($seasons as $season) {
             foreach ($season->getEpisodes() as $episode) {
                 $this->getUser()->removeEpisode($episode);
-                
             }
         }
         $entityManager->flush();
+
         return $this->redirectToRoute('app_index_series_info', ['id' => $id]);
+    }
+
+    #[Route('/browse/series', name: 'app_index_series_browse', methods: ['GET', 'POST'])]
+    public function browseSeries(PaginatorInterface $paginator, Request $request): Response
+    {
+        $title = $request->request->get('search');
+        $page = $request->request->get('page');
+        $obj = null;
+
+        if ($page <= 0) {
+            $page = 1;
+        }
+
+        if (null != $title) {
+            $omdbkey = $this->getParameter('app.omdbapi_key');
+            $url = 'http://www.omdbapi.com/?apikey=' . $omdbkey . '&s='.$title.'&page='.$page;
+            $finalURL = str_replace(' ', '+', $url);
+            try {
+                $json = file_get_contents($finalURL);
+                $obj = json_decode($json, true);
+            } catch(Exception $e){}
+        }
+
+        return $this->render('index/browse.html.twig', [
+            'title' => $title,
+            'series' => $obj,
+            'page' => $page,
+        ]);
     }
 
     private function addRatingIntoBase(EntityManagerInterface $entityManager, int $id, Request $request)

@@ -600,3 +600,8 @@ tr img {
     border: 1px solid white;
     border-radius: 15px;
 }
+
+.suivieButtonadd{
+    color: white;
+    cursor: pointer;
+}

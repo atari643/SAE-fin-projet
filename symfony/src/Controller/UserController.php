@@ -2,16 +2,17 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Form\UserType;
 use App\Entity\Rating;
+use App\Entity\User;
+use App\Form\EditUserAdminType;
+use App\Form\EditUserType;
+use App\Repository\SeriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\SeriesRepository;
 
 const USERS_PER_PAGE = 10;
 
@@ -20,14 +21,14 @@ class UserController extends MotherController
     #[Route('/users', name: 'app_users', methods: ['GET', 'POST'])]
     public function index(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
-        $page     = $request->query->get('page');
+        $page = $request->query->get('page');
         $get_args = $request->query->all();
 
-        if ($page == null) {
-            $get_string = "?";
+        if (null == $page) {
+            $get_string = '?';
             foreach (array_keys($get_args) as $key) {
                 $arg = $get_args[$key];
-                $get_string .= $key . "=" . $arg . "&";
+                $get_string .= $key.'='.$arg.'&';
             }
 
             $get_string .= 'page=1';
@@ -37,8 +38,8 @@ class UserController extends MotherController
 
         // not here box
         $usersRepository = $entityManager->getRepository(User::class);
-        $role            = $request->get('role');
-        $id              = $request->get('id');
+        $role = $request->get('role');
+        $id = $request->get('id');
 
         if (null != $id) {
             $user = $usersRepository->find($id);
@@ -55,7 +56,7 @@ class UserController extends MotherController
             $entityManager->flush();
         }
 
-        if ($this->getUser() != null) {
+        if (null != $this->getUser()) {
             $userAdminOrNot = $this->getUser()->isAdmin();
         } else {
             return $this->redirect($this->generateUrl('app_login')); // si accessible alors : $userAdminOrNot=false;
@@ -67,18 +68,18 @@ class UserController extends MotherController
         $search_query = $request->query->get('search');
         $user_specific = $entityManager->createQueryBuilder()
         ->select(
-            'u.id as id, u.name as name, u.registerDate as registerDate, u.admin'
+            'u.id as id, u.name as name, u.registerDate as registerDate, u.admin, u.fake, u.email'
         )
         ->from('App:User', 'u');
         if (!empty($search_query)) {
             $user_specific = $user_specific->where('u.name LIKE :search')
                 ->setParameter('search', "$search_query%");
-                $user_specific = $user_specific->getQuery();
-                $pagination = $paginator->paginate(
-                    $user_specific,
-                    $request->query->getInt('page', 1),
-                    USERS_PER_PAGE
-                );
+            $user_specific = $user_specific->getQuery();
+            $pagination = $paginator->paginate(
+                $user_specific,
+                $request->query->getInt('page', 1),
+                USERS_PER_PAGE
+            );
             if ($userAdminOrNot) {
                 return $this->render('user/index.html.twig', [
                     'pagination' => $pagination,
@@ -113,7 +114,6 @@ class UserController extends MotherController
         }
     }
 
-
     #[Route('/user/series', name: 'series_followed', methods: ['GET', 'POST'])]
     public function seriesFollowed(SeriesRepository $repository, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
@@ -132,31 +132,31 @@ class UserController extends MotherController
             ['pagination' => $pagination,
              'seriesView' => $seriesView]
         );
-    }//end seriesFollowed()
-
+    }// end seriesFollowed()
 
     #[Route('/user/series/{username}', name: 'series_followed_search_user', methods: ['GET', 'POST'])]
-    public function seriesFollowedByUser(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, string $username): Response
+    public function seriesFollowedByUser(SeriesRepository $repository,  EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, string $username): Response
     {
-        $users      = $entityManager->getRepository(User::class);
-        $user       = $users->findOneBy(['name' => $username]);
+        $users = $entityManager->getRepository(User::class);
+        $user = $users->findOneBy(['name' => $username]);
+        $series = $repository->seriesEpisodesCount($user);
         $pagination = $paginator->paginate(
-            $user->getSeries(),
+            $series,
             $request->query->getInt('page', 1),
             10
         );
+        $seriesView = $repository->seriesEpisodeCountView($user);
 
         return $this->render(
             'user/series_followed.html.twig',
-            ['pagination' => $pagination]
+            ['pagination' => $pagination, 'seriesView' => $seriesView]
         );
-    }//end seriesFollowedByUser()
-
+    }// end seriesFollowedByUser()
 
     #[Route('/user/profile', name: 'user_profile', methods: ['GET', 'POST'])]
     public function userProfile(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
-        //check if connected
+        // check if connected
         $user = $this->getUser();
         if (null == $user) {
             $login = $this->generateUrl('app_login');
@@ -178,44 +178,43 @@ class UserController extends MotherController
         );
 
         $comments = $infoRating['comments'];
-        usort($comments, function($a, $b) {
+        usort($comments, function ($a, $b) {
             return $b->getDate() <=> $a->getDate();
         });
-        
+
         return $this->render('user/profile.html.twig', [
             'user' => $name,
             'pagination' => $pagination,
             'pagination2' => $pagination2,
             'comments' => $comments,
             ]);
-    }//end userProfile()
-
+    }// end userProfile()
 
     #[Route('/user/profile/{username}', name: 'user_profile_search', methods: ['GET', 'POST'])]
     public function userProfileSearch(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, string $username): Response
     {
-        //check if connected
+        // check if connected
         $user = $this->getUser();
         if (null == $user) {
             $login = $this->generateUrl('app_login');
 
             return $this->redirect($login);
         }
-        //paginating series followed
-        $userOfUsername = $entityManager->getRepository(User::class)->findOneBy(array('name' => $username));
+        // paginating series followed
+        $userOfUsername = $entityManager->getRepository(User::class)->findOneBy(['name' => $username]);
         $pagination = $paginator->paginate(
             $userOfUsername->getSeries(),
-            $request->query->getInt('category') === 'series_followed' ? $request->query->getInt('page', 1) : 1,
-            10 
+            'series_followed' === $request->query->getInt('category') ? $request->query->getInt('page', 1) : 1,
+            10
         );
         $pagination->setParam('category', 'series_followed');
-        //paginating critics
+        // paginating critics
         $id = $userOfUsername->getId();
         $infoRating = $this->getUserRatingsById($entityManager, $id);
         $pagination2 = $paginator->paginate(
             $infoRating,
-            $request->query->get('category') === 'series_critics' ? $request->query->getInt('page', 1) : 1,
-            10 
+            'series_critics' === $request->query->get('category') ? $request->query->getInt('page', 1) : 1,
+            10
         );
         $pagination2->setParam('category', 'series_critics');
 
@@ -229,7 +228,6 @@ class UserController extends MotherController
 
     private function getUserRatingsById(EntityManagerInterface $entityManager, int $id)
     {
-
         $comments = $entityManager->getRepository(Rating::class)->findBy([
             'user' => $id,
         ]);
@@ -256,6 +254,7 @@ class UserController extends MotherController
             $request->query->getInt('page', 1),
             10
         );
+
         return $this->render(
             'user/ratings.html.twig',
             [
@@ -271,7 +270,7 @@ class UserController extends MotherController
     {
         $users = $entityManager
         ->getRepository(User::class);
-        $user = $users->findOneBy(array('name' => $username));
+        $user = $users->findOneBy(['name' => $username]);
         if (null == $user) {
             $login = $this->generateUrl('app_login');
 
@@ -284,6 +283,7 @@ class UserController extends MotherController
             $request->query->getInt('page', 1),
             10
         );
+
         return $this->render(
             'user/ratings.html.twig',
             [
@@ -303,7 +303,51 @@ class UserController extends MotherController
 
             return $this->redirect($login);
         }
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(EditUserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()&& $user instanceof User){
+            if($form->isValid()) {
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $form->get('plainPassword')->getData()
+                    )
+                );
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('user_profile');
+            } else if (($form['plainPassword']->getViewData()['first'])=="" && ($form['plainPassword']->getViewData()['second'])=="" && ($form['password']->getViewData())=="")
+            {
+                dump($form['plainPassword']);
+                $entityManager->persist($user);
+                $entityManager->flush();
+                return $this->redirectToRoute('user_profile');
+            }
+        }
+
+        return $this->render('user/edit.html.twig', [
+            'user' => $user,
+            'form' => $form->createView(),
+            'errorN' => $form['name']->getErrors(true),
+            'errorP' => $form['plainPassword']->getErrors(true),
+            'errorOldP' => $form['password']->getErrors(true),
+        ]);
+    }
+
+    #[Route('/user/edit/{username}/', name: 'user_editor_edit_Admin', methods: ['GET', 'POST'])]
+    public function editProfileUsername(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, string $username): Response
+    {
+        $userIsAdmin = $this->getUser();
+        if (null == $userIsAdmin or (!$this->isGranted('IS_IMPERSONATOR'))) {
+            $login = $this->generateUrl('app_login');
+
+            return $this->redirect($login);
+        }
+        $users = $entityManager->getRepository(User::class);
+        $user = $users->findOneBy(['name' => $username]);
+        $form = $this->createForm(EditUserAdminType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $user instanceof User) {
@@ -322,8 +366,10 @@ class UserController extends MotherController
         return $this->render('user/edit.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
-            'errorN' => $form['name']->getErrors(true),
+            'errorN' => '',/* $form['name']->getErrors(true), */
             'errorP' => $form['plainPassword']->getErrors(true),
+            'errorOldP' => '',
+            'user' => $user,
         ]);
     }
 }

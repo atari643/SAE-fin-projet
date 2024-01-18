@@ -42,6 +42,7 @@ security:
         # - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/user/series, roles: [ROLE_USER, ROLE_ADMIN] }
         # - { path: ^/users, roles: [ROLE_ADMIN, ROLE_USER] }
+        - { path: ^/series/browse, roles: [ROLE_ADMIN] }
 
 when@test:
     security:

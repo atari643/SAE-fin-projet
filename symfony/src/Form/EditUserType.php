@@ -12,40 +12,62 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 
-class UserType extends AbstractType
+
+class EditUserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('name')
-            /* ->add('password') */
+            ->add('password', PasswordType::class, ['mapped'      => false,
+            'label' => 'Old password',
+            'attr'        => [ 
+                'autocomplete' => 'new-password',
+                'placeholder'  => 'Enter your old password',
+            ],
+            'constraints' => [
+                new NotBlank(
+                    ['message' => 'Please enter your old password']
+                ),
+                new Length(
+                    [
+                        'min'        => 6,
+                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        // max length allowed by Symfony for security reasons
+                        'max'        => 4096,
+                    ]
+                ),new SecurityAssert\UserPassword([
+                    'message' => 'Wrong value for your old password.',
+                ])  
+            ],
+            ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'mapped'      => false,
                 'constraints' => [
                     new NotBlank(
-                        ['message' => 'Please enter a password']
+                        ['message' => 'Please enter a new password']
                     ),
                     new Length(
                         [
                             'min'        => 6,
-                            'minMessage' => 'Your password should be at least {{ limit }} characters',
+                            'minMessage' => 'Your new password should be at least {{ limit }} characters',
                             // max length allowed by Symfony for security reasons
                             'max'        => 4096,
                         ]
                     ),
                 ],
-                'invalid_message' => 'The password fields must match.',
+                'invalid_message' => 'The new password fields must match.',
                 'options' => ['attr' => ['class' => 'password-field']],
-                'required' => true,
                 'first_options' => ['label' => 'New Password', 'attr' =>['placeholder'  => '6 characters min'],],
                 'second_options' => ['label' => 'Repeat Password', 'attr' =>['placeholder'  => '6 characters min'],],
                 'attr' => ['autocomplete' => 'off'],
             ])
             ->add('country', EntityType::class, [
                 'class' => Country::class,
-'choice_label' => 'name',
+    'choice_label' => 'name',
             ])
         ;
     }
@@ -54,6 +76,7 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'required' => false,
         ]);
     }
 }

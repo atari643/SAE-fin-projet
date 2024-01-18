@@ -6,7 +6,13 @@
     <link rel="stylesheet" href="/ratings.css" />
     <link rel="stylesheet" href="/profile.css" />
     <link rel="stylesheet" href="{{ asset('/register-login.css') }}"> 
-    <h1>Edit your profile</h1>
+    
+    {% if not is_granted('IS_IMPERSONATOR')%}
+        <h1>Edit <span style="color : #cba848;">your</span> profile</h1>
+        <h4>To modify your password, you need to enter your old password before creating a new one</h4>
+    {% else %}
+        <h1>Edit <span style="color : #cba848;">{{user.name}}'s</span> password</h1>
+    {% endif %}
 
     <style>
     .form_body ul{display:none;}
@@ -15,10 +21,13 @@
     error_n = "{{ errorN|e('js') }}";
     
     error_p = "{{ errorP|e('js') }}";
-    
+    error_oldP = "{{ errorOldP|e('js') }}";
     error_text = "";
     if(error_n.length != 0){
         error_text += error_n;
+    }
+    if(error_oldP.length != 0){
+        error_text += "\n"+error_oldP;
     }
     if(error_p.length != 0){
         error_text += "\n"+error_p;
@@ -34,16 +43,22 @@
 <div class="form_body">
 
     {{ form_start(form) }} 
-        {{ form_row(form.name)}}        
+        
+        {% if not is_granted('IS_IMPERSONATOR')%}
+            {{ form_row(form.name)}}
+            {{ form_row(form.password)}}       
+        {% endif %} 
         {{ form_row(form.plainPassword, {
             label: 'Password'
         }) }}
-        {{ form_row(form.country) }}
+        {% if not is_granted('IS_IMPERSONATOR')%}
+            {{ form_row(form.country) }}
+        {% endif %}
         {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
     {{ form_end(form) }}
 
     <div class="HeaderOfRatings" style="width: fit-content; transform : translateX(40%); margin-top : 15px;">
-        <div class="headerTextOfRatings" style=""><p><a href="{{ path('user_profile') }}">Check</a> your profile</p>
+        <div class="headerTextOfRatings" style=""><p><a href="{{ path('user_profile') }}">Check</a> the profile</p>
             <a href="{{ path('user_profile') }}">
             <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random&rounded=true" style="display: inline; margin-left : 15px;"></a>
         </div>

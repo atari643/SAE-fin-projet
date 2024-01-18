@@ -23,33 +23,28 @@
         {% endblock %}
 		<div id="menu">
 			<div id="parentItemMenuLeft">
-				{# {% if app.user!=null and app.user.admin %}
-				<div class="itemMenu">
-					<span class="material-symbols-outlined">
-						preview
-					</span>
-				</div>
-				{% endif %} #}
-				<div class="itemMenu" onclick="window.location.href = '/users'">
-					<span class="material-symbols-outlined">
-						groups
-					</span>
-				</div>
+				{% if app.user!=null and app.user.admin %}
+					<div class="itemMenu" onclick="window.location.href = '/browse/series'">
+						<span class="material-symbols-outlined">
+							saved_search
+						</span>
+					</div>
+				{% endif %}
 			</div>
 			<div id="parentItemMenuCenter">
-				<div class="itemMenu" onclick="window.location.href = '/?page=1'">
+				<div class="itemMenu" id="home" onclick="window.location.href = '/?page=1'">
 					<span class="material-symbols-outlined">
 						home
 					</span>
 				</div>
-				<div class="itemMenu" onclick="window.location.href = '/user/series'">
+				<div class="itemMenu" id="subscriptions" onclick="window.location.href = '/user/series'">
 					<span class="material-symbols-outlined">
 						subscriptions
 					</span>
 				</div>
-				<div class="itemMenu">
+				<div class="itemMenu" id="group" onclick="window.location.href = '/users'">
 					<span class="material-symbols-outlined">
-						history
+						groups
 					</span>
 				</div>
 			</div>
@@ -75,18 +70,37 @@
 	<script>
     	const onThisPage = document.querySelector('body').dataset.onthispage;
     	const items = document.querySelectorAll('.itemMenu');
-    	switch(onThisPage) {
-        	case '/':
-            	items[2].classList.add('onThisPage');
-            	break;
-        	case '/users':
-            	items[0].classList.add('onThisPage');
-            	break;
-        	case '/user/series':
-            	items[2].classList.add('onThisPage');
-            	break;
-    	}
-
+		</script>
+		{% if is_granted('ROLE_ADMIN')  %}
+			<script>
+			switch(onThisPage) {
+				case '/':
+					document.querySelector('#home').classList.add('onThisPage');
+					break;
+				case '/users':
+					document.querySelector('#group').classList.add('onThisPage');
+					break;
+				case '/user/series':
+					document.querySelector('#subscriptions').classList.add('onThisPage');
+					break;
+			}
+			</script>
+    	{% else %}
+			<script>
+			switch(onThisPage) {
+				case '/':
+					document.querySelector('#home').classList.add('onThisPage');
+					break;
+				case '/users':
+					document.querySelector('#group').classList.add('onThisPage');
+					break;
+				case '/user/series':
+					document.querySelector('#subscriptions').classList.add('onThisPage');
+					break;
+			}
+			</script>
+		{% endif %}
+		<script>
 		const accountButton = document.querySelector('.itemMenu img');
 		accountButton.addEventListener('click', function () {
 			if (document.querySelector('.disconnect')) {
@@ -100,6 +114,7 @@
 			const accountNav = document.createElement('div');
 			accountNav.classList.add('disconnect');
 			accountNav.innerHTML = '<span class="material-symbols-outlined">logout</span><a href=" {{ path('app_logout') }}">Logout</a>';
+			accountNav.innerHTML += '<a href=" {{ path('user_profile') }}">Profile</a>';
 			return accountNav;
 		}
 
