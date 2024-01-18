@@ -123,6 +123,7 @@ class SerieController extends MotherController
         $moy = 0;
         $nombreNotes = 0;
         $comments = $infoRating;
+        
         if (!empty($comments)) {
             foreach ($comments as $comment) {
                 $val = $comment->getValue();
@@ -138,15 +139,24 @@ class SerieController extends MotherController
                     return $comment->getValue() == $filter;
                 });
 
+                usort($commentsChoisis, function ($a, $b) {
+                    return $b->getDate() <=> $a->getDate();
+                });
+
                 $autresComments = array_filter($comments, function ($comment) use ($filter) {
                     return $comment->getValue() != $filter;
                 });
+                usort($autresComments, function ($a, $b) {
+                    return $b->getDate() <=> $a->getDate();
+                });
 
                 $comments = array_merge($commentsChoisis, $autresComments);
+                
             } else {
                 usort($comments, function ($a, $b) {
                     return $b->getDate() <=> $a->getDate();
                 });
+                
             }
         }
 
@@ -160,7 +170,7 @@ class SerieController extends MotherController
         $paginationSeason->setParam('pageList', 'seasons');
 
         $paginationComments = $paginator->paginate(
-            $infoRating,
+            $comments,
             'comments' === $request->query->get('pageList') ? $request->query->getInt('page', 1) : 1,
             ITEMS_PER_PAGE
         );
