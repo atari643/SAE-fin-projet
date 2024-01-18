@@ -124,12 +124,13 @@ class SerieController extends MotherController
         $nombreNotes = 0;
         $comments = $infoRating;
         if (!empty($comments)) {
-            foreach ($infoRating as $comment) {
+            foreach ($comments as $comment) {
                 $val = $comment->getValue();
+                $nombreNotes = sizeof($comments);
                 $scoreSerie[$val] = $scoreSerie[$val] + 1;
                 $moy = $moy + $val;
 
-                $scoreSerie['moy'] = substr($moy / $nombreNotes, 0, 3);;
+                $scoreSerie['moy'] = substr($moy / $nombreNotes, 0, 3);
             }
 
             if ($filter != null) {
