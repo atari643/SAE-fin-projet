@@ -30,19 +30,7 @@ Pour installer et connecter un projet Symfony, suivez les étapes suivantes :
     Enregistrez le fichier et fermez-le.
     Cela permettra d'exécuter la commande Symfony depuis n'importe quel répertoire de votre machine.
 
-
-4. Maintenant, allez dans notre projet symfony et exécutez la commande suivante :
-    ```
-    symfony server:start
-    ```
-    Si vous utilisez Windows, vous pouvez également exécuter la commande suivante :
-    ```
-    symfony serve
-    ```
-5. Ouvrez votre navigateur et accédez à l'URL suivante : http://localhost:8000
-    Vous devriez voir la page d'accueil de votre projet Symfony.
-
-Maintenant, vous avez installé et connecté avec succès votre projet Symfony !
+Maintenant, vous avez installé 
 
 N'oubliez pas de consulter la documentation officielle de Symfony pour en savoir plus sur le développement avec Symfony : https://symfony.com/doc/current/index.html
 
@@ -66,9 +54,9 @@ Notre projet Symfony utilise une base de données MySQL. Pour installer la base 
 
 Pour vous connecter à la base de données, suivez les étapes suivantes :
 
-1. Ouvrez le fichier ".env.local" qui se trouve à la racine du projet.
+1. Créer le fichier ".env.local" à la racine du projet.
 
-2. Dans le fichier ".env.local", modifiez la ligne suivante :
+2. Dans le fichier ".env.local", écriver la ligne suivante :
     ```
     DATABASE_URL=mysql://USER:PASSWORD@SERVER:PORT/HOST
     ```
@@ -77,6 +65,33 @@ Pour vous connecter à la base de données, suivez les étapes suivantes :
 3. Enregistrez le fichier et fermez-le.
 
 4. Maintenant, vous êtes connecté à la base de données !
+
+## Lancer le projet 
+Maintenant que vous avez fait l'installation vous pouvez lancer le projet symphony 
+
+1. Rendez-vous dans le ficher symfony et ouvrez un terminal 
+    Pour récupérer les composer nécessaire à au lancement du site vous allez rentrer la commande:
+    ```
+    symfony composer install
+    ```
+2. Mettre à jour les informations de la base 
+    ```
+    symfony console doctrine:schema:update --dump-sql
+    ```
+    ```
+    symfony console doctrine:schema:update --force
+    ```
+3. Maintenant pour lancer le server exécuter la commande suivante :
+    ```
+    symfony server:start
+    ```
+    Si vous utilisez Windows, vous pouvez également exécuter la commande suivante :
+    ```
+    symfony serve
+    ```
+4. Ouvrez votre navigateur et accédez à l'URL suivante : http://localhost:8000
+    Vous devriez voir la page d'accueil de votre projet Symfony.
+
 
 ## Modifier les droits d'administration des utilisateurs du site
 
