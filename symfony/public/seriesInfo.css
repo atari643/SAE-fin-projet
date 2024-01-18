@@ -416,8 +416,7 @@ tr img {
     width: 100%;
     
 }
-
-
-
-
-
+.suivieButtonadd{
+    color: white;
+    cursor: pointer;
+}

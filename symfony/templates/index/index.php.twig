@@ -649,21 +649,6 @@
           window.location.replace("{{ path("app_login") }}");
         });
         {% else %}
-        suivieButton.addEventListener('click', function () {
-          if (suivieButton.querySelector('span').innerHTML == 'heart_plus') {
-            suivieButton.querySelector('span').innerHTML = 'heart_check';
-            suivieButton.style.color = 'rgb(0, 105, 0)';
-            setTimeout(function () {
-              suivieButton.style.color = 'white';
-              suivieButton.querySelector('span').innerHTML = 'heart_minus';
-            }, 600);
-
-            $.ajax({
-              type: "POST",
-              url: "{{ path('app_default') }}",
-              data: {add : true, id : poster.dataset.id}
-            });
-
             suivieButton.addEventListener('click', function () {
               if (suivieButton.querySelector('span').innerHTML == 'heart_plus') {
                 suivieButton.querySelector('span').innerHTML = 'heart_check';
@@ -703,8 +688,6 @@
               }
 
             });
-          }
-        });
         {% endif %}
 
         if (banner.offsetHeight >= window.innerHeight) {
