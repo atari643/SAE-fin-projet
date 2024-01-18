@@ -70,18 +70,37 @@
 	<script>
     	const onThisPage = document.querySelector('body').dataset.onthispage;
     	const items = document.querySelectorAll('.itemMenu');
-    	switch(onThisPage) {
-        	case '/':
-            	items[2].classList.add('onThisPage');
-            	break;
-        	case '/users':
-            	items[0].classList.add('onThisPage');
-            	break;
-        	case '/user/series':
-            	items[2].classList.add('onThisPage');
-            	break;
-    	}
-
+		</script>
+		{% if is_granted('IS_IMPERSONATOR')  %}
+			<script>
+			switch(onThisPage) {
+				case '/':
+					items[2].classList.add('onThisPage');
+					break;
+				case '/users':
+					items[3].classList.add('onThisPage');
+					break;
+				case '/user/series':
+					items[2].classList.add('onThisPage');
+					break;
+			}
+			</script>
+    	{% else %}
+			<script>
+			switch(onThisPage) {
+				case '/':
+					items[1].classList.add('onThisPage');
+					break;
+				case '/users':
+					items[2].classList.add('onThisPage');
+					break;
+				case '/user/series':
+					items[1].classList.add('onThisPage');
+					break;
+			}
+			</script>
+		{% endif %}
+		<script>
 		const accountButton = document.querySelector('.itemMenu img');
 		accountButton.addEventListener('click', function () {
 			if (document.querySelector('.disconnect')) {
